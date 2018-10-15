@@ -1,12 +1,4 @@
-# mkdir seq_data/PRJNA237293
-# cd seq_data/PRJNA237293
-
-library('seeker')
-doParallel::registerDoParallel(cores = min(parallel::detectCores() / 2, 24))
-
 # add log tsv for getFastq, fastqc, fastqscreen
-# revise how salmon and trimgalore handle missing files - require all files exist?
-
 # after installing miniconda, setting up bioconda, and installing aspera connect
 # conda install fastqc
 # conda install multiqc
@@ -16,9 +8,15 @@ doParallel::registerDoParallel(cores = min(parallel::detectCores() / 2, 24))
 # https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/fastq_screen_v0.13.0.tar.gz
 # run fastq_screen --get_genomes
 
+library('seeker')
+doParallel::registerDoParallel(cores = min(parallel::detectCores() / 2, 24))
+
+############################################################
+# paired-end mouse
+
 study = 'PRJNA237293'
-fastqDir = 'fastq'
-quantDir = 'salmon_output'
+fastqDir = file.path(study, 'fastq')
+quantDir = file.path(study, 'salmon_output')
 
 metadata = getMetadata(study)
 metadata = metadata[1:2, , drop = FALSE]
@@ -26,12 +24,35 @@ metadata = metadata[1:2, , drop = FALSE]
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
 metadata$fastq_local = fastqResult$localFilepaths
 
-fastqc(metadata$fastq_local)
-fastqscreen(metadata$fastq_local)
+fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
+fastqscreen(metadata$fastq_local, file.path(study, 'fastqscreen_output'))
 
 salmon(metadata$fastq_local, metadata$run_accession, quantDir,
        indexPath = '~/transcriptomes/mus_musculus_transcripts')
 tximport(file.path(quantDir, metadata$run_accession),
+         file.path(study, 'tximport_output.rds'),
          ensemblDataset = 'mmusculus_gene_ensembl')
 
-multiqc()
+multiqc(study, file.path(study, 'multiqc_output'))
+
+############################################################
+# single-end human
+
+study = 'PRJNA436224'
+fastqDir = file.path(study, 'fastq')
+quantDir = file.path(study, 'salmon_output')
+
+metadata = getMetadata(study)
+metadata = metadata[1:2, , drop = FALSE]
+
+fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
+metadata$fastq_local = fastqResult$localFilepaths
+
+fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
+fastqscreen(metadata$fastq_local, file.path(study, 'fastqscreen_output'))
+
+salmon(metadata$fastq_local, metadata$run_accession, quantDir)
+tximport(file.path(quantDir, metadata$run_accession),
+         file.path(study, 'tximport_output.rds'))
+
+multiqc(study, file.path(study, 'multiqc_output'))

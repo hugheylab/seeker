@@ -11,7 +11,8 @@ getMetadata = function(study, downloadMethod = 'aspera') {
                 'experiment_accession,run_accession,', fastqColname, '&download=txt')
   raw = curl::curl_fetch_memory(url)
   metadata = data.frame(readr::read_tsv(rawToChar(raw$content)))
-  metadata[[fastqColname]] = strsplit(metadata[[fastqColname]], ';')
+  if (grepl(';', metadata[[fastqColname]][1])) {
+    metadata[[fastqColname]] = strsplit(metadata[[fastqColname]], ';')}
   return(metadata)}
 
 
@@ -40,9 +41,16 @@ getFastq = function(remoteFilepaths, outputDir, ftpCmd = 'wget', ftpArgs = '-q',
   return(list(localFilepaths = localFilepaths, exitCodes = result))}
 
 
+checkFilepaths = function(filepaths) {
+  if (!all(file.exists(unlist(filepaths)))) {
+    stop('Not all supplied file paths exist.')}
+  invisible(NULL)}
+
+
 #' @export
 fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
                   args = c('-t', foreach::getDoParWorkers())) {
+  checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
   result = foreach(f = fs, ii = 1:length(fs), .combine = c) %do% {
@@ -55,6 +63,7 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
                        cmd = '~/fastq_screen_v0.13.0/fastq_screen',
                        args = c('--threads', foreach::getDoParWorkers(),
                                 '--conf', '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
+  checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
   result = foreach(f = fs, ii = 1:length(fs), .combine = c) %do% {
@@ -62,24 +71,12 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
   invisible(result)}
 
 
-checkFilepaths = function(filepaths) {
-  if (is.list(filepaths)) {
-    idx = sapply(filepaths, function(f) all(file.exists(f)))
-  } else {
-    idx = file.exists(filepaths)}
-  if (!any(idx)) {
-    stop('Insufficient sequencing files exist, based on supplied filepaths.')}
-  return(idx)}
-
-
 #' @export
 trimgalore = function(filepaths, outputDir = 'trimgalore_output',
                       cmd = 'trim_galore', args = '') {
+  checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
-  idx = checkFilepaths(filepaths)
-  fs = filepaths[idx]
-
-  result = foreach(f = fs, .combine = c) %dopar% {
+  result = foreach(f = filepaths, .combine = c) %dopar% {
     argsNow = c(args, '-o', outputDir)
     if (length(f) > 1) {
       argsNow = c(argsNow, '--paired', f[1], f[2])
@@ -94,14 +91,11 @@ salmon = function(filepaths, ids, outputDir = 'salmon_output', cmd = 'salmon',
                   indexPath = '~/transcriptomes/homo_sapiens_transcripts',
                   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
                            '-q --seqBias --gcBias --no-version-check')) {
+  checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', indexPath)
 
-  idx = checkFilepaths(filepaths)
-  fs = filepaths[idx]
-  ids = ids[idx]
-
-  result = foreach(f = fs, id = ids, .combine = c) %do% {
+  result = foreach(f = filepaths, id = ids, .combine = c) %do% {
     args1 = c(argsBase, '-o', file.path(outputDir, id))
     if (length(f) > 1) {
       args2 = c('-1', f[1], '-2', f[2])
@@ -129,6 +123,7 @@ tximport = function(dirpaths, outputFilename = 'tximport_output.rds',
 
   filepaths = file.path(dirpaths, filename)
   names(filepaths) = basename(dirpaths)
+  checkFilepaths(filepaths)
   txi = tximport::tximport(filepaths, tx2gene = t2g, type = type,
                            countsFromAbundance = countsFromAbundance,
                            ignoreTxVersion = ignoreTxVersion, ...)
