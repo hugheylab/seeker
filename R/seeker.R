@@ -6,7 +6,7 @@
 #' @export
 getMetadata = function(study, downloadMethod = 'aspera') {
   fastqColname = ifelse(downloadMethod == 'aspera', 'fastq_aspera', 'fastq_ftp')
-  url = sprintf('%s%s%s%s%s%s','https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
+  url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
                 study, '&result=read_run&fields=sample_accession,secondary_sample_accession,',
                 'experiment_accession,run_accession,', fastqColname, '&download=txt')
   raw = curl::curl_fetch_memory(url)
