@@ -5,8 +5,9 @@
 # conda install salmon
 # conda install trim-galore
 # conda install fastq-screen # installs dependencies, but itself not the latest version
-# https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/fastq_screen_v0.13.0.tar.gz
-# run fastq_screen --get_genomes
+# wget https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/fastq_screen_v0.13.0.tar.gz
+# tar -zxvf fastq_screen_v0.13.0.tar.gz
+# ~/fastq_screen_v0.13.0/fastq_screen --get_genomes
 
 library('seeker')
 doParallel::registerDoParallel(cores = min(parallel::detectCores() / 2, 24))
