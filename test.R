@@ -19,9 +19,9 @@ fastqscreen(metadata$fastq_local, file.path(study, 'fastqscreen_output'))
 
 salmon(metadata$fastq_local, metadata$run_accession, quantDir,
        indexPath = '~/transcriptomes/mus_musculus_transcripts')
-tximport(file.path(quantDir, metadata$run_accession),
-         file.path(study, 'tximport_output.rds'),
-         ensemblDataset = 'mmusculus_gene_ensembl')
+tx2gene = getTx2gene('mmusculus_gene_ensembl')
+tximport(file.path(quantDir, metadata$run_accession), tx2gene,
+         file.path(study, 'tximport_output.rds'))
 
 multiqc(study, file.path(study, 'multiqc_output'))
 
@@ -42,7 +42,8 @@ fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
 fastqscreen(metadata$fastq_local, file.path(study, 'fastqscreen_output'))
 
 salmon(metadata$fastq_local, metadata$run_accession, quantDir)
-tximport(file.path(quantDir, metadata$run_accession),
+tx2gene = getTx2gene()
+tximport(file.path(quantDir, metadata$run_accession), tx2gene,
          file.path(study, 'tximport_output.rds'))
 
 multiqc(study, file.path(study, 'multiqc_output'))

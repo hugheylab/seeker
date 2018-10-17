@@ -44,7 +44,7 @@ getFastq = function(remoteFilepaths, outputDir, ftpCmd = 'wget', ftpArgs = '-q',
 checkFilepaths = function(filepaths) {
   if (!all(file.exists(unlist(filepaths)))) {
     stop('Not all supplied file paths exist.')}
-  invisible(NULL)}
+  invisible(0)}
 
 
 #' @export
@@ -106,16 +106,18 @@ salmon = function(filepaths, ids, outputDir = 'salmon_output', cmd = 'salmon',
 
 
 #' @export
-tximport = function(dirpaths, outputFilename = 'tximport_output.rds',
-                    ensemblDataset = 'hsapiens_gene_ensembl',
-                    ensemblVersion = 94, type = 'salmon',
-                    countsFromAbundance = 'lengthScaledTPM',
-                    ignoreTxVersion = TRUE, ...) {
-  # listEnsemblArchives()
-  mart = biomaRt::useEnsembl('ensembl', ensemblDataset, version = ensemblVersion)
+getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 94) {
+  # biomaRt::listEnsemblArchives()
+  mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
   t2g = biomaRt::getBM(attributes = c('ensembl_transcript_id', 'ensembl_gene_id'),
                        mart = mart)
+  return(t2g)}
 
+
+#' @export
+tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.rds',
+                    type = 'salmon', countsFromAbundance = 'lengthScaledTPM',
+                    ignoreTxVersion = TRUE, ...) {
   if (type == 'salmon') {
     filename = 'quant.sf'
   } else if (type == 'kallisto') {
@@ -124,10 +126,12 @@ tximport = function(dirpaths, outputFilename = 'tximport_output.rds',
   filepaths = file.path(dirpaths, filename)
   names(filepaths) = basename(dirpaths)
   checkFilepaths(filepaths)
-  txi = tximport::tximport(filepaths, tx2gene = t2g, type = type,
+  txi = tximport::tximport(filepaths, tx2gene = tx2gene, type = type,
                            countsFromAbundance = countsFromAbundance,
                            ignoreTxVersion = ignoreTxVersion, ...)
-  saveRDS(txi, file = outputFilename)
+
+  if (!is.null(outputFilepath)) {
+    saveRDS(txi, outputFilepath)}
   invisible(txi)}
 
 

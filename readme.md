@@ -19,7 +19,7 @@
     ~/fastq_screen_v0.13.0/fastq_screen --get_genomes
     ```
 
-1. Install the `tximport` package from Bioconductor.
+1. Install the `biomaRt` and `tximport` packages from Bioconductor.
 
 1. Clone the git repo, build the source package, then do something like
     ```r

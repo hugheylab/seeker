@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
 License: GPL-2
@@ -11,6 +11,7 @@ RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5.1)
 Imports:
+  biomaRt (>= 2.36.1),
   curl (>= 3.2),
   foreach (>= 1.4.4),
   readr (>= 1.1.1),
