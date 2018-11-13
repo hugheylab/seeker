@@ -47,20 +47,18 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
     fs = remoteFilepaths
     localFilepaths = file.path(outputDir, basename(remoteFilepaths))}
 
-  if (!overwrite) {
-    idx = !file.exists(localFilepaths)
-    fs = fs[idx]
-    localFilepaths = localFilepaths[idx]}
-
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
   result = foreach(f = fs, ii = 1:length(fs), .combine = c) %dopar% {
-    if (startsWith(f, 'fasp')) {
-      args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputDir)
-      r = system2(path.expand(asperaCmd), args)
+    if (file.exists(localFilepaths[ii]) && !overwrite) {
+      r = 0
     } else {
-      r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}
+      if (startsWith(f, 'fasp')) {
+        args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputDir)
+        r = system2(path.expand(asperaCmd), args)
+      } else {
+        r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
     appendLogFile(logFilepath, f, ii)
     r}
 
