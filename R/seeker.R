@@ -32,8 +32,8 @@ getMetadata = function(study, downloadMethod = 'aspera') {
 
 
 #' @export
-getFastq = function(remoteFilepaths, outputDir, ftpCmd = 'wget', ftpArgs = '-q',
-                    asperaCmd = '~/.aspera/connect/bin/ascp',
+getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wget',
+                    ftpArgs = '-q', asperaCmd = '~/.aspera/connect/bin/ascp',
                     asperaArgs = c('-QT -l 300m -P33001', '-i',
                                    '~/.aspera/connect/etc/asperaweb_id_dsa.openssh'),
                     asperaPrefix = 'era-fasp') {
@@ -46,6 +46,11 @@ getFastq = function(remoteFilepaths, outputDir, ftpCmd = 'wget', ftpArgs = '-q',
   } else {
     fs = remoteFilepaths
     localFilepaths = file.path(outputDir, basename(remoteFilepaths))}
+
+  if (!overwrite) {
+    idx = !file.exists(localFilepaths)
+    fs = fs[idx]
+    localFilepaths = localFilepaths[idx]}
 
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
