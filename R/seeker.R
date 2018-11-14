@@ -19,7 +19,17 @@ appendLogFile = function(filepath, task, idx) {
 
 
 #' @export
-getMetadata = function(study, downloadMethod = 'aspera') {
+getMetadataSra = function(study, outputFilepath = 'metadata_sra.csv',
+                          wgetCmd = 'wget') {
+  urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
+              '?save=efetch&db=sra&rettype=runinfo&term=')
+  url = paste0(c(urlBase, study))
+  r = system2(path.expand(wgetCmd), c('-O', outputFilepath, url))
+  return(r)}
+
+
+#' @export
+getMetadataEna = function(study, downloadMethod = 'aspera') {
   fastqColname = ifelse(downloadMethod == 'aspera', 'fastq_aspera', 'fastq_ftp')
   url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
                 study, '&result=read_run&fields=sample_accession,secondary_sample_accession,',

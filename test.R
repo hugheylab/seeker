@@ -8,7 +8,8 @@ study = 'PRJNA237293'
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-metadata = getMetadata(study)
+getMetadataSra(study)
+metadata = getMetadataEna(study)
 metadata = metadata[1:2, , drop = FALSE]
 
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
@@ -32,7 +33,8 @@ study = 'PRJNA436224'
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-metadata = getMetadata(study)
+getMetadataSra(study)
+metadata = getMetadataEna(study)
 metadata = metadata[1:2, , drop = FALSE]
 
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
