@@ -8,8 +8,11 @@ study = 'PRJNA237293'
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-getMetadataSra(study)
+metadataSra = getMetadataSra(study)
+readr::write_csv(metadataSra, 'metadata_sra.csv')
+
 metadata = getMetadataEna(study)
+readr::write_csv(metadata, 'metadata_ena.csv')
 metadata = metadata[1:2, , drop = FALSE]
 
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
@@ -33,7 +36,9 @@ study = 'PRJNA436224'
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-getMetadataSra(study)
+metadataSra = getMetadataSra(study)
+readr::write_csv(metadataSra, 'metadata_sra.csv')
+
 metadata = getMetadataEna(study)
 metadata = metadata[1:2, , drop = FALSE]
 

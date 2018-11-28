@@ -1,6 +1,7 @@
-#' @importFrom foreach foreach
-#' @importFrom foreach "%do%"
-#' @importFrom foreach "%dopar%"
+#' @importFrom foreach foreach %do% %dopar%
+
+
+globalVariables(c('f', 'i', 'id'))
 
 
 createLogFile = function(filepath, n) {
@@ -19,13 +20,13 @@ appendLogFile = function(filepath, task, idx) {
 
 
 #' @export
-getMetadataSra = function(study, outputFilepath = 'metadata_sra.csv',
-                          wgetCmd = 'wget') {
+getMetadataSra = function(study) {
   urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
               '?save=efetch&db=sra&rettype=runinfo&term=')
-  url = paste0(c(urlBase, study))
-  r = system2(path.expand(wgetCmd), c('-O', outputFilepath, url))
-  return(r)}
+  url = paste0(c(urlBase, study), collapse = '')
+  raw = curl::curl_fetch_memory(url)
+  metadata = data.frame(readr::read_csv(rawToChar(raw$content)))
+  return(metadata)}
 
 
 #' @export
@@ -60,8 +61,8 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
-  result = foreach(f = fs, ii = 1:length(fs), .combine = c) %dopar% {
-    if (file.exists(localFilepaths[ii]) && !overwrite) {
+  result = foreach(f = fs, i = 1:length(fs), .combine = c) %dopar% {
+    if (file.exists(localFilepaths[i]) && !overwrite) {
       r = 0
     } else {
       if (startsWith(f, 'fasp')) {
@@ -69,7 +70,7 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
         r = system2(path.expand(asperaCmd), args)
       } else {
         r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
-    appendLogFile(logFilepath, f, ii)
+    appendLogFile(logFilepath, f, i)
     r}
 
   return(list(localFilepaths = localFilepaths, exitCodes = result))}
@@ -91,9 +92,9 @@ fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
-  result = foreach(f = fs, ii = 1:length(fs), .combine = c) %do% {
+  result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     r = system2(path.expand(cmd), c(args, '-o', outputDir, f))
-    appendLogFile(logFilepath, f, ii)
+    appendLogFile(logFilepath, f, i)
     r}
   invisible(result)}
 
@@ -110,9 +111,9 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
-  result = foreach(f = fs, ii = 1:length(fs), .combine = c) %do% {
+  result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     r = system2(path.expand(cmd), c(args, '--outdir', outputDir, f))
-    appendLogFile(logFilepath, f, ii)
+    appendLogFile(logFilepath, f, i)
     r}
   invisible(result)}
 
@@ -126,14 +127,14 @@ trimgalore = function(filepaths, outputDir = 'trimgalore_output',
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(filepaths))
 
-  result = foreach(f = filepaths, ii = 1:length(filepaths), .combine = c) %dopar% {
+  result = foreach(f = filepaths, i = 1:length(filepaths), .combine = c) %dopar% {
     argsNow = c(args, '-o', outputDir)
     if (length(f) > 1) {
       argsNow = c(argsNow, '--paired', f[1], f[2])
     } else {
       argsNow = c(argsNow, f)}
     r = system2(path.expand(cmd), argsNow)
-    appendLogFile(logFilepath, paste(f, collapse = '; '), ii)
+    appendLogFile(logFilepath, paste(f, collapse = '; '), i)
     r}
   invisible(result)}
 
@@ -150,14 +151,14 @@ salmon = function(filepaths, ids, outputDir = 'salmon_output', cmd = 'salmon',
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(ids))
 
-  result = foreach(f = filepaths, id = ids, ii = 1:length(ids), .combine = c) %do% {
+  result = foreach(f = filepaths, id = ids, i = 1:length(ids), .combine = c) %do% {
     args1 = c(argsBase, '-o', file.path(outputDir, id))
     if (length(f) > 1) {
       args2 = c('-1', f[1], '-2', f[2])
     } else {
       args2 = c('-r', f)}
     r = system2(path.expand(cmd), c(args1, args2))
-    appendLogFile(logFilepath, id, ii)
+    appendLogFile(logFilepath, id, i)
     r}
   invisible(result)}
 
