@@ -1,5 +1,5 @@
 # seeker
-`seeker` is an R package for processing sequencing data, especially RNA-seq data. Hopefully it helps you get to what you're after before the day you die.
+`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get to what you're after before the day you die.
 
 ## Installation
 
@@ -13,13 +13,15 @@
     conda install multiqc
     conda install salmon
     conda install trim-galore
-    conda install fastq-screen # installs dependencies, but itself not the latest version
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/fastq_screen_v0.13.0.tar.gz
-    tar -zxvf fastq_screen_v0.13.0.tar.gz
-    ~/fastq_screen_v0.13.0/fastq_screen --get_genomes
+    conda install fastq-screen
+    fastq_screen --get_genomes
     ```
 
 1. Install the `biomaRt` and `tximport` packages from Bioconductor.
+    ```r
+    install.packages('BiocManager')
+    BiocManager::install(c('biomaRt', 'tximport'))
+    ```
 
 1. Clone the git repo, build the source package, then do something like
     ```r

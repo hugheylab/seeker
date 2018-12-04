@@ -51,18 +51,19 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
   dir.create(outputDir, recursive = TRUE)
 
   if (is.list(remoteFilepaths)) {
-    fs = unlist(remoteFilepaths)
     localFilepaths = lapply(remoteFilepaths,
                             function(f) file.path(outputDir, basename(f)))
   } else {
-    fs = remoteFilepaths
     localFilepaths = file.path(outputDir, basename(remoteFilepaths))}
+
+  fs = unlist(remoteFilepaths)
+  fls = unlist(localFilepaths)
 
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
-  result = foreach(f = fs, i = 1:length(fs), .combine = c) %dopar% {
-    if (file.exists(localFilepaths[i]) && !overwrite) {
+  result = foreach(f = fs, fl = fls, i = 1:length(fs), .combine = c) %dopar% {
+    if (file.exists(fl) && !overwrite) {
       r = 0
     } else {
       if (startsWith(f, 'fasp')) {
@@ -140,7 +141,8 @@ trimgalore = function(filepaths, outputDir = 'trimgalore_output',
 
 
 #' @export
-salmon = function(filepaths, ids, outputDir = 'salmon_output', cmd = 'salmon',
+salmon = function(filepaths, runs, samples = runs,
+                  outputDir = 'salmon_output', cmd = 'salmon',
                   indexPath = '~/transcriptomes/homo_sapiens_transcripts',
                   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
                            '-q --seqBias --gcBias --no-version-check')) {
@@ -148,18 +150,25 @@ salmon = function(filepaths, ids, outputDir = 'salmon_output', cmd = 'salmon',
   dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', indexPath)
 
+  samplesUnique = sort(unique(samples))
   logFilepath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logFilepath, length(ids))
+  createLogFile(logFilepath, length(samplesUnique))
 
-  result = foreach(f = filepaths, id = ids, i = 1:length(ids), .combine = c) %do% {
-    args1 = c(argsBase, '-o', file.path(outputDir, id))
-    if (length(f) > 1) {
-      args2 = c('-1', f[1], '-2', f[2])
+  result = foreach(i = 1:length(samplesUnique), .combine = c) %do% {
+    samp = samplesUnique[i]
+    f = filepaths[samp == samples]
+    r = runs[samp = samples]
+    args1 = c(argsBase, '-o', file.path(outputDir, samp))
+
+    if (is.list(f)) {
+      f1 = sapply(f, function(f) f[1])
+      f2 = sapply(f, function(f) f[2])
+      args2 = c('-1', f1, '-2', f2)
     } else {
       args2 = c('-r', f)}
-    r = system2(path.expand(cmd), c(args1, args2))
-    appendLogFile(logFilepath, id, i)
-    r}
+    res = system2(path.expand(cmd), c(args1, args2))
+    appendLogFile(logFilepath, samp, i)
+    res}
   invisible(result)}
 
 
