@@ -7,14 +7,14 @@ globalVariables(c('f', 'fl', 'i', 'id'))
 createLogFile = function(filepath, n) {
   d = data.frame(datetime = as.character(Sys.time()),
                  task = sprintf('started (%d tasks)', n),
-                 idx = 0, stringsAsFactors = FALSE)
+                 idx = 0, status = 0, stringsAsFactors = FALSE)
   readr::write_tsv(d, filepath)
   invisible(d)}
 
 
-appendLogFile = function(filepath, task, idx) {
+appendLogFile = function(filepath, task, idx, status) {
   d = data.frame(datetime = as.character(Sys.time()), task = task,
-                 idx = idx, stringsAsFactors = FALSE)
+                 idx = idx, status = status, stringsAsFactors = FALSE)
   readr::write_tsv(d, filepath, append = TRUE)
   invisible(d)}
 
@@ -71,10 +71,10 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
         r = system2(path.expand(asperaCmd), args)
       } else {
         r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
-    appendLogFile(logFilepath, f, i)
+    appendLogFile(logFilepath, f, i, r)
     r}
 
-  return(list(localFilepaths = localFilepaths, exitCodes = result))}
+  return(list(localFilepaths = localFilepaths, statuses = result))}
 
 
 checkFilepaths = function(filepaths) {
@@ -95,7 +95,7 @@ fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
 
   result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     r = system2(path.expand(cmd), c(args, '-o', outputDir, f))
-    appendLogFile(logFilepath, f, i)
+    appendLogFile(logFilepath, f, i, r)
     r}
   invisible(result)}
 
@@ -114,7 +114,7 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
 
   result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     r = system2(path.expand(cmd), c(args, '--outdir', outputDir, f))
-    appendLogFile(logFilepath, f, i)
+    appendLogFile(logFilepath, f, i, r)
     r}
   invisible(result)}
 
@@ -135,14 +135,13 @@ trimgalore = function(filepaths, outputDir = 'trimgalore_output',
     } else {
       argsNow = c(argsNow, f)}
     r = system2(path.expand(cmd), argsNow)
-    appendLogFile(logFilepath, paste(f, collapse = '; '), i)
+    appendLogFile(logFilepath, paste(f, collapse = '; '), i, r)
     r}
   invisible(result)}
 
 
 #' @export
-salmon = function(filepaths, runs, samples = runs,
-                  outputDir = 'salmon_output', cmd = 'salmon',
+salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon',
                   indexPath = '~/transcriptomes/homo_sapiens_transcripts',
                   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
                            '-q --seqBias --gcBias --no-version-check')) {
@@ -157,7 +156,6 @@ salmon = function(filepaths, runs, samples = runs,
   result = foreach(i = 1:length(samplesUnique), .combine = c) %do% {
     samp = samplesUnique[i]
     f = filepaths[samp == samples]
-    r = runs[samp = samples]
     args1 = c(argsBase, '-o', file.path(outputDir, samp))
 
     if (is.list(f)) {
@@ -166,9 +164,10 @@ salmon = function(filepaths, runs, samples = runs,
       args2 = c('-1', f1, '-2', f2)
     } else {
       args2 = c('-r', f)}
-    res = system2(path.expand(cmd), c(args1, args2))
-    appendLogFile(logFilepath, samp, i)
-    res}
+
+    r = system2(path.expand(cmd), c(args1, args2))
+    appendLogFile(logFilepath, samp, i, r)
+    r}
   invisible(result)}
 
 

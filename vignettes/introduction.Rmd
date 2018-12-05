@@ -22,6 +22,7 @@ doParallel::registerDoParallel()
 Fastq column in metadata is a list of character vectors, so the metadata cannot be saved as a text file.
 ```{r, eval = FALSE}
 study = 'PRJNA297287'
+dir.create(study)
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
@@ -34,8 +35,7 @@ metadata$fastq_local = fastqResult$localFilepaths
 
 fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
 
-salmon(metadata$fastq_local, metadata$run_accession,
-       metadata$secondary_sample_accession, quantDir,
+salmon(metadata$fastq_local, metadata$secondary_sample_accession, quantDir,
        indexPath = '~/transcriptomes/mus_musculus_transcripts')
 
 tx2gene = getTx2gene('mmusculus_gene_ensembl')
@@ -49,6 +49,7 @@ multiqc(study, file.path(study, 'multiqc_output'))
 
 ```{r, eval = FALSE}
 study = 'PRJNA436224'
+dir.create(study)
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
@@ -61,8 +62,7 @@ metadata$fastq_local = fastqResult$localFilepaths
 
 fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
 
-salmon(metadata$fastq_local, metadata$run_accession,
-       metadata$secondary_sample_accession, quantDir)
+salmon(metadata$fastq_local, metadata$secondary_sample_accession, quantDir)
 
 tx2gene = getTx2gene()
 tximport(file.path(quantDir, metadata$run_accession), tx2gene,
