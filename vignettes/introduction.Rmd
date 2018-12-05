@@ -1,0 +1,96 @@
+---
+title: "Introduction to seeker"
+author: "Jake Hughey"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to seeker}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r, eval = FALSE}
+doParallel::registerDoParallel()
+```
+
+## Paired-end data from mice
+
+Fastq column in metadata is a list of character vectors, so the metadata cannot be saved as a text file.
+```{r, eval = FALSE}
+study = 'PRJNA297287'
+fastqDir = file.path(study, 'fastq')
+quantDir = file.path(study, 'salmon_output')
+
+metadata = getMetadataEna(study)
+saveRDS(metadata, file.path(study, 'metadata_ena.rds'))
+metadata = metadata[1:2, ]
+
+fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
+metadata$fastq_local = fastqResult$localFilepaths
+
+fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
+
+salmon(metadata$fastq_local, metadata$run_accession,
+       metadata$secondary_sample_accession, quantDir,
+       indexPath = '~/transcriptomes/mus_musculus_transcripts')
+
+tx2gene = getTx2gene('mmusculus_gene_ensembl')
+tximport(file.path(quantDir, metadata$run_accession), tx2gene,
+         file.path(study, 'tximport_output.rds'))
+
+multiqc(study, file.path(study, 'multiqc_output'))
+```
+
+## Single-end data from humans
+
+```{r, eval = FALSE}
+study = 'PRJNA436224'
+fastqDir = file.path(study, 'fastq')
+quantDir = file.path(study, 'salmon_output')
+
+metadata = getMetadataEna(study)
+readr::write_csv(metadata, 'metadata_ena.csv')
+metadata = metadata[1:2, ]
+
+fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
+metadata$fastq_local = fastqResult$localFilepaths
+
+fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
+
+salmon(metadata$fastq_local, metadata$run_accession,
+       metadata$secondary_sample_accession, quantDir)
+
+tx2gene = getTx2gene()
+tximport(file.path(quantDir, metadata$run_accession), tx2gene,
+         file.path(study, 'tximport_output.rds'))
+
+multiqc(study, file.path(study, 'multiqc_output'))
+```
+
+## Other functions
+
+`getMetadataSra` is not very useful, since the most important metadata can only be downloaded manually using the SRA Run Selector (https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/). Nice move, SRA.
+
+```{r, eval = FALSE}
+metadataSra = getMetadataSra(study)
+
+trimgalore(metadata$fastq_local)
+fastqscreen(metadata$fastq_local)
+```
+
+## Modifications for Mac OS
+
+The absence and presence of backslashes is essential.
+
+```{r, eval = FALSE}
+asperaCmd = '~/Applications/Aspera Connect.app/Contents/Resources/ascp'
+asperaArgs = c('-QT -l 300m -P33001', '-i',
+               '~/Applications/Aspera\\ Connect.app/Contents/Resources/asperaweb_id_dsa.openssh')
+
+fastqResult = getFastq(metadata$fastq_aspera, fastqDir,
+                       asperaCmd = asperaCmd, asperaArgs = asperaArgs)
+```

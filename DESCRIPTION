@@ -11,11 +11,14 @@ RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5)
 Imports:
-  biomaRt (>= 2.36.1),
-  curl (>= 3.2),
-  foreach (>= 1.4.4),
-  readr (>= 1.1.1),
-  tximport (>= 1.8.0)
+    biomaRt (>= 2.36.1),
+    curl (>= 3.2),
+    foreach (>= 1.4.4),
+    readr (>= 1.1.1),
+    tximport (>= 1.8.0)
 Suggests:
-  doParallel (>= 1.0.14),
-  rhdf5 (>= 2.24.0)
+    doParallel (>= 1.0.14),
+    rhdf5 (>= 2.24.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

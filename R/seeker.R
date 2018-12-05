@@ -1,7 +1,7 @@
 #' @importFrom foreach foreach %do% %dopar%
 
 
-globalVariables(c('f', 'i', 'id'))
+globalVariables(c('f', 'fl', 'i', 'id'))
 
 
 createLogFile = function(filepath, n) {
