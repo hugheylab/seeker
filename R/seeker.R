@@ -19,25 +19,30 @@ appendLogFile = function(filepath, task, idx, status) {
   invisible(d)}
 
 
-#' @export
-getMetadataSra = function(study) {
-  urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
-              '?save=efetch&db=sra&rettype=runinfo&term=')
-  url = paste0(c(urlBase, study), collapse = '')
-  raw = curl::curl_fetch_memory(url)
-  metadata = data.frame(readr::read_csv(rawToChar(raw$content)))
-  return(metadata)}
+getFileList = function(fileVec) {
+  if (is.list(fileVec)) {
+    return(fileVec)}
+  return(strsplit(fileVec, ';'))}
+
+
+getFileVec = function(fileList) {
+  return(sapply(fileList, function(f) paste0(f, collapse = ';')))}
 
 
 #' @export
-getMetadataEna = function(study, downloadMethod = 'aspera') {
-  fastqColname = ifelse(downloadMethod == 'aspera', 'fastq_aspera', 'fastq_ftp')
-  url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
-               study, '&result=read_run&download=txt')
+getMetadata = function(study, host = c('ena', 'sra')) {
+  host = match.arg(host)
+  if (host == 'ena') {
+    url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
+                 study, '&result=read_run&download=txt')
+    readFunc = readr::read_tsv
+  } else {
+    urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
+                '?save=efetch&db=sra&rettype=runinfo&term=')
+    url = paste0(c(urlBase, study), collapse = '')
+    readFunc = readr::read_csv}
   raw = curl::curl_fetch_memory(url)
-  metadata = data.frame(readr::read_tsv(rawToChar(raw$content)))
-  if (grepl(';', metadata[[fastqColname]][1])) {
-    metadata[[fastqColname]] = strsplit(metadata[[fastqColname]], ';')}
+  metadata = data.frame(readFunc(rawToChar(raw$content)))
   return(metadata)}
 
 
@@ -49,11 +54,9 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
                     asperaPrefix = 'era-fasp') {
   dir.create(outputDir, recursive = TRUE)
 
-  if (is.list(remoteFilepaths)) {
-    localFilepaths = lapply(remoteFilepaths,
-                            function(f) file.path(outputDir, basename(f)))
-  } else {
-    localFilepaths = file.path(outputDir, basename(remoteFilepaths))}
+  remoteFilepaths = getFileList(remoteFilepaths)
+  localFilepaths = lapply(remoteFilepaths,
+                          function(f) file.path(outputDir, basename(f)))
 
   fs = unlist(remoteFilepaths)
   fls = unlist(localFilepaths)
@@ -85,6 +88,7 @@ checkFilepaths = function(filepaths) {
 #' @export
 fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
                   args = c('-t', foreach::getDoParWorkers())) {
+  filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
@@ -102,8 +106,9 @@ fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
 #' @export
 fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
                        cmd = '~/fastq_screen_v0.13.0/fastq_screen',
-                       args = c('--threads', foreach::getDoParWorkers(),
-                                '--conf', '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
+                       args = c('--threads', foreach::getDoParWorkers(), '--conf',
+                                '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
+  filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
@@ -121,6 +126,7 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
 #' @export
 trimgalore = function(filepaths, outputDir = 'trimgalore_output',
                       cmd = 'trim_galore', args = '') {
+  filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
 
@@ -144,6 +150,7 @@ salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon
                   indexPath = '~/transcriptomes/homo_sapiens_transcripts',
                   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
                            '-q --seqBias --gcBias --no-version-check')) {
+  filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', indexPath)
@@ -157,12 +164,12 @@ salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon
     f = filepaths[samp == samples]
     args1 = c(argsBase, '-o', file.path(outputDir, samp))
 
-    if (is.list(f)) {
+    if (length(f[[1]]) > 1) {
       f1 = sapply(f, function(f) f[1])
       f2 = sapply(f, function(f) f[2])
       args2 = c('-1', f1, '-2', f2)
     } else {
-      args2 = c('-r', f)}
+      args2 = c('-r', unlist(f))}
 
     r = system2(path.expand(cmd), c(args1, args2))
     appendLogFile(logFilepath, samp, i, r)

@@ -19,15 +19,14 @@ doParallel::registerDoParallel()
 
 ## Paired-end data from mice
 
-Fastq column in metadata is a list of character vectors, so the metadata cannot be saved as a text file.
 ```{r, eval = FALSE}
 study = 'PRJNA297287'
 dir.create(study)
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-metadata = getMetadataEna(study)
-saveRDS(metadata, file.path(study, 'metadata_ena.rds'))
+metadata = getMetadata(study)
+readr::write_csv(metadata, 'metadata_ena.csv')
 metadata = metadata[1:2, ]
 
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
@@ -53,7 +52,7 @@ dir.create(study)
 fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
-metadata = getMetadataEna(study)
+metadata = getMetadata(study)
 readr::write_csv(metadata, 'metadata_ena.csv')
 metadata = metadata[1:2, ]
 
@@ -73,10 +72,10 @@ multiqc(study, file.path(study, 'multiqc_output'))
 
 ## Other functions
 
-`getMetadataSra` is not very useful, since the most important metadata can only be downloaded manually using the SRA Run Selector (https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/). Nice move, SRA.
+`getMetadata` with `host == 'sra'` is not very useful, since the most important metadata can only be downloaded manually using the SRA Run Selector (https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/). Nice move, SRA.
 
 ```{r, eval = FALSE}
-metadataSra = getMetadataSra(study)
+metadataSra = getMetadata(study, host = 'sra')
 
 trimgalore(metadata$fastq_local)
 fastqscreen(metadata$fastq_local)
