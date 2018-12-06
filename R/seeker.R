@@ -33,8 +33,7 @@ getMetadataSra = function(study) {
 getMetadataEna = function(study, downloadMethod = 'aspera') {
   fastqColname = ifelse(downloadMethod == 'aspera', 'fastq_aspera', 'fastq_ftp')
   url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
-                study, '&result=read_run&fields=sample_accession,secondary_sample_accession,',
-                'experiment_accession,run_accession,', fastqColname, '&download=txt')
+               study, '&result=read_run&download=txt')
   raw = curl::curl_fetch_memory(url)
   metadata = data.frame(readr::read_tsv(rawToChar(raw$content)))
   if (grepl(';', metadata[[fastqColname]][1])) {
