@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9009
+Version: 0.0.0.9010
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
 License: GPL-2
@@ -13,8 +13,8 @@ Depends: R (>= 3.5)
 Imports:
     biomaRt (>= 2.36.1),
     curl (>= 3.2),
+    data.table (>= 1.11.8),
     foreach (>= 1.4.4),
-    readr (>= 1.1.1),
     tximport (>= 1.8.0)
 Suggests:
     doParallel (>= 1.0.14),

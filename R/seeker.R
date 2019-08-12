@@ -5,17 +5,16 @@ globalVariables(c('f', 'fl', 'i', 'id'))
 
 
 createLogFile = function(filepath, n) {
-  d = data.frame(datetime = as.character(Sys.time()),
-                 task = sprintf('started (%d tasks)', n),
-                 idx = 0, status = 0, stringsAsFactors = FALSE)
-  readr::write_tsv(d, filepath)
+  d = list(datetime = as.character(Sys.time()),
+           task = sprintf('started (%d tasks)', n), idx = 0, status = 0)
+  data.table::fwrite(d, filepath, sep = '\t')
   invisible(d)}
 
 
 appendLogFile = function(filepath, task, idx, status) {
-  d = data.frame(datetime = as.character(Sys.time()), task = task,
-                 idx = idx, status = status, stringsAsFactors = FALSE)
-  readr::write_tsv(d, filepath, append = TRUE)
+  d = list(datetime = as.character(Sys.time()), task = task,
+           idx = idx, status = status)
+  data.table::fwrite(d, filepath, sep = '\t', append = TRUE)
   invisible(d)}
 
 
@@ -35,14 +34,15 @@ getMetadata = function(study, host = c('ena', 'sra')) {
   if (host == 'ena') {
     url = paste0('https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
                  study, '&result=read_run&download=txt')
-    readFunc = readr::read_tsv
+    sep = '\t'
   } else {
     urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
                 '?save=efetch&db=sra&rettype=runinfo&term=')
     url = paste0(c(urlBase, study), collapse = '')
-    readFunc = readr::read_csv}
+    sep = ','
+  }
   raw = curl::curl_fetch_memory(url)
-  metadata = data.frame(readFunc(rawToChar(raw$content)))
+  metadata = data.table::fread(rawToChar(raw$content), sep = sep)
   return(metadata)}
 
 

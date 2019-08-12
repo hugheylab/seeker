@@ -21,10 +21,10 @@
     ```bash
     mkdir transcriptomes
     cd transcriptomes
-    wget -O Mus_musculus.GRCm38.rel94.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-94/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
-    salmon index -t Mus_musculus.GRCm38.rel94.cdna.all.fa.gz -i mus_musculus_transcripts
-    wget -O Homo_sapiens.GRCh38.rel94.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
-    salmon index -t Homo_sapiens.GRCh38.rel94.cdna.all.fa.gz -i homo_sapiens_transcripts
+    wget -O Mus_musculus.GRCm38.rel97.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-97/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+    salmon index -t Mus_musculus.GRCm38.rel97.cdna.all.fa.gz -i mus_musculus_transcripts
+    wget -O Homo_sapiens.GRCh38.rel97.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-97/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+    salmon index -t Homo_sapiens.GRCh38.rel97.cdna.all.fa.gz -i homo_sapiens_transcripts
     ```
 
 1. Install the `biomaRt` and `tximport` packages from Bioconductor.
