@@ -178,7 +178,7 @@ salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon
 
 
 #' @export
-getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 94) {
+getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 97) {
   # biomaRt::listEnsemblArchives()
   mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
   t2g = biomaRt::getBM(attributes = c('ensembl_transcript_id', 'ensembl_gene_id'),
