@@ -188,8 +188,10 @@ getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 97) {
 
 #' @export
 tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.rds',
-                    type = 'salmon', countsFromAbundance = 'lengthScaledTPM',
+                    type = c('salmon', 'kallisto'),
+                    countsFromAbundance = 'lengthScaledTPM',
                     ignoreTxVersion = TRUE, ...) {
+  type = match.arg(type)
   if (type == 'salmon') {
     filename = 'quant.sf'
   } else if (type == 'kallisto') {
