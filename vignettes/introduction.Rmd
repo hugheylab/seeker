@@ -54,7 +54,7 @@ fastqDir = file.path(study, 'fastq')
 quantDir = file.path(study, 'salmon_output')
 
 metadata = getMetadata(study)
-readr::write_csv(metadata, file.path(study, 'metadata_ena.csv'))
+fwrite(metadata, file.path(study, 'metadata_ena.csv'))
 metadata = metadata[1:2, ]
 
 fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
