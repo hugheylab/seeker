@@ -9,11 +9,11 @@
 
 1. Install the other command-line tools.
     ```bash
-    conda install fastqc
-    conda install multiqc
-    conda install salmon
-    conda install trim-galore
-    conda install fastq-screen
+    conda install -c conda-forge -c bioconda multiqc
+    conda install -c bioconda fastqc
+    conda install -c bioconda salmon
+    conda install -c bioconda trim-galore
+    conda install -c bioconda fastq-screen
     fastq_screen --get_genomes
     ```
 
