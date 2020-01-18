@@ -87,7 +87,7 @@ checkFilepaths = function(filepaths) {
 
 #' @export
 fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
-                  args = c('-t', foreach::getDoParWorkers())) {
+                  args = NULL) {
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
@@ -96,7 +96,7 @@ fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
   logFilepath = file.path(outputDir, 'progress.tsv')
   createLogFile(logFilepath, length(fs))
 
-  result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
+  result = foreach(f = fs, i = 1:length(fs), .combine = c) %dopar% {
     r = system2(path.expand(cmd), c(args, '-o', outputDir, f))
     appendLogFile(logFilepath, f, i, r)
     r}
@@ -125,7 +125,7 @@ fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
 
 #' @export
 trimgalore = function(filepaths, outputDir = 'trimgalore_output',
-                      cmd = 'trim_galore', args = '') {
+                      cmd = 'trim_galore', args = NULL) {
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
@@ -211,5 +211,5 @@ tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.rds',
 
 #' @export
 multiqc = function(parentDir = '.', outputDir = 'multiqc_output',
-                   cmd = 'multiqc', args = '') {
+                   cmd = 'multiqc', args = NULL) {
   invisible(system2(path.expand(cmd), c(args, '-o', outputDir, parentDir)))}
