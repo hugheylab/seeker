@@ -105,7 +105,7 @@ fastqc = function(filepaths, outputDir = 'fastqc_output', cmd = 'fastqc',
 
 #' @export
 fastqscreen = function(filepaths, outputDir = 'fastqscreen_output',
-                       cmd = '~/fastq_screen_v0.13.0/fastq_screen',
+                       cmd = '~/miniconda3/bin/fastq_screen',
                        args = c('--threads', foreach::getDoParWorkers(), '--conf',
                                 '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
   filepaths = getFileList(filepaths)
@@ -178,7 +178,7 @@ salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon
 
 
 #' @export
-getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 97) {
+getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 99) {
   # biomaRt::listEnsemblArchives()
   mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
   t2g = biomaRt::getBM(attributes = c('ensembl_transcript_id', 'ensembl_gene_id'),
