@@ -47,7 +47,8 @@ getMetadata = function(study, host = c('ena', 'sra')) {
 
 
 #' @export
-getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wget',
+getFastq = function(remoteFilepaths, outputDir = 'fastq',
+                    overwrite = FALSE, ftpCmd = 'wget',
                     ftpArgs = '-q', asperaCmd = '~/.aspera/connect/bin/ascp',
                     asperaArgs = c('-QT -l 300m -P33001', '-i',
                                    '~/.aspera/connect/etc/asperaweb_id_dsa.openssh'),
@@ -76,7 +77,7 @@ getFastq = function(remoteFilepaths, outputDir, overwrite = FALSE, ftpCmd = 'wge
     appendLogFile(logFilepath, f, i, r)
     r}
 
-  return(list(localFilepaths = localFilepaths, statuses = result))}
+  return(list(localFilepaths = getFileVec(localFilepaths), statuses = result))}
 
 
 checkFilepaths = function(filepaths) {

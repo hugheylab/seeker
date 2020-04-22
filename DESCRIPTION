@@ -1,13 +1,13 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9012
+Version: 0.0.0.9013
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5)
 Imports:
