@@ -39,8 +39,7 @@ getMetadata = function(study, host = c('ena', 'sra')) {
     urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
                 '?save=efetch&db=sra&rettype=runinfo&term=')
     url = paste0(c(urlBase, study), collapse = '')
-    sep = ','
-  }
+    sep = ','}
   raw = curl::curl_fetch_memory(url)
   metadata = data.table::fread(rawToChar(raw$content), sep = sep)
   return(metadata)}
@@ -176,6 +175,36 @@ salmon = function(filepaths, samples, outputDir = 'salmon_output', cmd = 'salmon
     appendLogFile(logFilepath, samp, i, r)
     r}
   invisible(result)}
+
+
+#' @export
+getSalmonMetadata = function(outputDir = 'salmon_output',
+                             outputFilename = 'meta_info.csv') {
+  filepaths = list.files(outputDir, 'meta_info.json',
+                         full.names = TRUE, recursive = TRUE)
+  sampleNames = sapply(strsplit(filepaths, .Platform$file.sep),
+                       function(x) x[length(x) - 2L])
+
+  metaList = lapply(filepaths, function(x) rjson::fromJSON(file = x))
+  names(metaList) = sampleNames
+
+  fieldNames = c('eq_class_properties', 'length_classes')
+  metaSpecial = list()
+  for (fieldName in fieldNames) {
+    fieldSpecial = lapply(metaList, function(x) x[[fieldName]])
+    if (!all(lapply(fieldSpecial, length) == 0)) {
+      metaSpecial[[fieldName]] = lapply(metaList, function(x) x[[fieldName]])}}
+
+  metaList = lapply(metaList, function(x) x[!(names(x) %in% c('quant_errors', fieldNames))])
+  metadata = data.table::rbindlist(metaList, fill = TRUE, idcol = 'sample_name')
+
+  for (fieldName in names(metaSpecial)) {
+    data.table::set(metadata, i = NULL, j = fieldName,
+                    value = metaSpecial[[fieldName]])}
+
+  if (!is.null(outputFilename)) {
+    data.table::fwrite(metadata, file.path(outputDir, outputFilename))}
+  invisible(metadata)}
 
 
 #' @export
