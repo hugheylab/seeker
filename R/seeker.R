@@ -195,7 +195,9 @@ getSalmonMetadata = function(outputDir = 'salmon_output',
     if (!all(lapply(fieldSpecial, length) == 0)) {
       metaSpecial[[fieldName]] = lapply(metaList, function(x) x[[fieldName]])}}
 
-  metaList = lapply(metaList, function(x) x[!(names(x) %in% c('quant_errors', fieldNames))])
+  metaList = lapply(metaList, function(x) {
+    idx = !(names(x) %in% c('quant_errors', fieldNames))
+    x[idx]})
   metadata = data.table::rbindlist(metaList, fill = TRUE, idcol = 'sample_name')
 
   for (fieldName in names(metaSpecial)) {
@@ -217,7 +219,7 @@ getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 99) {
 
 
 #' @export
-tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.rds',
+tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.qs',
                     type = c('salmon', 'kallisto'),
                     countsFromAbundance = 'lengthScaledTPM',
                     ignoreTxVersion = TRUE, ...) {
@@ -235,7 +237,7 @@ tximport = function(dirpaths, tx2gene, outputFilepath = 'tximport_output.rds',
                            ignoreTxVersion = ignoreTxVersion, ...)
 
   if (!is.null(outputFilepath)) {
-    saveRDS(txi, outputFilepath)}
+    qs::qsave(txi, outputFilepath)}
   invisible(txi)}
 
 
