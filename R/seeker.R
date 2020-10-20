@@ -1,5 +1,5 @@
 #' @importFrom foreach foreach %do% %dopar%
-
+# readr not explicitly called, but used by tximport
 
 globalVariables(c('f', 'fl', 'i', 'id'))
 
