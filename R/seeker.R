@@ -29,20 +29,29 @@ getFileVec = function(fileList) {
 
 
 #' @export
-getMetadata = function(study, host = c('ena', 'sra')) {
+getMetadata = function(
+  study, host = c('ena', 'sra'),
+  fields = c(
+    'study_accession', 'sample_accession', 'secondary_sample_accession',
+    'sample_alias', 'sample_title', 'experiment_accession', 'run_accession',
+    'fastq_ftp', 'fastq_aspera')) {
+
   host = match.arg(host)
+
   if (host == 'ena') {
     url = paste0(
-      'https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=',
-      study, '&result=read_run&download=txt')
+      'https://www.ebi.ac.uk/ena/portal/api/filereport?accession=',
+      study, '&result=read_run&format=tsv&download=true&fields=',
+      paste0(fields, collapse = ','))
     sep = '\t'
   } else {
     urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
                 '?save=efetch&db=sra&rettype=runinfo&term=')
     url = paste0(c(urlBase, study), collapse = '')
     sep = ','}
+
   raw = curl::curl_fetch_memory(url)
-  metadata = data.table::fread(rawToChar(raw$content), sep = sep)
+  metadata = data.table::fread(text = rawToChar(raw$content), sep = sep)
   return(metadata)}
 
 
