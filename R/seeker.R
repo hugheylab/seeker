@@ -239,7 +239,7 @@ getSalmonMetadata = function(
 
 
 #' @export
-getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 99) {
+getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 104) {
   # biomaRt::listEnsemblArchives()
   mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
   t2g = biomaRt::getBM(
