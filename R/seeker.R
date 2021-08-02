@@ -77,15 +77,19 @@ getFastq = function(
 
   feo = foreach(f = fs, fl = fls, i = 1:length(fs), .combine = c,
                 .options.future = list(scheduling = Inf))
+
   result = feo %dopar% {
     if (file.exists(fl) && !overwrite) {
       r = 0
     } else {
+      Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
+
       if (startsWith(f, 'fasp')) {
         args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputDir)
         r = system2(path.expand(asperaCmd), args)
       } else {
         r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
+
     appendLogFile(logFilepath, f, i, r)
     r}
 
@@ -240,7 +244,8 @@ getSalmonMetadata = function(
 
 #' @export
 getTx2gene = function(dataset = 'hsapiens_gene_ensembl', version = 104) {
-  # biomaRt::listEnsemblArchives()
+  # x = biomaRt::listEnsemblArchives()
+  # version = max(as.integer(x$version[x$version != 'GRCh37']))
   mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
   t2g = biomaRt::getBM(
     attributes = c('ensembl_transcript_id', 'ensembl_gene_id'), mart = mart)
