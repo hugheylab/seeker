@@ -1,8 +1,6 @@
 #' @importFrom foreach foreach %do% %dopar%
 # readr not explicitly called, but used by tximport
 
-globalVariables(c('f', 'fl', 'i', 'id'))
-
 
 createLogFile = function(filepath, n) {
   d = list(datetime = as.character(Sys.time()),
@@ -45,9 +43,9 @@ getMetadata = function(
       paste0(fields, collapse = ','))
     sep = '\t'
   } else {
-    urlBase = c('http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
-                '?save=efetch&db=sra&rettype=runinfo&term=')
-    url = paste0(c(urlBase, study), collapse = '')
+    url = paste0(
+      'http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
+      '?save=efetch&db=sra&rettype=runinfo&term=', study)
     sep = ','}
 
   raw = curl::curl_fetch_memory(url)
@@ -63,6 +61,7 @@ getFastq = function(
                  '~/.aspera/connect/etc/asperaweb_id_dsa.openssh'),
   asperaPrefix = 'era-fasp') {
 
+  f = fl = i = NULL
   dir.create(outputDir, recursive = TRUE)
 
   remoteFilepaths = getFileList(remoteFilepaths)
@@ -106,6 +105,7 @@ checkFilepaths = function(filepaths) {
 fastqc = function(
   filepaths, outputDir = 'fastqc_output', cmd = 'fastqc', args = NULL) {
 
+  f = i = NULL
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
@@ -131,6 +131,7 @@ fastqscreen = function(
   args = c('--threads', foreach::getDoParWorkers(), '--conf',
            '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
 
+  f = i = NULL
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
@@ -150,6 +151,7 @@ fastqscreen = function(
 trimgalore = function(
   filepaths, outputDir = 'trimgalore_output', cmd = 'trim_galore', args = NULL) {
 
+  f = i = NULL
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
@@ -179,6 +181,7 @@ salmon = function(
   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
            '-q --seqBias --gcBias --no-version-check')) {
 
+  i = NULL
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
