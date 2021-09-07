@@ -1,26 +1,47 @@
 # seeker
-`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get to what you're after before the day you die.
+`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after before the day you die.
 
 ## Installation
 
-1. Install miniconda, bioconda, and R using the instructions in Notion.
+These instructions are for Linux. Slight modifications may be necessary for Mac OS. If you're using Windows, you're doing it wrong.
 
-1. Download and install Aspera Connect for Linux (https://downloads.asperasoft.com/en/downloads/8?list). You will likely have to download a tar.gz file (`wget`), untar it (`tar -zxvf`), then run the resulting bash shell script.
+1. Install miniconda, bioconda, mamba, and R using the instructions in Notion.
+
+1. Download and install [Aspera Connect for Linux](https://downloads.asperasoft.com/en/downloads/8?list). You will likely have to download a tar.gz file (`wget`), untar it (`tar -zxvf`), then run the resulting bash shell script.
+
+1. Install and set up Miniconda. See [here](https://bioconda.github.io/user/install.html#set-up-channels).
+    ```bash
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh Miniconda3-latest-Linux-x86_64.sh
+    
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+    ```
 
 1. Install the other command-line tools.
     ```bash
-    conda install fastq-screen fastqc multiqc salmon trim-galore
-    fastq_screen --get_genomes # optional, very slow
+    conda install mamba -c conda-forge
+    mamba install refgenie trim-galore fastqc fastq-screen salmon multiqc
     ```
 
-1. Build a salmon index for each relevant species. Below are examples for mouse and human. See https://useast.ensembl.org/info/data/ftp/index.html.
+1. Optionally, fetch the genomes for fastq-screen. This takes a long time, so don't bother unless you actually plan to run fastq-screen.
     ```bash
-    mkdir transcriptomes
-    cd transcriptomes
-    wget -O Mus_musculus.GRCm38.rel99.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-99/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
-    salmon index -t Mus_musculus.GRCm38.rel99.cdna.all.fa.gz -i mus_musculus_transcripts
-    wget -O Homo_sapiens.GRCh38.rel97.cdna.all.fa.gz ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
-    salmon index -t Homo_sapiens.GRCh38.rel99.cdna.all.fa.gz -i homo_sapiens_transcripts
+    fastq_screen --get_genomes
+    ```
+
+1. Configure refgenie. For example:
+    ```bash
+    mkdir genomes
+    printf "\nexport REFGENIE=/home/ubuntu/genomes/genome_config.yaml\n" >> ~/.bashrc
+    source ~/.bashrc
+    refgenie init
+    ```
+
+1. Fetch the salmon index files using refgenie. For example:
+    ```bash
+    refgenie pull hg38/salmon_sa_index
+    refgenie pull mm10/salmon_sa_index
     ```
 
 1. Install the `biomaRt` and `tximport` packages from Bioconductor.
