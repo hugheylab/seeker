@@ -1,6 +1,25 @@
+#' Run Salmon
+#'
+#' This function calls
+#' [salmon](https://combine-lab.github.io/salmon/)
+#' using [system2()]. To run in parallel, register a parallel backend using
+#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#'
+#' @param filepaths Paths to fastq files. For single-end reads, each element
+#'   should be a single filepath. For paired-end reads, each element should be
+#'   two filepaths separated by ";".
+#' @param samples Corresponding sample names for fastq files.
+#' @param indexDir Directory that contains salmon index.
+#' @param outputDir Directory in which to store output. Will be created if it
+#'   doesn't exist.
+#' @param cmd Name or path of the command-line interface.
+#' @param args Additional arguments to pass to the command-line interface.
+#'
+#' @return A vector of exit codes, invisibly.
+#'
 #' @export
 salmon = function(
-  filepaths, samples, indexPath, outputDir = 'salmon_output', cmd = 'salmon',
+  filepaths, samples, indexDir, outputDir = 'salmon_output', cmd = 'salmon',
   args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
            '-q --seqBias --gcBias --no-version-check')) {
 
@@ -8,7 +27,7 @@ salmon = function(
   filepaths = getFileList(filepaths)
   checkFilepaths(filepaths)
   dir.create(outputDir, recursive = TRUE)
-  argsBase = c('quant', args, '-i', indexPath)
+  argsBase = c('quant', args, '-i', indexDir)
 
   samplesUnique = sort(unique(samples))
   logPath = file.path(outputDir, 'progress.tsv')
@@ -35,6 +54,14 @@ salmon = function(
   invisible(result)}
 
 
+#' Aggregrate metadata from salmon quantifications
+#'
+#' @param outputDir Directory that contains output from salmon.
+#' @param outputFilename Name of file, which will be saved in `outputDir`. If
+#'   `NULL`, no file is saved.
+#'
+#' @return A data.table, invisibly.
+#'
 #' @export
 getSalmonMetadata = function(
   outputDir = 'salmon_output', outputFilename = 'meta_info.csv') {

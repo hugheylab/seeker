@@ -1,9 +1,12 @@
 # seeker
+
+[![R-CMD-check](https://github.com/hugheylab/seeker/workflows/R-CMD-check/badge.svg)](https://github.com/hugheylab/seeker/actions)
+
 `seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after before the day you die.
 
 ## Installation
 
-These instructions are for Linux. Slight modifications may be necessary for Mac OS. If you're using Windows, you're doing it wrong.
+These instructions are for Linux. Slight modifications may be necessary for macOS. If you're using Windows, you're doing it wrong.
 
 1. Install miniconda, bioconda, mamba, and R using the instructions in Notion.
 

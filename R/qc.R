@@ -1,15 +1,17 @@
-#' Run fastqc
+#' Run FastQC
 #'
 #' This function calls
 #' [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) using
 #' [system2()]. To run in parallel, register a parallel backend using
 #' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
 #'
-#' @param filepaths Paths to fastq files.
-#' @param outputDir Directory in which to store fastqc's
-#'   output.
-#' @param cmd Name of fastqc command-line interface.
-#' @param args Arguments to pass to fastqc's CLI.
+#' @param filepaths Paths to fastq files. For single-end reads, each element
+#'   should be a single filepath. For paired-end reads, each element can be two
+#'   filepaths separated by ";".
+#' @param outputDir Directory in which to store output. Will be created if it
+#'   doesn't exist.
+#' @param cmd Name or path of the command-line interface.
+#' @param args Additional arguments to pass to the command-line interface.
 #'
 #' @return A vector of exit codes, invisibly.
 #'
@@ -36,10 +38,26 @@ fastqc = function(
   invisible(result)}
 
 
+#' Run FastQ Screen
+#'
+#' This function calls
+#' [fastq_screen](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)
+#' using [system2()]. To run in parallel, register a parallel backend using
+#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#'
+#' @param filepaths Paths to fastq files. For single-end reads, each element
+#'   should be a single filepath. For paired-end reads, each element can be two
+#'   filepaths separated by ";".
+#' @param outputDir Directory in which to store output. Will be created if it
+#'   doesn't exist.
+#' @param cmd Name or path of the command-line interface.
+#' @param args Additional arguments to pass to the command-line interface.
+#'
+#' @return A vector of exit codes, invisibly.
+#'
 #' @export
 fastqscreen = function(
-  filepaths, outputDir = 'fastqscreen_output',
-  cmd = '~/miniconda3/bin/fastq_screen',
+  filepaths, outputDir = 'fastqscreen_output', cmd = 'fastq_screen',
   args = c('--threads', foreach::getDoParWorkers(), '--conf',
            '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
 
@@ -59,6 +77,23 @@ fastqscreen = function(
   invisible(result)}
 
 
+#' Run Trim Galore!
+#'
+#' This function calls
+#' [trim_galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+#' using [system2()]. To run in parallel, register a parallel backend using
+#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#'
+#' @param filepaths Paths to fastq files. For single-end reads, each element
+#'   should be a single filepath. For paired-end reads, each element should be
+#'   two filepaths separated by ";".
+#' @param outputDir Directory in which to store output. Will be created if it
+#'   doesn't exist.
+#' @param cmd Name or path of the command-line interface.
+#' @param args Additional arguments to pass to the command-line interface.
+#'
+#' @return A vector of exit codes, invisibly.
+#'
 #' @export
 trimgalore = function(
   filepaths, outputDir = 'trimgalore_output', cmd = 'trim_galore', args = NULL) {
@@ -86,6 +121,18 @@ trimgalore = function(
   invisible(result)}
 
 
+#' Run MultiQC
+#'
+#' This function calls [multiqc](https://multiqc.info/) using [system2()].
+#'
+#' @param parentDir Directory that contains output to be aggregated.
+#' @param outputDir Directory in which to store output. Will be created if it
+#'   doesn't exist.
+#' @param cmd Name or path of the command-line interface.
+#' @param args Additional arguments to pass to the command-line interface.
+#'
+#' @return An exit code, invisibly.
+#'
 #' @export
 multiqc = function(
   parentDir = '.', outputDir = 'multiqc_output', cmd = 'multiqc', args = NULL) {

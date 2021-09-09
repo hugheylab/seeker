@@ -52,12 +52,12 @@ getMetadata = function(
 #' [doParallel::registerDoParallel()].
 #'
 #' @param remoteFilepaths Character vector of remote filepaths. For single-end
-#'   reads, each element of the vector will be a single filepath. For paired-end
-#'   reads, each element can be two filepaths separated by ";". If a remote
-#'   filepath starts with "fasp", the file will be downloaded using aspera,
-#'   otherwise the file will be downloaded using ftp.
+#'   reads, each element of the vector should be a single filepath. For
+#'   paired-end reads, each element should be two filepaths separated by ";". If
+#'   a remote filepath starts with "fasp", the file will be downloaded using
+#'   aspera, otherwise the file will be downloaded using ftp.
 #' @param outputDir String indicating the local directory in which to save the
-#'   files. Will be created if it doesn't already exist.
+#'   files. Will be created if it doesn't exist.
 #' @param overwrite Logical indicating whether to overwrite files that already
 #'   exist in `outputDir`.
 #' @param ftpCmd String indicating system command for fetching files by ftp.
