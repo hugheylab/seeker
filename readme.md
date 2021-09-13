@@ -8,7 +8,7 @@
 
 These instructions are for Linux. Slight modifications may be necessary for macOS. If you're using Windows, you're doing it wrong.
 
-1. Download and install [Aspera Connect for Linux](https://downloads.asperasoft.com/en/downloads/8?list). You will likely have to download a tar.gz file (`wget`), untar it (`tar -zxvf`), then run the resulting bash shell script.
+1. Download and install [Aspera Connect for Linux](https://www.ibm.com/aspera/connect/). You will likely have to download a tar.gz file (`wget`), untar it (`tar -zxvf`), then run the resulting bash shell script.
 
 1. Install and set up Miniconda. See [here](https://bioconda.github.io/user/install.html#set-up-channels).
     ```bash
