@@ -21,7 +21,10 @@ doesn't exist.}
 
 \item{cmd}{Name or path of the command-line interface.}
 
-\item{args}{Additional arguments to pass to the command-line interface.}
+\item{args}{Additional arguments to pass to the command-line interface.
+Output files will always be compressed. Arguments "dont_gzip", "--cores",
+"-j", and "--basename" are not allowed. Arguments "-o" and "--paired"
+should not be specified here.}
 }
 \value{
 A vector of exit codes, invisibly.
@@ -29,6 +32,7 @@ A vector of exit codes, invisibly.
 \description{
 This function calls
 \href{https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/}{trim_galore}
-using \code{\link[=system2]{system2()}}. To run in parallel, register a parallel backend using
+using \code{\link[=system2]{system2()}}, and is only designed to handle standard adapter/quality
+trimming. To run in parallel, register a parallel backend using
 \code{\link[doFuture:registerDoFuture]{doFuture::registerDoFuture()}} or \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }

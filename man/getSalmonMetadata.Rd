@@ -6,14 +6,14 @@
 \usage{
 getSalmonMetadata(
   outputDir = "salmon_output",
-  outputFilename = "meta_info.csv"
+  outputFilepath = "salmon_meta_info.csv"
 )
 }
 \arguments{
 \item{outputDir}{Directory that contains output from salmon.}
 
-\item{outputFilename}{Name of file, which will be saved in \code{outputDir}. If
-\code{NULL}, no file is saved.}
+\item{outputFilepath}{Path to which to save the result. If \code{NULL}, no file is
+saved.}
 }
 \value{
 A data.table, invisibly.

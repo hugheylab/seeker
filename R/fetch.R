@@ -1,3 +1,4 @@
+#' @import checkmate
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom data.table data.table
 NULL
@@ -25,7 +26,9 @@ getMetadata = function(
     'sample_alias', 'sample_title', 'experiment_accession', 'run_accession',
     'fastq_ftp', 'fastq_aspera')) {
 
+  assertString(study)
   host = match.arg(host)
+  assertCharacter(fields, any.missing = FALSE)
 
   if (host == 'ena') {
     url = paste0(
@@ -68,21 +71,29 @@ getMetadata = function(
 #' @param asperaPrefix String indicating prefix for downloading files by aspera,
 #'   i.e., `asperaPrefix@remoteFilepath`.
 #'
-#' @return A `data.table`. As the function runs, it updates a tab-delimited log
-#'   file in `outputDir` called "progress.tsv".
+#' @return A list. As the function runs, it updates a tab-delimited log file in
+#'   `outputDir` called "progress.tsv".
 #'
-#' @seealso [getMetadata()]
+#' @seealso [getMetadata()], [getAsperaCmd()], [getAsperaArgs()]
 #'
 #' @export
 getFastq = function(
   remoteFilepaths, outputDir = 'fastq', overwrite = FALSE, ftpCmd = 'wget',
-  ftpArgs = '-q', asperaCmd = '~/.aspera/connect/bin/ascp',
-  asperaArgs = c('-QT -l 300m -P33001', '-i',
-                 '~/.aspera/connect/etc/asperaweb_id_dsa.openssh'),
+  ftpArgs = '-q', asperaCmd = getAsperaCmd(), asperaArgs = getAsperaArgs(),
   asperaPrefix = 'era-fasp') {
 
+  assertCharacter(remoteFilepaths, any.missing = FALSE)
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertLogical(overwrite, any.missing = FALSE, len = 1L)
+  assertString(ftpCmd)
+  assertCharacter(ftpArgs, any.missing = FALSE)
+  assertString(asperaCmd)
+  assertCharacter(asperaArgs, any.missing = FALSE)
+  assertString(asperaPrefix)
+
   f = fl = i = NULL
-  dir.create(outputDir, recursive = TRUE)
+  if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
 
   remoteFilepaths = getFileList(remoteFilepaths)
   localFilepaths = lapply(
@@ -91,14 +102,14 @@ getFastq = function(
   fs = unlist(remoteFilepaths)
   fls = unlist(localFilepaths)
 
-  logPath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logPath, length(fs))
+  logPath = getLogPath(outputDir)
+  writeLogFile(logPath, n = length(fs))
 
   feo = foreach(f = fs, fl = fls, i = 1:length(fs), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
-    if (file.exists(fl) && !isTRUE(overwrite)) {
+    if (file.exists(fl) && isFALSE(overwrite)) {
       r = 0
     } else {
       Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
@@ -109,8 +120,9 @@ getFastq = function(
       } else {
         r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
 
-    appendLogFile(logPath, f, i, r)
+    writeLogFile(logPath, f, i, r)
     r}
 
-  d = data.table(local_filepath = getFileVec(localFilepaths), status = result)
+  writeLogFile(logPath, n = -length(fs))
+  d = list(fastq_local = getFileVec(localFilepaths), status = result)
   return(d)}

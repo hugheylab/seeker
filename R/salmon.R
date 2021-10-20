@@ -24,14 +24,26 @@ salmon = function(
            '-q --seqBias --gcBias --no-version-check')) {
 
   i = NULL
+  assertCharacter(filepaths, any.missing = FALSE)
+  assertCharacter(samples, any.missing = FALSE)
+  assertTRUE(length(filepaths) == length(samples))
+
   filepaths = getFileList(filepaths)
-  checkFilepaths(filepaths)
-  dir.create(outputDir, recursive = TRUE)
+
+  assertFileExists(unlist(filepaths))
+  assertString(indexDir)
+  assertDirectoryExists(indexDir)
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertString(cmd)
+  assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+
+  if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', indexDir)
 
   samplesUnique = sort(unique(samples))
-  logPath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logPath, length(samplesUnique))
+  logPath = getLogPath(outputDir)
+  writeLogFile(logPath, n = length(samplesUnique))
 
   feo = foreach(i = 1:length(samplesUnique), .combine = c,
                 .options.future = list(scheduling = Inf))
@@ -42,29 +54,37 @@ salmon = function(
     args1 = c(argsBase, '-o', file.path(outputDir, samp))
 
     if (length(f[[1]]) > 1) {
-      f1 = sapply(f, function(f) f[1])
-      f2 = sapply(f, function(f) f[2])
+      f1 = sapply(f, function(f) f[1L])
+      f2 = sapply(f, function(f) f[2L])
       args2 = c('-1', f1, '-2', f2)
     } else {
       args2 = c('-r', unlist(f))}
 
     r = system2(path.expand(cmd), c(args1, args2))
-    appendLogFile(logPath, samp, i, r)
+    writeLogFile(logPath, samp, i, r)
     r}
+
+  writeLogFile(logPath, n = -length(samplesUnique))
   invisible(result)}
 
 
 #' Aggregrate metadata from salmon quantifications
 #'
 #' @param outputDir Directory that contains output from salmon.
-#' @param outputFilename Name of file, which will be saved in `outputDir`. If
-#'   `NULL`, no file is saved.
+#' @param outputFilepath Path to which to save the result. If `NULL`, no file is
+#'   saved.
 #'
 #' @return A data.table, invisibly.
 #'
 #' @export
 getSalmonMetadata = function(
-  outputDir = 'salmon_output', outputFilename = 'meta_info.csv') {
+  outputDir = 'salmon_output', outputFilepath = 'salmon_meta_info.csv') {
+
+  assertString(outputDir)
+  assertDirectoryExists(outputDir)
+  assertString(outputFilepath, null.ok = TRUE)
+  if (!is.null(outputFilepath)) {
+    assertPathForOutput(outputFilepath, overwrite = TRUE)}
 
   filepaths = list.files(
     outputDir, 'meta_info.json', full.names = TRUE, recursive = TRUE)
@@ -89,6 +109,6 @@ getSalmonMetadata = function(
   for (fieldName in names(metaSpecial)) {
     data.table::set(metadata, j = fieldName, value = metaSpecial[[fieldName]])}
 
-  if (!is.null(outputFilename)) {
-    data.table::fwrite(metadata, file.path(outputDir, outputFilename))}
+  if (!is.null(outputFilepath)) {
+    data.table::fwrite(metadata, outputFilepath)}
   invisible(metadata)}

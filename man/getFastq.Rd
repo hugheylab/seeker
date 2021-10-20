@@ -10,9 +10,8 @@ getFastq(
   overwrite = FALSE,
   ftpCmd = "wget",
   ftpArgs = "-q",
-  asperaCmd = "~/.aspera/connect/bin/ascp",
-  asperaArgs = c("-QT -l 300m -P33001", "-i",
-    "~/.aspera/connect/etc/asperaweb_id_dsa.openssh"),
+  asperaCmd = getAsperaCmd(),
+  asperaArgs = getAsperaArgs(),
   asperaPrefix = "era-fasp"
 )
 }
@@ -42,8 +41,8 @@ exist in \code{outputDir}.}
 i.e., \code{asperaPrefix@remoteFilepath}.}
 }
 \value{
-A \code{data.table}. As the function runs, it updates a tab-delimited log
-file in \code{outputDir} called "progress.tsv".
+A list. As the function runs, it updates a tab-delimited log file in
+\code{outputDir} called "progress.tsv".
 }
 \description{
 This function can download fastq files using aspera (recommended) or ftp, by
@@ -52,5 +51,5 @@ parallel, register a parallel backend using \code{\link[doFuture:registerDoFutur
 \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
 \seealso{
-\code{\link[=getMetadata]{getMetadata()}}
+\code{\link[=getMetadata]{getMetadata()}}, \code{\link[=getAsperaCmd]{getAsperaCmd()}}, \code{\link[=getAsperaArgs]{getAsperaArgs()}}
 }

@@ -20,21 +20,29 @@ fastqc = function(
   filepaths, outputDir = 'fastqc_output', cmd = 'fastqc', args = NULL) {
 
   f = i = NULL
+  assertCharacter(filepaths, any.missing = FALSE)
   filepaths = getFileList(filepaths)
-  checkFilepaths(filepaths)
-  dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
 
-  logPath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logPath, length(fs))
+  assertFileExists(fs)
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertString(cmd)
+  assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+
+  if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
+  logPath = getLogPath(outputDir)
+  writeLogFile(logPath, n = length(fs))
 
   feo = foreach(f = fs, i = 1:length(fs), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
     r = system2(path.expand(cmd), c(args, '-o', outputDir, f))
-    appendLogFile(logPath, f, i, r)
+    writeLogFile(logPath, f, i, r)
     r}
+
+  writeLogFile(logPath, n = -length(fs))
   invisible(result)}
 
 
@@ -62,18 +70,26 @@ fastqscreen = function(
            '~/FastQ_Screen_Genomes/fastq_screen.conf')) {
 
   f = i = NULL
+  assertCharacter(filepaths, any.missing = FALSE)
   filepaths = getFileList(filepaths)
-  checkFilepaths(filepaths)
-  dir.create(outputDir, recursive = TRUE)
   fs = unlist(filepaths)
 
-  logPath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logPath, length(fs))
+  assertFileExists(fs)
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertString(cmd)
+  assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+
+  if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
+  logPath = getLogPath(outputDir)
+  writeLogFile(logPath, n = length(fs))
 
   result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     r = system2(path.expand(cmd), c(args, '--outdir', outputDir, f))
-    appendLogFile(logPath, f, i, r)
+    writeLogFile(logPath, f, i, r)
     r}
+
+  writeLogFile(logPath, n = -length(fs))
   invisible(result)}
 
 
@@ -81,7 +97,8 @@ fastqscreen = function(
 #'
 #' This function calls
 #' [trim_galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
-#' using [system2()]. To run in parallel, register a parallel backend using
+#' using [system2()], and is only designed to handle standard adapter/quality
+#' trimming. To run in parallel, register a parallel backend using
 #' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
 #'
 #' @param filepaths Paths to fastq files. For single-end reads, each element
@@ -91,6 +108,9 @@ fastqscreen = function(
 #'   doesn't exist.
 #' @param cmd Name or path of the command-line interface.
 #' @param args Additional arguments to pass to the command-line interface.
+#'   Output files will always be compressed. Arguments "dont_gzip", "--cores",
+#'   "-j", and "--basename" are not allowed. Arguments "-o" and "--paired"
+#'   should not be specified here.
 #'
 #' @return A vector of exit codes, invisibly.
 #'
@@ -99,25 +119,36 @@ trimgalore = function(
   filepaths, outputDir = 'trimgalore_output', cmd = 'trim_galore', args = NULL) {
 
   f = i = NULL
+  assertCharacter(filepaths, any.missing = FALSE)
   filepaths = getFileList(filepaths)
-  checkFilepaths(filepaths)
-  dir.create(outputDir, recursive = TRUE)
 
-  logPath = file.path(outputDir, 'progress.tsv')
-  createLogFile(logPath, length(filepaths))
+  assertFileExists(unlist(filepaths))
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertString(cmd)
+  assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+
+  if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
+  logPath = getLogPath(outputDir)
+  writeLogFile(logPath, n = length(filepaths))
+
+  args = paste(c(args, '--gzip'), collapse = ' ')
+  if (grepl('(-j|--cores|--basename|--dont_gzip|-o|--paired)', args)) {
+    stop('args contains unallowed arguments.')}
 
   feo = foreach(f = filepaths, i = 1:length(filepaths), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
-    argsNow = c(args, '-o', outputDir)
-    if (length(f) > 1) {
-      argsNow = c(argsNow, '--paired', f[1], f[2])
-    } else {
-      argsNow = c(argsNow, f)}
+    argsNow = c(args, '-o', outputDir, if (length(f) > 1) '--paired', f)
     r = system2(path.expand(cmd), argsNow)
-    appendLogFile(logPath, paste(f, collapse = '; '), i, r)
-    r}
+    writeLogFile(logPath, paste(f, collapse = ';'), i, r)
+
+    fastqTrimmed = paste(file.path(outputDir, getTrimmedFilenames(f)),
+                         collapse = ';')
+    data.table(fastq_trimmed = fastqTrimmed, status = r)}
+
+  writeLogFile(logPath, n = -length(filepaths))
   invisible(result)}
 
 
@@ -136,4 +167,12 @@ trimgalore = function(
 #' @export
 multiqc = function(
   parentDir = '.', outputDir = 'multiqc_output', cmd = 'multiqc', args = NULL) {
+
+  assertString(parentDir)
+  assertDirectoryExists(parentDir)
+  assertString(outputDir)
+  assertPathForOutput(outputDir, overwrite = TRUE)
+  assertString(cmd)
+  assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+
   invisible(system2(path.expand(cmd), c(args, '-o', outputDir, parentDir)))}

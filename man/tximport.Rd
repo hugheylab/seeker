@@ -15,7 +15,7 @@ tximport(
 )
 }
 \arguments{
-\item{dirpaths}{Paths to directories than contain quantification results.}
+\item{dirpaths}{Paths to directories that contain quantification results.}
 
 \item{tx2gene}{Data.frame, as returned by \code{\link[=getTx2gene]{getTx2gene()}}, passed to
 \code{\link[tximport:tximport]{tximport::tximport()}}.}
