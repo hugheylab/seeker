@@ -58,16 +58,15 @@ getMetadata = function(
 #'   reads, each element of the vector should be a single filepath. For
 #'   paired-end reads, each element should be two filepaths separated by ";". If
 #'   a remote filepath starts with "fasp", the file will be downloaded using
-#'   aspera, otherwise the file will be downloaded using ftp.
+#'   aspera ascp, otherwise the file will be downloaded using wget.
 #' @param outputDir String indicating the local directory in which to save the
 #'   files. Will be created if it doesn't exist.
 #' @param overwrite Logical indicating whether to overwrite files that already
 #'   exist in `outputDir`.
-#' @param ftpCmd String indicating system command for fetching files by ftp.
-#' @param ftpArgs Character vector indicating arguments to pass to `ftpCmd`.
+#' @param wgetCmd String indicating command for fetching files using wget.
+#' @param wgetArgs Character vector indicating arguments to pass to wget.
 #' @param asperaCmd String indicating path to the aspera ascp program.
-#' @param asperaArgs Character vector indicating arguments to pass to
-#'   `asperaCmd`.
+#' @param asperaArgs Character vector indicating arguments to pass to ascp.
 #' @param asperaPrefix String indicating prefix for downloading files by aspera,
 #'   i.e., `asperaPrefix@remoteFilepath`.
 #'
@@ -78,16 +77,16 @@ getMetadata = function(
 #'
 #' @export
 getFastq = function(
-  remoteFilepaths, outputDir = 'fastq', overwrite = FALSE, ftpCmd = 'wget',
-  ftpArgs = '-q', asperaCmd = getAsperaCmd(), asperaArgs = getAsperaArgs(),
+  remoteFilepaths, outputDir = 'fastq', overwrite = FALSE, wgetCmd = 'wget',
+  wgetArgs = '-q', asperaCmd = getAsperaCmd(), asperaArgs = getAsperaArgs(),
   asperaPrefix = 'era-fasp') {
 
   assertCharacter(remoteFilepaths, any.missing = FALSE)
   assertString(outputDir)
   assertPathForOutput(outputDir, overwrite = TRUE)
   assertLogical(overwrite, any.missing = FALSE, len = 1L)
-  assertString(ftpCmd)
-  assertCharacter(ftpArgs, any.missing = FALSE)
+  assertString(wgetCmd)
+  assertCharacter(wgetArgs, any.missing = FALSE)
   assertString(asperaCmd)
   assertCharacter(asperaArgs, any.missing = FALSE)
   assertString(asperaPrefix)
@@ -105,6 +104,8 @@ getFastq = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(fs))
 
+  outputSafe = safe(outputDir)
+
   feo = foreach(f = fs, fl = fls, i = 1:length(fs), .combine = c,
                 .options.future = list(scheduling = Inf))
 
@@ -115,14 +116,14 @@ getFastq = function(
       Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
 
       if (startsWith(f, 'fasp')) {
-        args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputDir)
+        args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputSafe)
         r = system2(path.expand(asperaCmd), args)
       } else {
-        r = system2(path.expand(ftpCmd), c(ftpArgs, '-P', outputDir, f))}}
+        r = system2(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
 
     writeLogFile(logPath, f, i, r)
     r}
 
   writeLogFile(logPath, n = -length(fs))
-  d = list(fastq_local = getFileVec(localFilepaths), status = result)
+  d = list(localFilepaths = getFileVec(localFilepaths), statuses = result)
   return(d)}

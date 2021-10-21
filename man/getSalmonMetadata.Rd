@@ -4,16 +4,13 @@
 \alias{getSalmonMetadata}
 \title{Aggregrate metadata from salmon quantifications}
 \usage{
-getSalmonMetadata(
-  outputDir = "salmon_output",
-  outputFilepath = "salmon_meta_info.csv"
-)
+getSalmonMetadata(inputDir, outputDir = ".")
 }
 \arguments{
-\item{outputDir}{Directory that contains output from salmon.}
+\item{inputDir}{Directory that contains output from salmon.}
 
-\item{outputFilepath}{Path to which to save the result. If \code{NULL}, no file is
-saved.}
+\item{outputDir}{Directory in which to save the result, a file named
+"salmon_meta_info.csv". If \code{NULL}, no file is saved.}
 }
 \value{
 A data.table, invisibly.

@@ -7,7 +7,7 @@
 tximport(
   dirpaths,
   tx2gene,
-  outputFilepath = "tximport_output.qs",
+  outputDir = ".",
   type = c("salmon", "kallisto"),
   countsFromAbundance = "lengthScaledTPM",
   ignoreTxVersion = TRUE,
@@ -20,8 +20,8 @@ tximport(
 \item{tx2gene}{Data.frame, as returned by \code{\link[=getTx2gene]{getTx2gene()}}, passed to
 \code{\link[tximport:tximport]{tximport::tximport()}}.}
 
-\item{outputFilepath}{Path to which to save the result using \code{\link[qs:qsave]{qs::qsave()}}.
-If \code{NULL}, no file will be saved.}
+\item{outputDir}{Directory in which to save the result, a file named
+"tximport_output.qs", using \code{\link[qs:qsave]{qs::qsave()}}. If \code{NULL}, no file is saved.}
 
 \item{type}{Passed to \code{\link[tximport:tximport]{tximport::tximport()}}.}
 

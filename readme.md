@@ -2,7 +2,7 @@
 
 [![R-CMD-check](https://github.com/hugheylab/seeker/workflows/R-CMD-check/badge.svg)](https://github.com/hugheylab/seeker/actions)
 
-`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after before the day you die.
+`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after, before the day you die.
 
 ## Installation
 
@@ -33,7 +33,8 @@ These instructions are for Linux. Slight modifications may be necessary for macO
 
 1. Configure refgenie. For example:
     ```bash
-    mkdir genomes
+    mkdir /home/ubuntu/genomes
+    refgenie init -c /home/ubuntu/genomes/genome_config.yaml
     printf "\nexport REFGENIE=/home/ubuntu/genomes/genome_config.yaml\n" >> ~/.bashrc
     source ~/.bashrc
     refgenie init
@@ -47,7 +48,8 @@ These instructions are for Linux. Slight modifications may be necessary for macO
 
 1. Install the `biomaRt` and `tximport` packages from Bioconductor.
     ```r
-    install.packages('BiocManager')
+    if (!requireNamespace('BiocManager', quietly = TRUE))
+      install.packages('BiocManager')
     BiocManager::install(c('biomaRt', 'tximport'))
     ```
 

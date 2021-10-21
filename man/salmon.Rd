@@ -10,8 +10,8 @@ salmon(
   indexDir,
   outputDir = "salmon_output",
   cmd = "salmon",
-  args = c("-l", "A", "-p", foreach::getDoParWorkers(),
-    "-q --seqBias --gcBias --no-version-check")
+  args = c("-l A -q --seqBias --gcBias --no-version-check -p",
+    foreach::getDoParWorkers())
 )
 }
 \arguments{

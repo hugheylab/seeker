@@ -8,8 +8,8 @@ getFastq(
   remoteFilepaths,
   outputDir = "fastq",
   overwrite = FALSE,
-  ftpCmd = "wget",
-  ftpArgs = "-q",
+  wgetCmd = "wget",
+  wgetArgs = "-q",
   asperaCmd = getAsperaCmd(),
   asperaArgs = getAsperaArgs(),
   asperaPrefix = "era-fasp"
@@ -20,7 +20,7 @@ getFastq(
 reads, each element of the vector should be a single filepath. For
 paired-end reads, each element should be two filepaths separated by ";". If
 a remote filepath starts with "fasp", the file will be downloaded using
-aspera, otherwise the file will be downloaded using ftp.}
+aspera ascp, otherwise the file will be downloaded using wget.}
 
 \item{outputDir}{String indicating the local directory in which to save the
 files. Will be created if it doesn't exist.}
@@ -28,14 +28,13 @@ files. Will be created if it doesn't exist.}
 \item{overwrite}{Logical indicating whether to overwrite files that already
 exist in \code{outputDir}.}
 
-\item{ftpCmd}{String indicating system command for fetching files by ftp.}
+\item{wgetCmd}{String indicating command for fetching files using wget.}
 
-\item{ftpArgs}{Character vector indicating arguments to pass to \code{ftpCmd}.}
+\item{wgetArgs}{Character vector indicating arguments to pass to wget.}
 
 \item{asperaCmd}{String indicating path to the aspera ascp program.}
 
-\item{asperaArgs}{Character vector indicating arguments to pass to
-\code{asperaCmd}.}
+\item{asperaArgs}{Character vector indicating arguments to pass to ascp.}
 
 \item{asperaPrefix}{String indicating prefix for downloading files by aspera,
 i.e., \code{asperaPrefix@remoteFilepath}.}

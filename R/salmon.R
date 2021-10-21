@@ -20,8 +20,8 @@
 #' @export
 salmon = function(
   filepaths, samples, indexDir, outputDir = 'salmon_output', cmd = 'salmon',
-  args = c('-l', 'A', '-p', foreach::getDoParWorkers(),
-           '-q --seqBias --gcBias --no-version-check')) {
+  args = c('-l A -q --seqBias --gcBias --no-version-check -p',
+           foreach::getDoParWorkers())) {
 
   i = NULL
   assertCharacter(filepaths, any.missing = FALSE)
@@ -39,7 +39,7 @@ salmon = function(
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
 
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
-  argsBase = c('quant', args, '-i', indexDir)
+  argsBase = c('quant', args, '-i', safe(indexDir))
 
   samplesUnique = sort(unique(samples))
   logPath = getLogPath(outputDir)
@@ -51,14 +51,14 @@ salmon = function(
   result = feo %do% {
     samp = samplesUnique[i]
     f = filepaths[samp == samples]
-    args1 = c(argsBase, '-o', file.path(outputDir, samp))
+    args1 = c(argsBase, '-o', safe(file.path(outputDir, samp)))
 
-    if (length(f[[1]]) > 1) {
+    if (length(f[[1L]]) > 1) {
       f1 = sapply(f, function(f) f[1L])
       f2 = sapply(f, function(f) f[2L])
-      args2 = c('-1', f1, '-2', f2)
+      args2 = c('-1', safe(f1), '-2', safe(f2))
     } else {
-      args2 = c('-r', unlist(f))}
+      args2 = c('-r', safe(unlist(f)))}
 
     r = system2(path.expand(cmd), c(args1, args2))
     writeLogFile(logPath, samp, i, r)
@@ -70,24 +70,26 @@ salmon = function(
 
 #' Aggregrate metadata from salmon quantifications
 #'
-#' @param outputDir Directory that contains output from salmon.
-#' @param outputFilepath Path to which to save the result. If `NULL`, no file is
-#'   saved.
+#' @param inputDir Directory that contains output from salmon.
+#' @param outputDir Directory in which to save the result, a file named
+#'   "salmon_meta_info.csv". If `NULL`, no file is saved.
 #'
 #' @return A data.table, invisibly.
 #'
 #' @export
-getSalmonMetadata = function(
-  outputDir = 'salmon_output', outputFilepath = 'salmon_meta_info.csv') {
+getSalmonMetadata = function(inputDir, outputDir = '.') {
 
-  assertString(outputDir)
-  assertDirectoryExists(outputDir)
-  assertString(outputFilepath, null.ok = TRUE)
-  if (!is.null(outputFilepath)) {
-    assertPathForOutput(outputFilepath, overwrite = TRUE)}
+  outputFilename = 'salmon_meta_info.csv'
+
+  assertString(inputDir)
+  assertDirectoryExists(inputDir)
+  assertString(outputDir, null.ok = TRUE)
+  if (!is.null(outputDir)) {
+    assertPathForOutput(outputDir, overwrite = TRUE)
+    if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)}
 
   filepaths = list.files(
-    outputDir, 'meta_info.json', full.names = TRUE, recursive = TRUE)
+    inputDir, 'meta_info.json', full.names = TRUE, recursive = TRUE)
   sampleNames = sapply(
     strsplit(filepaths, .Platform$file.sep), function(x) x[length(x) - 2L])
 
@@ -109,6 +111,6 @@ getSalmonMetadata = function(
   for (fieldName in names(metaSpecial)) {
     data.table::set(metadata, j = fieldName, value = metaSpecial[[fieldName]])}
 
-  if (!is.null(outputFilepath)) {
-    data.table::fwrite(metadata, outputFilepath)}
+  if (!is.null(outputDir)) {
+    data.table::fwrite(metadata, file.path(outputDir, outputFilename))}
   invisible(metadata)}

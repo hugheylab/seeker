@@ -27,12 +27,6 @@ getFileVec = function(fileList) {
   return(sapply(fileList, function(f) paste0(f, collapse = ';')))}
 
 
-# checkFilepaths = function(filepaths) {
-#   if (!all(file.exists(unlist(filepaths)))) {
-#     stop('Not all supplied file paths exist.')}
-#   invisible(0)}
-
-
 #' Get aspera command
 #'
 #' This function returns the default path to the aspera ascp command-line
@@ -64,12 +58,12 @@ getAsperaCmd = function() {
 #'
 #' @export
 getAsperaArgs = function() {
-  a = c('-QT -l 300m -P33001', '-i')
+  a = c('-QT -l 300m -P33001 -i')
   f = 'asperaweb_id_dsa.openssh'
   rgs = switch(
     Sys.info()[['sysname']],
-    Linux = c(a, file.path('~/.aspera/connect/etc', f)),
-    Darwin = c(a, file.path('~/Applications/Aspera\\ Connect.app/Contents/Resources', f)),
+    Linux = c(a, safe(file.path('~/.aspera/connect/etc', f))),
+    Darwin = c(a, safe(file.path('~/Applications/Aspera Connect.app/Contents/Resources', f))),
     Windows = NULL)
   return(rgs)}
 
@@ -100,6 +94,11 @@ getTrimmedFilenames = function(x) {
   return(y)}
 
 
+safe = function(x) {
+  y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
+  return(y)}
+
+
 #' Check for presence of command-line interfaces
 #'
 #' This function checks whether the command-line tools used by seeker are
@@ -117,7 +116,7 @@ checkDefaultCommands = function() {
   i = NULL
   r = foreach(i = 1:nrow(d), .combine = rbind) %do% {
     cmd = if (d$cmd[i] == 'ascp') getAsperaCmd() else d$cmd[i]
-    path = system2('command', c('-v', gsub(' ', '\\\\ ', cmd)), stdout = TRUE)
+    path = system2('command', c('-v', safe(cmd)), stdout = TRUE)
     if (length(path) == 0L) {
       path = NA_character_
       version = NA_character_

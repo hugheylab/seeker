@@ -38,7 +38,8 @@ fastqc = function(
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
-    r = system2(path.expand(cmd), c(args, '-o', outputDir, f))
+    argsNow = c(args, '-o', safe(outputDir), safe(f))
+    r = system2(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
     r}
 
@@ -85,7 +86,8 @@ fastqscreen = function(
   writeLogFile(logPath, n = length(fs))
 
   result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
-    r = system2(path.expand(cmd), c(args, '--outdir', outputDir, f))
+    argsNow = c(args, '--outdir', safe(outputDir), safe(f))
+    r = system2(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
     r}
 
@@ -136,16 +138,17 @@ trimgalore = function(
   if (grepl('(-j|--cores|--basename|--dont_gzip|-o|--paired)', args)) {
     stop('args contains unallowed arguments.')}
 
-  feo = foreach(f = filepaths, i = 1:length(filepaths), .combine = c,
+  feo = foreach(f = filepaths, i = 1:length(filepaths), .combine = rbind,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
-    argsNow = c(args, '-o', outputDir, if (length(f) > 1) '--paired', f)
+    argsNow = c(
+      args, '-o', safe(outputDir), if (length(f) > 1) '--paired', safe(f))
     r = system2(path.expand(cmd), argsNow)
     writeLogFile(logPath, paste(f, collapse = ';'), i, r)
 
-    fastqTrimmed = paste(file.path(outputDir, getTrimmedFilenames(f)),
-                         collapse = ';')
+    fastqTrimmed = paste(
+      file.path(outputDir, basename(getTrimmedFilenames(f))), collapse = ';')
     data.table(fastq_trimmed = fastqTrimmed, status = r)}
 
   writeLogFile(logPath, n = -length(filepaths))
@@ -175,4 +178,6 @@ multiqc = function(
   assertString(cmd)
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
 
-  invisible(system2(path.expand(cmd), c(args, '-o', outputDir, parentDir)))}
+  argsNow = c(args, '-o', safe(outputDir), safe(parentDir))
+  r = system2(path.expand(cmd), argsNow)
+  invisible(r)}
