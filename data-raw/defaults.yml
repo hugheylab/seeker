@@ -11,9 +11,9 @@ metadata:
 fetch:
   run: TRUE # [logical]
   # overwrite # [logical or NULL]
-  # asperaCmd # [string or NULL]
-  # asperaArgs # [character vector or NULL]
-  # asperaPrefix # [string or NULL]
+  # ascpCmd # [string or NULL]
+  # ascpArgs # [character vector or NULL]
+  # ascpPrefix # [string or NULL]
 trimgalore:
   run: TRUE # [logical]
   # cmd # [string or NULL]

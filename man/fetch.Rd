@@ -10,9 +10,9 @@ fetch(
   overwrite = FALSE,
   wgetCmd = "wget",
   wgetArgs = "-q",
-  asperaCmd = getAsperaCmd(),
-  asperaArgs = getAsperaArgs(),
-  asperaPrefix = "era-fasp"
+  ascpCmd = getAscpCmd(),
+  ascpArgs = getAscpArgs(),
+  ascpPrefix = "era-fasp"
 )
 }
 \arguments{
@@ -20,7 +20,7 @@ fetch(
 reads, each element of the vector should be a single filepath. For
 paired-end reads, each element should be two filepaths separated by ";". If
 a remote filepath starts with "fasp", the file will be downloaded using
-aspera ascp, otherwise the file will be downloaded using wget.}
+ascp, otherwise the file will be downloaded using wget.}
 
 \item{outputDir}{String indicating the local directory in which to save the
 files. Will be created if it doesn't exist.}
@@ -32,23 +32,23 @@ exist in \code{outputDir}.}
 
 \item{wgetArgs}{Character vector indicating arguments to pass to wget.}
 
-\item{asperaCmd}{String indicating path to the aspera ascp program.}
+\item{ascpCmd}{String indicating path to the ascp program.}
 
-\item{asperaArgs}{Character vector indicating arguments to pass to ascp.}
+\item{ascpArgs}{Character vector indicating arguments to pass to ascp.}
 
-\item{asperaPrefix}{String indicating prefix for downloading files by aspera,
-i.e., \code{asperaPrefix@remoteFilepath}.}
+\item{ascpPrefix}{String indicating prefix for downloading files by ascp,
+i.e., \code{ascpPrefix@remoteFilepath}.}
 }
 \value{
 A list. As the function runs, it updates a tab-delimited log file in
 \code{outputDir} called "progress.tsv".
 }
 \description{
-This function can download files using aspera (recommended) or wget, by
+This function can download files using aspera ascp (recommended) or wget, by
 calling command-line interfaces using \code{\link[=system2]{system2()}}. To download files in
 parallel, register a parallel backend using \code{\link[doFuture:registerDoFuture]{doFuture::registerDoFuture()}} or
 \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
 \seealso{
-\code{\link[=getMetadata]{getMetadata()}}, \code{\link[=getAsperaCmd]{getAsperaCmd()}}, \code{\link[=getAsperaArgs]{getAsperaArgs()}}
+\code{\link[=getMetadata]{getMetadata()}}, \code{\link[=getAscpCmd]{getAscpCmd()}}, \code{\link[=getAscpArgs]{getAscpArgs()}}
 }

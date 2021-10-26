@@ -112,5 +112,5 @@ getSalmonMetadata = function(inputDir, outputDir = 'data') {
     data.table::set(metadata, j = fieldName, value = metaSpecial[[fieldName]])}
 
   if (!is.null(outputDir)) {
-    data.table::fwrite(metadata, file.path(outputDir, outputFilename))}
+    fwrite(metadata, file.path(outputDir, outputFilename))}
   invisible(metadata)}

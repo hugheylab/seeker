@@ -30,7 +30,7 @@ getTx2gene = function(
     attributes = c('ensembl_transcript_id', 'ensembl_gene_id'), mart = mart)
 
   if (!is.null(outputDir)) {
-    data.table::fwrite(t2g, file.path(outputDir, outputFilename))}
+    fwrite(t2g, file.path(outputDir, outputFilename))}
   return(t2g)}
 
 

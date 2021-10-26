@@ -14,7 +14,7 @@ writeLogFile = function(path, task, idx, status, n = NULL) {
     } else {
       x = 'finished'}
     d = data.table(d, task = sprintf('%s %d tasks', x, abs(n)), idx = 0, status = 0)}
-  data.table::fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
+  fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
   invisible(d)}
 
 
@@ -27,17 +27,17 @@ getFileVec = function(fileList) {
   return(sapply(fileList, function(f) paste0(f, collapse = ';')))}
 
 
-#' Get aspera command
+#' Get ascp command
 #'
 #' This function returns the default path to the aspera ascp command-line
 #' interface, based on the operating system. Windows is not supported.
 #'
 #' @return A string.
 #'
-#' @seealso [getAsperaArgs()], [fetch()]
+#' @seealso [getAscpArgs()], [fetch()]
 #'
 #' @export
-getAsperaCmd = function() {
+getAscpCmd = function() {
   cmd = switch(
     Sys.info()[['sysname']],
     Linux = '~/.aspera/connect/bin/ascp',
@@ -46,18 +46,18 @@ getAsperaCmd = function() {
   return(cmd)}
 
 
-#' Get aspera arguments
+#' Get ascp arguments
 #'
-#' This function returns the default arguments to pass to the aspera
+#' This function returns the default arguments to pass to the aspera ascp
 #' command-line interface, based on the operating system. Windows is not
 #' supported.
 #'
 #' @return A character vector.
 #'
-#' @seealso [getAsperaCmd()], [fetch()]
+#' @seealso [getAscpCmd()], [fetch()]
 #'
 #' @export
-getAsperaArgs = function() {
+getAscpArgs = function() {
   a = c('-QT -l 300m -P33001 -i')
   f = 'asperaweb_id_dsa.openssh'
   rgs = switch(
@@ -99,6 +99,15 @@ safe = function(x) {
   return(y)}
 
 
+checkCommand = function(cmd) {
+  old = getOption('warn')
+  options(warn = -1)
+  path = system2('command', c('-v', safe(cmd)), stdout = TRUE)
+  options(warn = old)
+  if (length(path) == 0) path = NA_character_
+  return(path)}
+
+
 #' Check for presence of command-line interfaces
 #'
 #' This function checks whether the command-line tools used by seeker are
@@ -115,13 +124,10 @@ checkDefaultCommands = function() {
 
   i = NULL
   r = foreach(i = 1:nrow(d), .combine = rbind) %do% {
-    cmd = if (d$cmd[i] == 'ascp') getAsperaCmd() else d$cmd[i]
-    path = system2('command', c('-v', safe(cmd)), stdout = TRUE)
-    if (length(path) == 0L) {
-      path = NA_character_
-      version = NA_character_
-    } else {
-      version = system2(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]}
+    cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
+    path = checkCommand(cmd)
+    version = if (is.na(path)) NA_character_ else
+      system2(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
     data.table(command = d$cmd[i], path = path, version = version)}
 
   return(r)}

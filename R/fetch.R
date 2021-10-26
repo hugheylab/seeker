@@ -1,10 +1,3 @@
-#' @import checkmate
-#' @importFrom foreach foreach %do% %dopar%
-#' @importFrom data.table data.table set
-NULL
-# readr not explicitly called, but used by tximport
-
-
 #' Fetch metadata for a genomic study
 #'
 #' This function can use the API of the European Nucleotide Archive
@@ -43,14 +36,13 @@ getMetadata = function(
     sep = ','}
 
   raw = curl::curl_fetch_memory(url)
-  metadata = data.table::fread(
-    text = rawToChar(raw$content), sep = sep, na.strings = '')
+  metadata = fread(text = rawToChar(raw$content), sep = sep, na.strings = '')
   return(metadata)}
 
 
 #' Fetch files
 #'
-#' This function can download files using aspera (recommended) or wget, by
+#' This function can download files using aspera ascp (recommended) or wget, by
 #' calling command-line interfaces using [system2()]. To download files in
 #' parallel, register a parallel backend using [doFuture::registerDoFuture()] or
 #' [doParallel::registerDoParallel()].
@@ -59,28 +51,28 @@ getMetadata = function(
 #'   reads, each element of the vector should be a single filepath. For
 #'   paired-end reads, each element should be two filepaths separated by ";". If
 #'   a remote filepath starts with "fasp", the file will be downloaded using
-#'   aspera ascp, otherwise the file will be downloaded using wget.
+#'   ascp, otherwise the file will be downloaded using wget.
 #' @param outputDir String indicating the local directory in which to save the
 #'   files. Will be created if it doesn't exist.
 #' @param overwrite Logical indicating whether to overwrite files that already
 #'   exist in `outputDir`.
 #' @param wgetCmd String indicating command for fetching files using wget.
 #' @param wgetArgs Character vector indicating arguments to pass to wget.
-#' @param asperaCmd String indicating path to the aspera ascp program.
-#' @param asperaArgs Character vector indicating arguments to pass to ascp.
-#' @param asperaPrefix String indicating prefix for downloading files by aspera,
-#'   i.e., `asperaPrefix@remoteFilepath`.
+#' @param ascpCmd String indicating path to the ascp program.
+#' @param ascpArgs Character vector indicating arguments to pass to ascp.
+#' @param ascpPrefix String indicating prefix for downloading files by ascp,
+#'   i.e., `ascpPrefix@remoteFilepath`.
 #'
 #' @return A list. As the function runs, it updates a tab-delimited log file in
 #'   `outputDir` called "progress.tsv".
 #'
-#' @seealso [getMetadata()], [getAsperaCmd()], [getAsperaArgs()]
+#' @seealso [getMetadata()], [getAscpCmd()], [getAscpArgs()]
 #'
 #' @export
 fetch = function(
   remoteFilepaths, outputDir = 'fetch_output', overwrite = FALSE,
-  wgetCmd = 'wget', wgetArgs = '-q', asperaCmd = getAsperaCmd(),
-  asperaArgs = getAsperaArgs(), asperaPrefix = 'era-fasp') {
+  wgetCmd = 'wget', wgetArgs = '-q', ascpCmd = getAscpCmd(),
+  ascpArgs = getAscpArgs(), ascpPrefix = 'era-fasp') {
 
   assertCharacter(remoteFilepaths, any.missing = FALSE)
   assertString(outputDir)
@@ -88,9 +80,9 @@ fetch = function(
   assertFlag(overwrite)
   assertString(wgetCmd)
   assertCharacter(wgetArgs, any.missing = FALSE)
-  assertString(asperaCmd)
-  assertCharacter(asperaArgs, any.missing = FALSE)
-  assertString(asperaPrefix)
+  assertString(ascpCmd)
+  assertCharacter(ascpArgs, any.missing = FALSE)
+  assertString(ascpPrefix)
 
   f = fl = i = NULL
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
@@ -117,8 +109,8 @@ fetch = function(
       Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
 
       if (startsWith(f, 'fasp')) {
-        args = c(asperaArgs, sprintf('%s@%s', asperaPrefix, f), outputSafe)
-        r = system2(path.expand(asperaCmd), args)
+        args = c(ascpArgs, sprintf('%s@%s', ascpPrefix, f), outputSafe)
+        r = system2(path.expand(ascpCmd), args)
       } else {
         r = system2(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
 
