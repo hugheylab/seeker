@@ -1,6 +1,6 @@
 #' @import checkmate
 #' @importFrom foreach foreach %do% %dopar%
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table set
 NULL
 # readr not explicitly called, but used by tximport
 
@@ -16,7 +16,7 @@ NULL
 #'
 #' @return A `data.table`.
 #'
-#' @seealso [getFastq()]
+#' @seealso [fetch()]
 #'
 #' @export
 getMetadata = function(
@@ -43,13 +43,14 @@ getMetadata = function(
     sep = ','}
 
   raw = curl::curl_fetch_memory(url)
-  metadata = data.table::fread(text = rawToChar(raw$content), sep = sep)
+  metadata = data.table::fread(
+    text = rawToChar(raw$content), sep = sep, na.strings = '')
   return(metadata)}
 
 
-#' Fetch fastq files
+#' Fetch files
 #'
-#' This function can download fastq files using aspera (recommended) or ftp, by
+#' This function can download files using aspera (recommended) or wget, by
 #' calling command-line interfaces using [system2()]. To download files in
 #' parallel, register a parallel backend using [doFuture::registerDoFuture()] or
 #' [doParallel::registerDoParallel()].
@@ -76,15 +77,15 @@ getMetadata = function(
 #' @seealso [getMetadata()], [getAsperaCmd()], [getAsperaArgs()]
 #'
 #' @export
-getFastq = function(
-  remoteFilepaths, outputDir = 'fastq', overwrite = FALSE, wgetCmd = 'wget',
-  wgetArgs = '-q', asperaCmd = getAsperaCmd(), asperaArgs = getAsperaArgs(),
-  asperaPrefix = 'era-fasp') {
+fetch = function(
+  remoteFilepaths, outputDir = 'fetch_output', overwrite = FALSE,
+  wgetCmd = 'wget', wgetArgs = '-q', asperaCmd = getAsperaCmd(),
+  asperaArgs = getAsperaArgs(), asperaPrefix = 'era-fasp') {
 
   assertCharacter(remoteFilepaths, any.missing = FALSE)
   assertString(outputDir)
   assertPathForOutput(outputDir, overwrite = TRUE)
-  assertLogical(overwrite, any.missing = FALSE, len = 1L)
+  assertFlag(overwrite)
   assertString(wgetCmd)
   assertCharacter(wgetArgs, any.missing = FALSE)
   assertString(asperaCmd)

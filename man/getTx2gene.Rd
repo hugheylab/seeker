@@ -4,17 +4,21 @@
 \alias{getTx2gene}
 \title{Get mapping between transcripts and genes}
 \usage{
-getTx2gene(dataset = "hsapiens_gene_ensembl", outputDir = ".", ...)
+getTx2gene(
+  dataset = "mmusculus_gene_ensembl",
+  version = NULL,
+  outputDir = "data"
+)
 }
 \arguments{
 \item{dataset}{Ensembl gene dataset, passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. To
 see which datasets are available, do
-\verb{mart = useEnsembl('genes'); listDatasets(mart)}.}
+\verb{mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)}.}
+
+\item{version}{Passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}.}
 
 \item{outputDir}{Directory in which to save the result, a file named
 "tx2gene.csv". If \code{NULL}, no file is saved.}
-
-\item{...}{Additional arguments passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}.}
 }
 \value{
 A data.frame, as returned by \code{\link[biomaRt:getBM]{biomaRt::getBM()}}.

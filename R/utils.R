@@ -34,7 +34,7 @@ getFileVec = function(fileList) {
 #'
 #' @return A string.
 #'
-#' @seealso [getAsperaArgs()], [getFastq()]
+#' @seealso [getAsperaArgs()], [fetch()]
 #'
 #' @export
 getAsperaCmd = function() {
@@ -54,7 +54,7 @@ getAsperaCmd = function() {
 #'
 #' @return A character vector.
 #'
-#' @seealso [getAsperaCmd()], [getFastq()]
+#' @seealso [getAsperaCmd()], [fetch()]
 #'
 #' @export
 getAsperaArgs = function() {

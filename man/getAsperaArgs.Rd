@@ -15,5 +15,5 @@ command-line interface, based on the operating system. Windows is not
 supported.
 }
 \seealso{
-\code{\link[=getAsperaCmd]{getAsperaCmd()}}, \code{\link[=getFastq]{getFastq()}}
+\code{\link[=getAsperaCmd]{getAsperaCmd()}}, \code{\link[=fetch]{fetch()}}
 }

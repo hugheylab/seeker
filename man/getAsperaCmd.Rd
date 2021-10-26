@@ -14,5 +14,5 @@ This function returns the default path to the aspera ascp command-line
 interface, based on the operating system. Windows is not supported.
 }
 \seealso{
-\code{\link[=getAsperaArgs]{getAsperaArgs()}}, \code{\link[=getFastq]{getFastq()}}
+\code{\link[=getAsperaArgs]{getAsperaArgs()}}, \code{\link[=fetch]{fetch()}}
 }

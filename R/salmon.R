@@ -77,7 +77,7 @@ salmon = function(
 #' @return A data.table, invisibly.
 #'
 #' @export
-getSalmonMetadata = function(inputDir, outputDir = '.') {
+getSalmonMetadata = function(inputDir, outputDir = 'data') {
 
   outputFilename = 'salmon_meta_info.csv'
 

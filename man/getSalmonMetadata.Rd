@@ -4,7 +4,7 @@
 \alias{getSalmonMetadata}
 \title{Aggregrate metadata from salmon quantifications}
 \usage{
-getSalmonMetadata(inputDir, outputDir = ".")
+getSalmonMetadata(inputDir, outputDir = "data")
 }
 \arguments{
 \item{inputDir}{Directory that contains output from salmon.}

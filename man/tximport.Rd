@@ -5,9 +5,9 @@
 \title{Run tximport on RNA-seq quantifications}
 \usage{
 tximport(
-  dirpaths,
+  inputDir,
   tx2gene,
-  outputDir = ".",
+  outputDir = "data",
   type = c("salmon", "kallisto"),
   countsFromAbundance = "lengthScaledTPM",
   ignoreTxVersion = TRUE,
@@ -15,10 +15,10 @@ tximport(
 )
 }
 \arguments{
-\item{dirpaths}{Paths to directories that contain quantification results.}
+\item{inputDir}{Directory that contains the quantification directories.}
 
-\item{tx2gene}{Data.frame, as returned by \code{\link[=getTx2gene]{getTx2gene()}}, passed to
-\code{\link[tximport:tximport]{tximport::tximport()}}.}
+\item{tx2gene}{\code{NULL} or data.frame of mapping between transcripts and
+genes, as returned by \code{\link[=getTx2gene]{getTx2gene()}}, passed to \code{\link[tximport:tximport]{tximport::tximport()}}.}
 
 \item{outputDir}{Directory in which to save the result, a file named
 "tximport_output.qs", using \code{\link[qs:qsave]{qs::qsave()}}. If \code{NULL}, no file is saved.}
