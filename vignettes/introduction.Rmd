@@ -9,28 +9,34 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, setup, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
 
-## testing
+The main function in the `seeker` package is, well, `seeker()`. Currently `seeker()` is targeted at processing RNA-seq data. The main input is a list of parameters specifying which steps of RNA-seq data processing to perform and how to perform them. Depending on the parameters, `seeker()` will call other functions in the package.
+
+A convenient way to construct the list of parameters is to make a yaml file and read it into R using `yaml::read_yaml()`. A template yaml file is reproduced below and available at `system.file('extdata', 'params_template.yml', package = 'seeker')`.
+
 ```{r, code = readLines(system.file('extdata', 'params_template.yml', package = 'seeker')), eval = FALSE}
 ```
 
+A convenient way to run `seeker()` is then using a script such as the one reproduced below and available at `system.file('extdata', 'run_seeker.R', package = 'seeker')`.
 
 ```{r, code = readLines(system.file('extdata', 'run_seeker.R', package = 'seeker')), eval = FALSE}
 ```
 
-basic usage
+If you copy the script to your current working directory, you can run it using a command such as
+
 ```sh
-Rscript run_seeker.R <study>.yml <parentDir>
+Rscript run_seeker.R <path/to/study>.yml <path/to/parent/directory>
 ```
 
-fancier, works for both bash and zsh
+A somewhat fancier option, which saves stdout and stderr to a log file, would be something like
+
 ```sh
-study="GSE143524" && \
-parentDir="/Users/jakehughey/Downloads" && \
+study="<study>" && \
+parentDir="<path/to/parent/directory>" && \
 mkdir -p "${parentDir}/${study}" && \
-Rscript inst/extdata/run_seeker.R data-raw/${study}.yml "${parentDir}" &> \
-"${parentDir}/${study}/progress.log"
+Rscript run_seeker.R "<path/to>/${study}.yml" "${parentDir}" &> \
+  "${parentDir}/${study}/progress.log"
 ```

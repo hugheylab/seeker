@@ -1,4 +1,4 @@
-doParallel::registerDoParallel(cores = 4)
+doParallel::registerDoParallel()
 
 cArgs = commandArgs(TRUE)
 yamlPath = cArgs[1L]
