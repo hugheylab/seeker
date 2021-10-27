@@ -1,0 +1,42 @@
+study: 'GSE143524' # [string]
+metadata:
+  run: TRUE # [logical]
+  bioproject: 'PRJNA600892' # [string]
+  include:
+    # [named list or NULL]
+    colname: 'run_accession' # [string]
+    values: ['SRR10876945', 'SRR10876946'] # [vector]
+  # exclude # [named list or NULL]
+    # colname # [string]
+    # values # [vector]
+fetch:
+  run: TRUE # [logical]
+  # overwrite # [logical or NULL]
+  # ascpCmd # [string or NULL]
+  # ascpArgs # [character vector or NULL]
+  # ascpPrefix # [string or NULL]
+trimgalore:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+fastqc:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+salmon:
+  run: FALSE # [logical]
+  indexDir: '~/Dropbox (VUMC)/hughey_lab/genomes/alias/mm10/salmon_sa_index/default' # [string]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+multiqc:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+tximport:
+  run: FALSE # [logical]
+  tx2gene:
+    # [named list or NULL]
+    dataset: 'mmusculus_gene_ensembl' # [string]
+    version: 104 # [number; latest version is 104 as of Oct 2021]
+  countsFromAbundance: 'lengthScaledTPM' # [string]
+  # ignoreTxVersion # [logical or NULL]

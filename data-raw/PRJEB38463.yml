@@ -1,0 +1,44 @@
+study: 'PRJEB38463' # [string]
+metadata:
+  run: TRUE # [logical]
+  bioproject: 'PRJEB38463' # [string]
+  # include:
+    # [named list or NULL]
+    # colname # [string]
+    # values # [vector]
+  # exclude # [named list or NULL]
+    # colname # [string]
+    # values # [vector]
+fetch:
+  run: TRUE # [logical]
+  # overwrite # [logical or NULL]
+  # ascpCmd # [string or NULL]
+  # ascpArgs # [character vector or NULL]
+  # ascpPrefix # [string or NULL]
+trimgalore:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+fastqc:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+salmon:
+  run: TRUE # [logical]
+  indexDir: '~/Downloads/s_cerevisiae_index' # [string]
+  # wget -q http://ftp.ensembl.org/pub/release-104/fasta/saccharomyces_cerevisiae/cdna/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa.gz
+  # salmon index -t Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa.gz -i s_cerevisiae_index -k 31
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+multiqc:
+  run: TRUE # [logical]
+  # cmd # [string or NULL]
+  # args # [character vector or NULL]
+tximport:
+  run: TRUE # [logical]
+  tx2gene:
+    # [named list or NULL]
+    dataset: 'scerevisiae_gene_ensembl' # [string]
+    version: 104 # [number; latest version is 104 as of Oct 2021]
+  countsFromAbundance: 'lengthScaledTPM' # [string]
+  # ignoreTxVersion # [logical or NULL]

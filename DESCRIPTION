@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9026
+Version: 0.0.0.9027
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
 License: GPL-2
@@ -24,5 +24,6 @@ Suggests:
   doFuture (>= 0.10.0),
   rhdf5 (>= 2.24.0),
   knitr,
-  rmarkdown
+  rmarkdown,
+  yaml (>= 2.2.1)
 VignetteBuilder: knitr

@@ -100,6 +100,123 @@ checkSeekerParams = function(params) {
   invisible()}
 
 
+#' Process RNA-seq data end to end
+#'
+#' This function selectively performs various steps to process RNA-seq data.
+#'
+#' @param params Named list of parameters with components:
+#' * `study`: String used to name the output directory within `parentDir`.
+#' * `metadata`: Named list with components:
+#'   * `run`: Logical indicating whether to fetch metadata from ENA. See
+#'     [fetchMetadata()]. If `TRUE`, saves a file
+#'     `parentDir`/`study`/data/metadata.csv. If `FALSE`, expects that file to
+#'     already exist. Following components are only checked if `run` is `TRUE`.
+#'   * `bioproject`: String indicating the study's bioproject accession.
+#'   * `include`: Optional named list for specifying which rows of metadata to
+#'     include for further processing, with components:
+#'     * `column`: String indicating column in metadata
+#'     * `values`: Vector indicating values within `column`
+#'   * `exclude`: Optional named list for specifying which rows of metadata to
+#'     exclude from further processing (superseding `include`), with components:
+#'     * `column`: String indicating column in metadata
+#'     * `values`: Vector indicating values within `column`
+#' * `fetch`: Named list with components:
+#'   * `run`: Logical indicating whether to fetch fastq(.gz) files using ascp.
+#'     See [fetch()]. If `TRUE`, expects metadata to have a column
+#'     'fastq_aspera' containing remote paths, and saves files to
+#'     `parentDir`/`study`/fetch_output. If `FALSE`, expects metadata to have a
+#'     column 'fastq_aspera' containing names (or complete paths, local or
+#'     remote) of fastq files. Whether `TRUE` or `FALSE`, updates metadata with
+#'     column 'fastq_fetched' containing paths to files that should be in
+#'     `parentDir`/`study`/fetch_output. Following components are only checked
+#'     if `run` is `TRUE`.
+#'   * `overwrite`: Logical indicating whether to overwrite files that already
+#'     exist. `NULL` indicates to use the default in [fetch()].
+#'   * `ascpCmd`: String indicating path to ascp. `NULL` indicates to use the
+#'     default in [fetch()].
+#'   * `ascpArgs`: Character vector of arguments to pass to ascp. `NULL`
+#'     indicates to use the default in [fetch()].
+#'   * `ascpPrefix`: String indicating prefix for fetching files. `NULL`
+#'     indicates to use the default in [fetch()].
+#' * `trimgalore`: Named list with components:
+#'   * `run`: Logical indicating whether to perform quality/adapter trimming of
+#'     reads. See [trimgalore()]. If `TRUE`, expects metadata to have a column
+#'     'fastq_fetched' containing paths to fastq files in
+#'     `parentDir`/`study`/fetch_output, saves trimmed files to
+#'     `parentDir`/`study`/trimgalore_output, and updates metadata with column
+#'     'fastq_trimmed'. If `FALSE`, expects and does nothing. Following
+#'     components are only checked if `run` is `TRUE`.
+#'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
+#'     use the default in [trimgalore()].
+#'   * `args`: Additional arguments to pass to the command-line interface.
+#'     `NULL` indicates to use the default in [trimgalore()].
+#' * `fastqc`: Named list with components:
+#'   * `run`: Logical indicating whether to perform QC on reads. See [fastqc()].
+#'     If `TRUE` and `trimgalore$run` is `TRUE`, expects metadata to have a
+#'     column 'fastq_trimmed' containing paths to fastq files in
+#'     `parentDir`/`study`/trimgalore_output. If `TRUE` and `trimgalore$run` is
+#'     `FALSE`, expects metadata to have a column 'fastq_fetched' containing
+#'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`,
+#'     saves results to `parentDir`/`study`/fastqc_output. If `FALSE`, expects
+#'     and does nothing. Following components are only checked if `run` is
+#'     `TRUE`.
+#'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
+#'     use the default in [fastqc()].
+#'   * `args`: Additional arguments to pass to the command-line interface.
+#'     `NULL` indicates to use the default in [fastqc()].
+#' * `salmon`: Named list with components:
+#'   * `run`: Logical indicating whether to quantify transcript abundances. See
+#'     [salmon()]. If `TRUE` and `trimgalore$run` is `TRUE`, expects metadata to
+#'     have a column 'fastq_trimmed' containing paths to fastq files in
+#'     `parentDir`/`study`/trimgalore_output. If `TRUE` and `trimgalore$run` is
+#'     `FALSE`, expects metadata to have a column 'fastq_fetched' containing
+#'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`, also
+#'     expects metadata to have a column 'sample_accession' containing sample
+#'     ids, and saves results to `parentDir`/`study`/salmon_output and
+#'     `parentDir`/`study`/data/salmon_meta_info.csv. If `FALSE`, expects and
+#'     does nothing. Following components are only checked if `run` is `TRUE`.
+#'   * `indexDir`: Directory that contains salmon index.
+#'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
+#'     use the default in [salmon()].
+#'   * `args`: Additional arguments to pass to the command-line interface.
+#'     `NULL` indicates to use the default in [salmon()].
+#' * `multiqc`: Named list with components:
+#'   * `run`: Logical indicating whether to aggregrate results of various
+#'     processing steps. See [multiqc()]. If `TRUE`, saves results to
+#'     `parentDir`/`study`/multiqc_output. If `FALSE`, expects and does nothing.
+#'     Following components are only checked if `run` is `TRUE`.
+#'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
+#'     use the default in [multiqc()].
+#'   * `args`: Additional arguments to pass to the command-line interface.
+#'     `NULL` indicates to use the default in [multiqc()].
+#' * `tximport`: Named list with components:
+#'   * `run`: Logical indicating whether to summarize transcript- or gene-level
+#'     estimates for downstream analysis. See [tximport()]. If `TRUE`, expects a
+#'     directory `parentDir`/`study`/salmon_output containing directories of
+#'     quantification results from salmon, and saves results to
+#'     `parentDir`/`study`/data/tximport_output.qs. If `FALSE`, expects and does
+#'     nothing. Following components are only checked if `run` is `TRUE`.
+#'   * `tx2gene`: Optional named list with components:
+#'     * `dataset`: String indicating ensembl gene dataset. See [getTx2gene()].
+#'     * `version`: Number indicating ensembl version. See [getTx2gene()].
+#'
+#'     If specified, saves a file `parentDir`/`study`/data/tx2gene.csv.
+#'   * `countsFromAbundance`: String indicating whether or how to estimate
+#'     counts using estimated abundances. See [tximport::tximport()].
+#'   * `ignoreTxVersion`: Logical indicating whether to the version suffix on
+#'     transcript ids. If `NULL`, indicates to use `TRUE`. See
+#'     [tximport::tximport()].
+#'
+#' `params` can be derived from a yaml file, see
+#' \code{vignette('introduction', package = 'seeker')}.
+#' @param parentDir Directory in which to store the output, which will be a
+#'   directory named according to `params$study`.
+#'
+#' @return `NULL`, invisibly.
+#'
+#' @seealso [fetchMetadata()], [fetch()], [trimgalore()], [fastqc()],
+#'   [salmon()], [multiqc()], [tximport()]
+#'
 #' @export
 seeker = function(params, parentDir = '.') {
   assertOS(c('linux', 'mac', 'solaris'))
@@ -112,16 +229,13 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'metadata'
-  # if run, expects bioproject to be a valid bioproject accession
-  # if not run, expects a metadata file at
-  # <parentDir>/<params$study>/data/metadata.csv
   paramsNow = params[[step]]
   dataDir = file.path(outputDir, 'data')
   metadataPath = file.path(dataDir, 'metadata.csv')
 
   if (paramsNow$run) {
     # host must be 'ena' to download fastq files using ascp
-    metadata = getMetadata(paramsNow$bioproject)
+    metadata = fetchMetadata(paramsNow$bioproject)
     if (!dir.exists(dataDir)) dir.create(dataDir)
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
@@ -138,10 +252,6 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'fetch'
-  # if run, expects metadata to have a column 'fastq_aspera' containing remote
-  # paths to download fastq.gz files by ascp
-  # if not run, expects metadata to have a column 'fastq_aspera' containing
-  # names (or complete paths, local or remote) of fastq.gz files
   paramsNow = params[[step]]
   fetchDir = file.path(outputDir, paste0(step, '_output'))
   inputColname = 'fastq_aspera'
@@ -164,9 +274,6 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'trimgalore'
-  # if run, expects metadata to have a column 'fastq_fetched' containing local
-  # paths to fastq.gz files
-  # if not run, expects nothing
   paramsNow = params[[step]]
   trimDir = file.path(outputDir, paste0(step, '_output'))
   inputColname = outputColname
@@ -178,19 +285,10 @@ seeker = function(params, parentDir = '.') {
       list(filepaths = metadata[[inputColname]], outputDir = trimDir),
       paramsNow))
     set(metadata, j = outputColname, value = result$fastq_trimmed)
-    fwrite(metadata, metadataPath) # could be overwritten
-  } #else {
-    #set(metadata, j = outputColname, value = metadata[[inputColname]])}
-
-  # fwrite(metadata, metadataPath) # could be overwritten
+    fwrite(metadata, metadataPath)} # could be overwritten
 
   ####################
   step = 'fastqc'
-  # if run, if trimgalore run, expects metadata to have a column 'fastq_trimmed'
-  # containing paths to fastq.gz files
-  # if run, if trimgalore not run, expects metadata to have a column
-  # 'fastq_fetched' containing paths to fastq.gz files
-  # if not run, expects nothing
   paramsNow = params[[step]]
   fastqcDir = file.path(outputDir, paste0(step, '_output'))
   fileColname = if (params$trimgalore$run) outputColname else inputColname
@@ -203,13 +301,6 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'salmon'
-  # if run and trimgalore run, expects metadata to have a column 'fastq_trimmed'
-  # containing paths to fastq.gz files and a column 'sample_accession'
-  # containing sample ids
-  # if run and trimgalore not run, expects metadata to have a column
-  # 'fastq_fetched' containing paths to fastq.gz files and a column
-  # 'sample_accession' containing sample ids
-  # if not run, expects nothing
   paramsNow = params[[step]]
   salmonDir = file.path(outputDir, paste0(step, '_output'))
   sampleColname = 'sample_accession'
@@ -226,7 +317,6 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'multiqc'
-  # if run or not run, expects nothing
   multiqcDir = file.path(outputDir, paste0(step, '_output'))
 
   if (params[[step]]$run) {
@@ -238,9 +328,6 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   step = 'tximport'
-  # if run, expects a directory <parentDir>/<params$study>/salmon_output
-  # containing directories of quantification results from salmon
-  # if not run, expects nothing
   paramsNow = params[[step]]
 
   if (paramsNow$run) {

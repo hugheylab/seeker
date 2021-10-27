@@ -3,36 +3,37 @@
 #' This function can use the API of the European Nucleotide Archive
 #' (recommended) or the Sequence Read Archive.
 #'
-#' @param study String indicating study accession.
+#' @param bioproject String indicating bioproject accession.
 #' @param host String indicating from where to fetch the metadata.
-#' @param fields Character vector indicating which fields to fetch.
+#' @param fields Character vector indicating which fields to fetch, if `host`
+#'   is 'ena'.
 #'
 #' @return A `data.table`.
 #'
 #' @seealso [fetch()]
 #'
 #' @export
-getMetadata = function(
-  study, host = c('ena', 'sra'),
+fetchMetadata = function(
+  bioproject, host = c('ena', 'sra'),
   fields = c(
     'study_accession', 'sample_accession', 'secondary_sample_accession',
     'sample_alias', 'sample_title', 'experiment_accession', 'run_accession',
-    'fastq_ftp', 'fastq_aspera')) {
+    'fastq_md5', 'fastq_ftp', 'fastq_aspera')) {
 
-  assertString(study)
+  assertString(bioproject)
   host = match.arg(host)
   assertCharacter(fields, any.missing = FALSE)
 
   if (host == 'ena') {
     url = paste0(
       'https://www.ebi.ac.uk/ena/portal/api/filereport?accession=',
-      study, '&result=read_run&format=tsv&download=true&fields=',
+      bioproject, '&result=read_run&format=tsv&download=true&fields=',
       paste0(fields, collapse = ','))
     sep = '\t'
   } else {
     url = paste0(
       'http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi',
-      '?save=efetch&db=sra&rettype=runinfo&term=', study)
+      '?save=efetch&db=sra&rettype=runinfo&term=', bioproject)
     sep = ','}
 
   raw = curl::curl_fetch_memory(url)
@@ -66,7 +67,7 @@ getMetadata = function(
 #' @return A list. As the function runs, it updates a tab-delimited log file in
 #'   `outputDir` called "progress.tsv".
 #'
-#' @seealso [getMetadata()], [getAscpCmd()], [getAscpArgs()]
+#' @seealso [fetchMetadata()], [getAscpCmd()], [getAscpArgs()]
 #'
 #' @export
 fetch = function(

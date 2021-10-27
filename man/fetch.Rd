@@ -50,5 +50,5 @@ parallel, register a parallel backend using \code{\link[doFuture:registerDoFutur
 \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
 \seealso{
-\code{\link[=getMetadata]{getMetadata()}}, \code{\link[=getAscpCmd]{getAscpCmd()}}, \code{\link[=getAscpArgs]{getAscpArgs()}}
+\code{\link[=fetchMetadata]{fetchMetadata()}}, \code{\link[=getAscpCmd]{getAscpCmd()}}, \code{\link[=getAscpArgs]{getAscpArgs()}}
 }

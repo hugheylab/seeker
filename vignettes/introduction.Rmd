@@ -9,88 +9,28 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
 
-```{r, eval = FALSE}
-library('data.table')
-doParallel::registerDoParallel()
+## testing
+```{r, code = readLines(system.file('extdata', 'params_template.yml', package = 'seeker')), eval = FALSE}
 ```
 
-## Paired-end data from mice
 
-```{r, eval = FALSE}
-study = 'PRJNA297287'
-dir.create(study)
-fastqDir = file.path(study, 'fastq')
-quantDir = file.path(study, 'salmon_output')
-
-metadata = getMetadata(study)
-fwrite(metadata, file.path(study, 'metadata_ena.csv'))
-metadata = metadata[1:2, ]
-
-fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
-metadata$fastq_local = fastqResult$localFilepaths
-
-fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
-
-salmon(metadata$fastq_local, metadata$secondary_sample_accession, quantDir,
-       indexPath = '~/transcriptomes/mus_musculus_transcripts')
-
-tx2gene = getTx2gene('mmusculus_gene_ensembl')
-tximport(file.path(quantDir, sort(unique(metadata$secondary_sample_accession))),
-         tx2gene, file.path(study, 'tximport_output.rds'))
-
-multiqc(study, file.path(study, 'multiqc_output'))
+```{r, code = readLines(system.file('extdata', 'run_seeker.R', package = 'seeker')), eval = FALSE}
 ```
 
-## Single-end data from humans
-
-```{r, eval = FALSE}
-study = 'PRJNA436224'
-dir.create(study)
-fastqDir = file.path(study, 'fastq')
-quantDir = file.path(study, 'salmon_output')
-
-metadata = getMetadata(study)
-fwrite(metadata, file.path(study, 'metadata_ena.csv'))
-metadata = metadata[1:2, ]
-
-fastqResult = getFastq(metadata$fastq_aspera, fastqDir)
-metadata$fastq_local = fastqResult$localFilepaths
-
-fastqc(metadata$fastq_local, file.path(study, 'fastqc_output'))
-
-salmon(metadata$fastq_local, metadata$secondary_sample_accession, quantDir)
-
-tx2gene = getTx2gene()
-tximport(file.path(quantDir, sort(unique(metadata$secondary_sample_accession))),
-         tx2gene, file.path(study, 'tximport_output.rds'))
-
-multiqc(study, file.path(study, 'multiqc_output'))
+basic usage
+```sh
+Rscript run_seeker.R <study>.yml <parentDir>
 ```
 
-## Other functions
-
-`getMetadata` with `host == 'sra'` is not very useful, since the most important metadata can only be downloaded manually using the SRA Run Selector (https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/). Nice move, SRA.
-
-```{r, eval = FALSE}
-metadataSra = getMetadata(study, host = 'sra')
-
-trimgalore(metadata$fastq_local)
-fastqscreen(metadata$fastq_local)
-```
-
-## Modifications for Mac OS
-
-The absence and presence of backslashes is essential.
-
-```{r, eval = FALSE}
-asperaCmd = '~/Applications/Aspera Connect.app/Contents/Resources/ascp'
-asperaArgs = c('-QT -l 300m -P33001', '-i',
-               '~/Applications/Aspera\\ Connect.app/Contents/Resources/asperaweb_id_dsa.openssh')
-
-fastqResult = getFastq(metadata$fastq_aspera, fastqDir,
-                       asperaCmd = asperaCmd, asperaArgs = asperaArgs)
+fancier, works for both bash and zsh
+```sh
+study="GSE143524" && \
+parentDir="/Users/jakehughey/Downloads" && \
+mkdir -p "${parentDir}/${study}" && \
+Rscript inst/extdata/run_seeker.R data-raw/${study}.yml "${parentDir}" &> \
+"${parentDir}/${study}/progress.log"
 ```
