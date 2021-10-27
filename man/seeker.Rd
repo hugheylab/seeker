@@ -20,14 +20,14 @@ already exist. Following components are only checked if \code{run} is \code{TRUE
 \item \code{include}: Optional named list for specifying which rows of metadata to
 include for further processing, with components:
 \itemize{
-\item \code{column}: String indicating column in metadata
-\item \code{values}: Vector indicating values within \code{column}
+\item \code{colname}: String indicating column in metadata
+\item \code{values}: Vector indicating values within \code{colname}
 }
 \item \code{exclude}: Optional named list for specifying which rows of metadata to
 exclude from further processing (superseding \code{include}), with components:
 \itemize{
-\item \code{column}: String indicating column in metadata
-\item \code{values}: Vector indicating values within \code{column}
+\item \code{colname}: String indicating column in metadata
+\item \code{values}: Vector indicating values within \code{colname}
 }
 }
 \item \code{fetch}: Named list with components:

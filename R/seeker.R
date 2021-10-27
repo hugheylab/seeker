@@ -114,12 +114,12 @@ checkSeekerParams = function(params) {
 #'   * `bioproject`: String indicating the study's bioproject accession.
 #'   * `include`: Optional named list for specifying which rows of metadata to
 #'     include for further processing, with components:
-#'     * `column`: String indicating column in metadata
-#'     * `values`: Vector indicating values within `column`
+#'     * `colname`: String indicating column in metadata
+#'     * `values`: Vector indicating values within `colname`
 #'   * `exclude`: Optional named list for specifying which rows of metadata to
 #'     exclude from further processing (superseding `include`), with components:
-#'     * `column`: String indicating column in metadata
-#'     * `values`: Vector indicating values within `column`
+#'     * `colname`: String indicating column in metadata
+#'     * `values`: Vector indicating values within `colname`
 #' * `fetch`: Named list with components:
 #'   * `run`: Logical indicating whether to fetch fastq(.gz) files using ascp.
 #'     See [fetch()]. If `TRUE`, expects metadata to have a column
