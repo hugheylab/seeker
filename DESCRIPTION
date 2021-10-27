@@ -23,8 +23,8 @@ Imports:
 Suggests:
   doFuture (>= 0.10.0),
   doParallel (>= 1.0.16),
-  rhdf5 (>= 2.24.0),
   knitr,
+  rhdf5 (>= 2.24.0),
   rmarkdown,
   yaml (>= 2.2.1)
 VignetteBuilder: knitr
