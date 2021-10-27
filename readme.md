@@ -7,61 +7,96 @@
 
 ## Installation
 
-These instructions are for Linux. Slight modifications may be necessary for macOS. If you're using Windows, you're doing it wrong.
+### R package
 
-1. Download and install [Aspera Connect for Linux](https://www.ibm.com/aspera/connect/). You will likely have to download a tar.gz file (`wget`), untar it (`tar -zxvf`), then run the resulting shell script.
+1. Install [`BiocManager`](https://cran.r-project.org/package=BiocManager).
 
-1. Install and set up Miniconda. See [here](https://bioconda.github.io/user/install.html#set-up-channels).
+    ```r
+    if (!requireNamespace('BiocManager', quietly = TRUE))
+      install.packages('BiocManager')
+    ```
 
+1. If you use RStudio, go to Tools → Global Options... → Packages → Add... (under Secondary repositories), then enter:
+
+    - Name: hugheylab
+    - Url: https://hugheylab.github.io/drat/
+
+    You only have to do this once. Then you can install or update the package by entering:
+
+    ```r
+    BiocManager::install('seeker')
+    ```
+
+    Alternatively, you can install or update the package by entering:
+
+    ```r
+    BiocManager::install('seeker', site_repository = 'https://hugheylab.github.io/drat/')
+    ```
+
+### System dependencies
+
+These instructions are for Unix-based systems. If you're using Windows, you're doing it wrong.
+
+1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
+
+1. Install [Miniconda](https://conda.io/en/latest/miniconda.html). On Linux:
+    
     ```sh
     curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     sh Miniconda3-latest-Linux-x86_64.sh
+    ```
+
+    On macOS:
     
+    ```sh
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+    sh Miniconda3-latest-MacOSX-x86_64.sh
+    ```
+
+1. Set up conda channels, including [bioconda](https://bioconda.github.io/user/install.html).
+
+    ```sh
     conda config --add channels defaults
     conda config --add channels bioconda
     conda config --add channels conda-forge
     ```
 
-1. Install the other command-line tools.
+1. Install the [mamba package manager](https://github.com/mamba-org/mamba).
 
     ```sh
     conda install mamba -c conda-forge
+    ```
+
+1. Install the other command-line tools. The code below will install the packages into the base conda environment; use `-n` to specify a different environment. When using `seeker`, you will need to ensure that R is running with the given conda environment.
+
+    ```sh
     mamba install refgenie trim-galore fastqc fastq-screen salmon multiqc
     ```
 
-1. Optionally, fetch the genomes for fastq-screen. This takes a long time, so don't bother unless you actually plan to run fastq-screen.
+1. Optionally, configure [refgenie](http://refgenie.databio.org/en/latest/install). For example:
 
     ```sh
-    fastq_screen --get_genomes
+    mkdir -p ${HOME}/genomes
+    refgenie init -c ${HOME}/genomes/genome_config.yaml
     ```
-
-1. Configure refgenie. For example:
-
+    
+    Then you can add the following line to ~/.bashrc, ~/.bash_profile, or ~/.zshrc, depending on your OS and shell.
+    
     ```sh
-    mkdir /home/ubuntu/genomes
-    refgenie init -c /home/ubuntu/genomes/genome_config.yaml
-    printf "\nexport REFGENIE=/home/ubuntu/genomes/genome_config.yaml\n" >> ~/.bashrc
-    source ~/.bashrc
-    refgenie init
+    REFGENIE="${HOME}/genomes/genome_config.yaml"
     ```
+    
+    Then `source` the file and run `refgenie init`.
 
-1. Fetch the salmon index files using refgenie. For example:
+1. Optionally, use refgenie to fetch the salmon index files for the mouse and human transcriptomes.
 
     ```sh
     refgenie pull hg38/salmon_sa_index
     refgenie pull mm10/salmon_sa_index
     ```
 
-1. Install the `biomaRt` and `tximport` packages from Bioconductor.
+1. Optionally, fetch the genomes for fastq-screen. This takes a long time, so don't bother unless you actually plan to run fastq-screen.
 
-    ```r
-    if (!requireNamespace('BiocManager', quietly = TRUE))
-      install.packages('BiocManager')
-    BiocManager::install(c('biomaRt', 'tximport'))
-    ```
-
-1. Clone the git repo, build the source package, then do something like
-
-    ```r
-    install.packages('seeker_0.0.0.9001.tar.gz', type = 'source', repos = NULL)
+    ```sh
+    fastq_screen --get_genomes
     ```
