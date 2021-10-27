@@ -208,7 +208,8 @@ checkSeekerParams = function(params) {
 #'     [tximport::tximport()].
 #'
 #' `params` can be derived from a yaml file, see
-#' \code{vignette('introduction', package = 'seeker')}.
+#' \code{vignette('introduction', package = 'seeker')}. The yaml representation
+#' of `params` will be saved to `parentDir`/`params$study`/data/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
 #'
@@ -227,16 +228,18 @@ seeker = function(params, parentDir = '.') {
   outputDir = file.path(parentDir, params$study)
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
+  dataDir = file.path(outputDir, 'data')
+  if (!dir.exists(dataDir)) dir.create(dataDir)
+  yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
+
   ####################
   step = 'metadata'
   paramsNow = params[[step]]
-  dataDir = file.path(outputDir, 'data')
   metadataPath = file.path(dataDir, 'metadata.csv')
 
   if (paramsNow$run) {
     # host must be 'ena' to download fastq files using ascp
     metadata = fetchMetadata(paramsNow$bioproject)
-    if (!dir.exists(dataDir)) dir.create(dataDir)
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
     fread(metadataPath, na.strings = '')}

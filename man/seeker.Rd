@@ -133,7 +133,8 @@ transcript ids. If \code{NULL}, indicates to use \code{TRUE}. See
 }
 
 \code{params} can be derived from a yaml file, see
-\code{vignette('introduction', package = 'seeker')}.}
+\code{vignette('introduction', package = 'seeker')}. The yaml representation
+of \code{params} will be saved to \code{parentDir}/\code{params$study}/data/params.yml.}
 
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{params$study}.}
