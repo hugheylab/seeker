@@ -25,13 +25,13 @@ A convenient way to run `seeker()` is then using a script such as the one reprod
 ```{r, code = readLines(system.file('extdata', 'run_seeker.R', package = 'seeker')), eval = FALSE}
 ```
 
-If you copy the script to your current working directory, you can run it using a command such as
+If you copy the script to your current working directory, you can run it using something like
 
 ```sh
 Rscript run_seeker.R <path/to/study>.yml <path/to/parent/directory>
 ```
 
-A somewhat fancier option, which saves stdout and stderr to a log file, would be something like
+A fancier option, which saves stdout and stderr to a log file, would be something like
 
 ```sh
 study="<study>" && \
@@ -40,3 +40,5 @@ mkdir -p "${parentDir}/${study}" && \
 Rscript run_seeker.R "<path/to>/${study}.yml" "${parentDir}" &> \
   "${parentDir}/${study}/progress.log"
 ```
+
+This option assumes that the name of the yaml file (minus the file extension) is identical to the `study` variable within the yaml file, which we highly recommend.
