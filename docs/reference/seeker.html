@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9028</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9030</span>
       </span>
     </div>
 
@@ -101,7 +101,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/hugheylab/seeker/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -116,7 +121,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Process RNA-seq data end to end</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/hugheylab/seeker/blob/master/R/seeker.R'><code>R/seeker.R</code></a></small>
     <div class="hidden name"><code>seeker.Rd</code></div>
     </div>
 
@@ -160,6 +165,8 @@ remote) of fastq files. Whether <code>TRUE</code> or <code>FALSE</code>, updates
 column 'fastq_fetched' containing paths to files that should be in
 <code>parentDir</code>/<code>study</code>/fetch_output. Following components are only checked
 if <code>run</code> is <code>TRUE</code>.</p></li>
+<li><p><code>keep</code>: Logical indicating whether to keep fetched fastq files when all
+processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>overwrite</code>: Logical indicating whether to overwrite files that already
 exist. <code>NULL</code> indicates to use the default in <code><a href='fetch.html'>fetch()</a></code>.</p></li>
 <li><p><code>ascpCmd</code>: String indicating path to ascp. <code>NULL</code> indicates to use the
@@ -177,6 +184,8 @@ reads. See <code><a href='trimgalore.html'>trimgalore()</a></code>. If <code>TRU
 <code>parentDir</code>/<code>study</code>/trimgalore_output, and updates metadata with column
 'fastq_trimmed'. If <code>FALSE</code>, expects and does nothing. Following
 components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
+<li><p><code>keep</code>: Logical indicating whether to keep trimmed fastq files when all
+processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>cmd</code>: Name or path of the command-line interface. <code>NULL</code> indicates to
 use the default in <code><a href='trimgalore.html'>trimgalore()</a></code>.</p></li>
 <li><p><code>args</code>: Additional arguments to pass to the command-line interface.
@@ -192,6 +201,8 @@ paths to fastq files in <code>parentDir</code>/<code>study</code>/fetch_output. 
 saves results to <code>parentDir</code>/<code>study</code>/fastqc_output. If <code>FALSE</code>, expects
 and does nothing. Following components are only checked if <code>run</code> is
 <code>TRUE</code>.</p></li>
+<li><p><code>keep</code>: Logical indicating whether to keep fastqc files when all
+processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>cmd</code>: Name or path of the command-line interface. <code>NULL</code> indicates to
 use the default in <code><a href='fastqc.html'>fastqc()</a></code>.</p></li>
 <li><p><code>args</code>: Additional arguments to pass to the command-line interface.
@@ -209,6 +220,8 @@ ids, and saves results to <code>parentDir</code>/<code>study</code>/salmon_outpu
 <code>parentDir</code>/<code>study</code>/data/salmon_meta_info.csv. If <code>FALSE</code>, expects and
 does nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>indexDir</code>: Directory that contains salmon index.</p></li>
+<li><p><code>keep</code>: Logical indicating whether to keep quantification results when
+all processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>cmd</code>: Name or path of the command-line interface. <code>NULL</code> indicates to
 use the default in <code><a href='salmon.html'>salmon()</a></code>.</p></li>
 <li><p><code>args</code>: Additional arguments to pass to the command-line interface.
@@ -226,9 +239,10 @@ use the default in <code><a href='multiqc.html'>multiqc()</a></code>.</p></li>
 </ul></li>
 <li><p><code>tximport</code>: Named list with components:</p><ul>
 <li><p><code>run</code>: Logical indicating whether to summarize transcript- or gene-level
-estimates for downstream analysis. See <code><a href='tximport.html'>tximport()</a></code>. If <code>TRUE</code>, expects a
+estimates for downstream analysis. See <code><a href='tximport.html'>tximport()</a></code>. If <code>TRUE</code>, expects
+metadata to have a column 'sample_accession' of sample ids, and expects a
 directory <code>parentDir</code>/<code>study</code>/salmon_output containing directories of
-quantification results from salmon, and saves results to
+quantification results, and saves results to
 <code>parentDir</code>/<code>study</code>/data/tximport_output.qs. If <code>FALSE</code>, expects and does
 nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>tx2gene</code>: Optional named list with components:</p><ul>
@@ -236,7 +250,7 @@ nothing. Following components are only checked if <code>run</code> is <code>TRUE
 <li><p><code>version</code>: Number indicating ensembl version. See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
 </ul>
 
-<p>If specified, saves a file <code>parentDir</code>/<code>study</code>/data/tx2gene.csv.</p></li>
+<p>If specified, saves a file <code>parentDir</code>/<code>study</code>/data/tx2gene.csv.gz.</p></li>
 <li><p><code>countsFromAbundance</code>: String indicating whether or how to estimate
 counts using estimated abundances. See <code><a href='https://rdrr.io/pkg/tximport/man/tximport.html'>tximport::tximport()</a></code>.</p></li>
 <li><p><code>ignoreTxVersion</code>: Logical indicating whether to the version suffix on

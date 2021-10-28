@@ -27,7 +27,7 @@ fastqc:
   # cmd # [string or NULL]
   # args # [character vector or NULL]
 salmon:
-  run: FALSE # [logical]
+  run: TRUE # [logical]
   indexDir: '~/Dropbox (VUMC)/hughey_lab/genomes/alias/mm10/salmon_sa_index/default' # [string]
   # keep # [logical or NULL]
   # cmd # [string or NULL]
@@ -37,7 +37,7 @@ multiqc:
   # cmd # [string or NULL]
   # args # [character vector or NULL]
 tximport:
-  run: FALSE # [logical]
+  run: TRUE # [logical]
   tx2gene:
     # [named list or NULL]
     dataset: 'mmusculus_gene_ensembl' # [string]

@@ -18,7 +18,7 @@ see which datasets are available, do
 \item{version}{Passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}.}
 
 \item{outputDir}{Directory in which to save the result, a file named
-"tx2gene.csv". If \code{NULL}, no file is saved.}
+"tx2gene.csv.gz". If \code{NULL}, no file is saved.}
 }
 \value{
 A data.frame, as returned by \code{\link[biomaRt:getBM]{biomaRt::getBM()}}.

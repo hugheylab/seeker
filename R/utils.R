@@ -94,6 +94,13 @@ getTrimmedFilenames = function(x) {
   return(y)}
 
 
+getFastqcFilenames = function(fastqFilepaths) {
+  x = basename(unlist(getFileList(fastqFilepaths)))
+  y = gsub('\\.(f(ast)?q(\\.gz)?)$', '', x, ignore.case = TRUE)
+  z = c(paste0(y, '_fastqc.html'), paste0(y, '_fastqc.zip'))
+  return(z)}
+
+
 safe = function(x) {
   y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
   return(y)}

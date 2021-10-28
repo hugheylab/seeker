@@ -132,7 +132,7 @@ nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{version}: Number indicating ensembl version. See \code{\link[=getTx2gene]{getTx2gene()}}.
 }
 
-If specified, saves a file \code{parentDir}/\code{study}/data/tx2gene.csv.
+If specified, saves a file \code{parentDir}/\code{study}/data/tx2gene.csv.gz.
 \item \code{countsFromAbundance}: String indicating whether or how to estimate
 counts using estimated abundances. See \code{\link[tximport:tximport]{tximport::tximport()}}.
 \item \code{ignoreTxVersion}: Logical indicating whether to the version suffix on

@@ -214,7 +214,7 @@ checkSeekerParams = function(params) {
 #'     * `dataset`: String indicating ensembl gene dataset. See [getTx2gene()].
 #'     * `version`: Number indicating ensembl version. See [getTx2gene()].
 #'
-#'     If specified, saves a file `parentDir`/`study`/data/tx2gene.csv.
+#'     If specified, saves a file `parentDir`/`study`/data/tx2gene.csv.gz.
 #'   * `countsFromAbundance`: String indicating whether or how to estimate
 #'     counts using estimated abundances. See [tximport::tximport()].
 #'   * `ignoreTxVersion`: Logical indicating whether to the version suffix on
@@ -275,7 +275,7 @@ seeker = function(params, parentDir = '.') {
   fetchColname = 'fastq_fetched'
 
   if (paramsNow$run) {
-    paramsNow$run = NULL
+    paramsNow[c('run', 'keep')] = NULL
     result = do.call(fetch, c(
       list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
       paramsNow))
@@ -296,7 +296,7 @@ seeker = function(params, parentDir = '.') {
   trimColname = 'fastq_trimmed'
 
   if (paramsNow$run) {
-    paramsNow$run = NULL
+    paramsNow[c('run', 'keep')] = NULL
     result = do.call(trimgalore, c(
       list(filepaths = metadata[[fetchColname]], outputDir = trimDir),
       paramsNow))
@@ -310,7 +310,7 @@ seeker = function(params, parentDir = '.') {
   fileColname = if (params$trimgalore$run) trimColname else fetchColname
 
   if (paramsNow$run) {
-    paramsNow$run = NULL
+    paramsNow[c('run', 'keep')] = NULL
     result = do.call(fastqc, c(
       list(filepaths = metadata[[fileColname]], outputDir = fastqcDir),
       paramsNow))}
@@ -324,7 +324,7 @@ seeker = function(params, parentDir = '.') {
   # colons or spaces regardless of whether dataset originated from SRA or ENA
 
   if (paramsNow$run) {
-    paramsNow$run = NULL
+    paramsNow[c('run', 'keep')] = NULL
     result = do.call(salmon, c(
       list(filepaths = metadata[[fileColname]],
            samples = metadata[[sampleColname]], outputDir = salmonDir),
@@ -365,17 +365,14 @@ seeker = function(params, parentDir = '.') {
   fwrite(metadata, metadataPath)
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
-    unlink(metadata[[fetchColname]])}
+    unlink(unlist(getFileList(metadata[[fetchColname]])))}
 
   if (params$trimgalore$run && isFALSE(params$trimgalore$keep)) {
-    unlink(metadata[[trimColname]])}
+    unlink(unlist(getFileList(metadata[[trimColname]])))}
 
   if (params$fastqc$run && isFALSE(params$fastqc$keep)) {
-    x = basename(unlist(getFileList(metadata[[fileColname]])))
-    y = gsub('\\.fastq$|\\.fastq\\.gz$|\\.fq$|\\.fq\\.gz$', '', x,
-             ignore.case = TRUE)
-    z = c(paste0(y, '_fastqc.html'), paste0(y, '_fastqc.zip'))
-    unlink(file.path(fastqcDir, z))}
+    fastqcFilenames = getFastqcFilenames(metadata[[fileColname]])
+    unlink(file.path(fastqcDir, fastqcFilenames))}
 
   if (params$salmon$run && isFALSE(params$salmon$keep)) {
     unlink(file.path(salmonDir, unique(metadata[[sampleColname]])),

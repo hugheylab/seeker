@@ -8,7 +8,7 @@
 #'   `mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)`.
 #' @param version Passed to [biomaRt::useEnsembl()].
 #' @param outputDir Directory in which to save the result, a file named
-#'   "tx2gene.csv". If `NULL`, no file is saved.
+#'   "tx2gene.csv.gz". If `NULL`, no file is saved.
 #'
 #' @return A data.frame, as returned by [biomaRt::getBM()].
 #'
@@ -17,7 +17,7 @@ getTx2gene = function(
   dataset = 'mmusculus_gene_ensembl', version = NULL, outputDir = 'data') {
   # x = biomaRt::listEnsemblArchives()
   # version = max(as.integer(x$version[x$version != 'GRCh37']))
-  outputFilename = 'tx2gene.csv'
+  outputFilename = 'tx2gene.csv.gz'
 
   assertString(dataset)
   assertString(outputDir, null.ok = TRUE)

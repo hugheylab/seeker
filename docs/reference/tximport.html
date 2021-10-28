@@ -73,7 +73,7 @@ tximport package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9028</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9030</span>
       </span>
     </div>
 
@@ -102,7 +102,12 @@ tximport package." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/hugheylab/seeker/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -117,7 +122,7 @@ tximport package." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run tximport on RNA-seq quantifications</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/hugheylab/seeker/blob/master/R/tximport.R'><code>R/tximport.R</code></a></small>
     <div class="hidden name"><code>tximport.Rd</code></div>
     </div>
 
@@ -129,6 +134,7 @@ tximport package." />
     <pre class="usage"><span class='fu'>tximport</span><span class='op'>(</span>
   <span class='va'>inputDir</span>,
   <span class='va'>tx2gene</span>,
+  samples <span class='op'>=</span> <span class='cn'>NULL</span>,
   outputDir <span class='op'>=</span> <span class='st'>"data"</span>,
   type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"salmon"</span>, <span class='st'>"kallisto"</span><span class='op'>)</span>,
   countsFromAbundance <span class='op'>=</span> <span class='st'>"lengthScaledTPM"</span>,
@@ -147,6 +153,11 @@ tximport package." />
       <th>tx2gene</th>
       <td><p><code>NULL</code> or data.frame of mapping between transcripts and
 genes, as returned by <code><a href='getTx2gene.html'>getTx2gene()</a></code>, passed to <code><a href='https://rdrr.io/pkg/tximport/man/tximport.html'>tximport::tximport()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>samples</th>
+      <td><p>Names of quantification directories to include. <code>NULL</code>
+indicates all.</p></td>
     </tr>
     <tr>
       <th>outputDir</th>
