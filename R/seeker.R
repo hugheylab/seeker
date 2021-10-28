@@ -191,9 +191,10 @@ checkSeekerParams = function(params) {
 #'     `NULL` indicates to use the default in [multiqc()].
 #' * `tximport`: Named list with components:
 #'   * `run`: Logical indicating whether to summarize transcript- or gene-level
-#'     estimates for downstream analysis. See [tximport()]. If `TRUE`, expects a
+#'     estimates for downstream analysis. See [tximport()]. If `TRUE`, expects
+#'     metadata to have a column 'sample_accession' of sample ids, and expects a
 #'     directory `parentDir`/`study`/salmon_output containing directories of
-#'     quantification results from salmon, and saves results to
+#'     quantification results, and saves results to
 #'     `parentDir`/`study`/data/tximport_output.qs. If `FALSE`, expects and does
 #'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `tx2gene`: Optional named list with components:
@@ -342,8 +343,10 @@ seeker = function(params, parentDir = '.') {
       NULL}
     paramsNow$tx2gene = NULL
 
+    # samples don't have to be unique here
     result = do.call(tximport, c(
-      list(inputDir = salmonDir, tx2gene = tx2gene, outputDir = dataDir),
+      list(inputDir = salmonDir, tx2gene = tx2gene,
+           samples = metadata[[sampleColname]], outputDir = dataDir),
       paramsNow))}
 
   ####################

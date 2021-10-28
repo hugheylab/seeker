@@ -42,6 +42,8 @@ getTx2gene = function(
 #' @param inputDir Directory that contains the quantification directories.
 #' @param tx2gene `NULL` or data.frame of mapping between transcripts and
 #'   genes, as returned by [getTx2gene()], passed to [tximport::tximport()].
+#' @param samples Names of quantification directories to include. `NULL`
+#'   indicates all.
 #' @param outputDir Directory in which to save the result, a file named
 #'   "tximport_output.qs", using [qs::qsave()]. If `NULL`, no file is saved.
 #' @param type Passed to [tximport::tximport()].
@@ -53,14 +55,16 @@ getTx2gene = function(
 #'
 #' @export
 tximport = function(
-  inputDir, tx2gene, outputDir = 'data', type = c('salmon', 'kallisto'),
-  countsFromAbundance = 'lengthScaledTPM', ignoreTxVersion = TRUE, ...) {
+  inputDir, tx2gene, samples = NULL, outputDir = 'data',
+  type = c('salmon', 'kallisto'), countsFromAbundance = 'lengthScaledTPM',
+  ignoreTxVersion = TRUE, ...) {
 
   outputFilename = 'tximport_output.qs'
 
   assertString(inputDir)
   assertDirectoryExists(inputDir)
   assertDataFrame(tx2gene, null.ok = TRUE)
+  assertCharacter(samples, null.ok = TRUE)
   assertString(outputDir, null.ok = TRUE)
   if (!is.null(outputDir)) {
     assertPathForOutput(outputDir, overwrite = TRUE)
@@ -71,6 +75,9 @@ tximport = function(
 
   paths = dir(inputDir, pat, full.names = TRUE, recursive = TRUE)
   names(paths) = basename(dirname(paths))
+
+  if (!is.null(samples)) {
+    paths = paths[names(paths) %in% samples]} # ok if samples has duplicates
 
   txi = tximport::tximport(
     paths, tx2gene = tx2gene, type = type,

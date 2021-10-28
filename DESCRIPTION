@@ -1,9 +1,10 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9028
+Version: 0.0.0.9029
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
+URL: https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -27,4 +28,5 @@ Suggests:
   knitr,
   rhdf5 (>= 2.24.0),
   rmarkdown
+Config/testthat/edition: 3
 VignetteBuilder: knitr

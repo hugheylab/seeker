@@ -112,9 +112,10 @@ use the default in \code{\link[=multiqc]{multiqc()}}.
 \item \code{tximport}: Named list with components:
 \itemize{
 \item \code{run}: Logical indicating whether to summarize transcript- or gene-level
-estimates for downstream analysis. See \code{\link[=tximport]{tximport()}}. If \code{TRUE}, expects a
+estimates for downstream analysis. See \code{\link[=tximport]{tximport()}}. If \code{TRUE}, expects
+metadata to have a column 'sample_accession' of sample ids, and expects a
 directory \code{parentDir}/\code{study}/salmon_output containing directories of
-quantification results from salmon, and saves results to
+quantification results, and saves results to
 \code{parentDir}/\code{study}/data/tximport_output.qs. If \code{FALSE}, expects and does
 nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{tx2gene}: Optional named list with components:

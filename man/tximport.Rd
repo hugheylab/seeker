@@ -7,6 +7,7 @@
 tximport(
   inputDir,
   tx2gene,
+  samples = NULL,
   outputDir = "data",
   type = c("salmon", "kallisto"),
   countsFromAbundance = "lengthScaledTPM",
@@ -19,6 +20,9 @@ tximport(
 
 \item{tx2gene}{\code{NULL} or data.frame of mapping between transcripts and
 genes, as returned by \code{\link[=getTx2gene]{getTx2gene()}}, passed to \code{\link[tximport:tximport]{tximport::tximport()}}.}
+
+\item{samples}{Names of quantification directories to include. \code{NULL}
+indicates all.}
 
 \item{outputDir}{Directory in which to save the result, a file named
 "tximport_output.qs", using \code{\link[qs:qsave]{qs::qsave()}}. If \code{NULL}, no file is saved.}
