@@ -48,23 +48,27 @@ checkSeekerParams = function(params) {
     assertCharacter(params$multiqc$args, any.missing = FALSE, null.ok = TRUE)}
 
   if (params$salmon$run) {
-    assertSubset(names(params$salmon), c('run', 'indexDir', 'cmd', 'args'))
+    assertSubset(names(params$salmon),
+                 c('run', 'indexDir', 'keep', 'cmd', 'args'))
     assertString(params$salmon$indexDir, min.chars = 1L)
     assertDirectoryExists(params$salmon$indexDir)
+    assertFlag(params$salmon$keep, null.ok = TRUE)
     assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$salmon$cmd, 'salmon',
                   defaultCommands[command == 'salmon']$path)
     assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
 
   if (params$fastqc$run) {
-    assertSubset(names(params$fastqc), c('run', 'cmd', 'args'))
+    assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
+    assertFlag(params$salmon$keep, null.ok = TRUE)
     assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$fastqc$cmd, 'fastqc',
                   defaultCommands[command == 'fastqc']$path)
     assertCharacter(params$fastqc$args, any.missing = FALSE, null.ok = TRUE)}
 
   if (params$trimgalore$run) {
-    assertSubset(names(params$trimgalore), c('run', 'cmd', 'args'))
+    assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
+    assertFlag(params$trimgalore$keep, null.ok = TRUE)
     assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$trimgalore$cmd, 'trim_galore',
                   defaultCommands[command == 'trim_galore']$path)
@@ -72,7 +76,8 @@ checkSeekerParams = function(params) {
 
   if (params$fetch$run) {
     assertSubset(names(params$fetch),
-                 c('run', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+                 c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+    assertFlag(params$fetch$keep, null.ok = TRUE)
     assertFlag(params$fetch$overwrite, null.ok = TRUE)
     assertString(params$fetch$ascpCmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$fetch$ascpCmd, 'ascp',
@@ -130,6 +135,8 @@ checkSeekerParams = function(params) {
 #'     column 'fastq_fetched' containing paths to files that should be in
 #'     `parentDir`/`study`/fetch_output. Following components are only checked
 #'     if `run` is `TRUE`.
+#'   * `keep`: Logical indicating whether to keep fetched fastq files when all
+#'     processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `overwrite`: Logical indicating whether to overwrite files that already
 #'     exist. `NULL` indicates to use the default in [fetch()].
 #'   * `ascpCmd`: String indicating path to ascp. `NULL` indicates to use the
@@ -146,6 +153,8 @@ checkSeekerParams = function(params) {
 #'     `parentDir`/`study`/trimgalore_output, and updates metadata with column
 #'     'fastq_trimmed'. If `FALSE`, expects and does nothing. Following
 #'     components are only checked if `run` is `TRUE`.
+#'   * `keep`: Logical indicating whether to keep trimmed fastq files when all
+#'     processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
 #'     use the default in [trimgalore()].
 #'   * `args`: Additional arguments to pass to the command-line interface.
@@ -160,6 +169,8 @@ checkSeekerParams = function(params) {
 #'     saves results to `parentDir`/`study`/fastqc_output. If `FALSE`, expects
 #'     and does nothing. Following components are only checked if `run` is
 #'     `TRUE`.
+#'   * `keep`: Logical indicating whether to keep fastqc files when all
+#'     processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
 #'     use the default in [fastqc()].
 #'   * `args`: Additional arguments to pass to the command-line interface.
@@ -176,6 +187,8 @@ checkSeekerParams = function(params) {
 #'     `parentDir`/`study`/data/salmon_meta_info.csv. If `FALSE`, expects and
 #'     does nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `indexDir`: Directory that contains salmon index.
+#'   * `keep`: Logical indicating whether to keep quantification results when
+#'     all processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
 #'     use the default in [salmon()].
 #'   * `args`: Additional arguments to pass to the command-line interface.
@@ -243,7 +256,7 @@ seeker = function(params, parentDir = '.') {
     metadata = fetchMetadata(paramsNow$bioproject)
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
-    fread(metadataPath, na.strings = '')}
+    metadata = fread(metadataPath, na.strings = '')}
 
   # exclude supersedes include
   if (!is.null(paramsNow$include)) {
@@ -258,21 +271,21 @@ seeker = function(params, parentDir = '.') {
   step = 'fetch'
   paramsNow = params[[step]]
   fetchDir = file.path(outputDir, paste0(step, '_output'))
-  inputColname = 'fastq_aspera'
-  outputColname = 'fastq_fetched'
+  remoteColname = 'fastq_aspera'
+  fetchColname = 'fastq_fetched'
 
   if (paramsNow$run) {
     paramsNow$run = NULL
     result = do.call(fetch, c(
-      list(remoteFilepaths = metadata[[inputColname]], outputDir = fetchDir),
+      list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
       paramsNow))
-    set(metadata, j = outputColname, value = result$localFilepaths)
+    set(metadata, j = fetchColname, value = result$localFilepaths)
 
   } else {
     localFilepaths = getFileVec(
-      lapply(getFileList(metadata[[inputColname]]),
+      lapply(getFileList(metadata[[remoteColname]]),
              function(f) file.path(fetchDir, basename(f))))
-    set(metadata, j = outputColname, value = localFilepaths)}
+    set(metadata, j = fetchColname, value = localFilepaths)}
 
   fwrite(metadata, metadataPath) # could be overwritten
 
@@ -280,22 +293,21 @@ seeker = function(params, parentDir = '.') {
   step = 'trimgalore'
   paramsNow = params[[step]]
   trimDir = file.path(outputDir, paste0(step, '_output'))
-  inputColname = outputColname
-  outputColname = 'fastq_trimmed'
+  trimColname = 'fastq_trimmed'
 
   if (paramsNow$run) {
     paramsNow$run = NULL
     result = do.call(trimgalore, c(
-      list(filepaths = metadata[[inputColname]], outputDir = trimDir),
+      list(filepaths = metadata[[fetchColname]], outputDir = trimDir),
       paramsNow))
-    set(metadata, j = outputColname, value = result$fastq_trimmed)
+    set(metadata, j = trimColname, value = result$fastq_trimmed)
     fwrite(metadata, metadataPath)} # could be overwritten
 
   ####################
   step = 'fastqc'
   paramsNow = params[[step]]
   fastqcDir = file.path(outputDir, paste0(step, '_output'))
-  fileColname = if (params$trimgalore$run) outputColname else inputColname
+  fileColname = if (params$trimgalore$run) trimColname else fetchColname
 
   if (paramsNow$run) {
     paramsNow$run = NULL
@@ -351,4 +363,22 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   fwrite(metadata, metadataPath)
+
+  if (params$fetch$run && isFALSE(params$fetch$keep)) {
+    unlink(metadata[[fetchColname]])}
+
+  if (params$trimgalore$run && isFALSE(params$trimgalore$keep)) {
+    unlink(metadata[[trimColname]])}
+
+  if (params$fastqc$run && isFALSE(params$fastqc$keep)) {
+    x = basename(unlist(getFileList(metadata[[fileColname]])))
+    y = gsub('\\.fastq$|\\.fastq\\.gz$|\\.fq$|\\.fq\\.gz$', '', x,
+             ignore.case = TRUE)
+    z = c(paste0(y, '_fastqc.html'), paste0(y, '_fastqc.zip'))
+    unlink(file.path(fastqcDir, z))}
+
+  if (params$salmon$run && isFALSE(params$salmon$keep)) {
+    unlink(file.path(salmonDir, unique(metadata[[sampleColname]])),
+           recursive = TRUE)}
+
   invisible()}

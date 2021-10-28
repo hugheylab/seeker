@@ -41,6 +41,8 @@ remote) of fastq files. Whether \code{TRUE} or \code{FALSE}, updates metadata wi
 column 'fastq_fetched' containing paths to files that should be in
 \code{parentDir}/\code{study}/fetch_output. Following components are only checked
 if \code{run} is \code{TRUE}.
+\item \code{keep}: Logical indicating whether to keep fetched fastq files when all
+processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{overwrite}: Logical indicating whether to overwrite files that already
 exist. \code{NULL} indicates to use the default in \code{\link[=fetch]{fetch()}}.
 \item \code{ascpCmd}: String indicating path to ascp. \code{NULL} indicates to use the
@@ -59,6 +61,8 @@ reads. See \code{\link[=trimgalore]{trimgalore()}}. If \code{TRUE}, expects meta
 \code{parentDir}/\code{study}/trimgalore_output, and updates metadata with column
 'fastq_trimmed'. If \code{FALSE}, expects and does nothing. Following
 components are only checked if \code{run} is \code{TRUE}.
+\item \code{keep}: Logical indicating whether to keep trimmed fastq files when all
+processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{cmd}: Name or path of the command-line interface. \code{NULL} indicates to
 use the default in \code{\link[=trimgalore]{trimgalore()}}.
 \item \code{args}: Additional arguments to pass to the command-line interface.
@@ -75,6 +79,8 @@ paths to fastq files in \code{parentDir}/\code{study}/fetch_output. If \code{TRU
 saves results to \code{parentDir}/\code{study}/fastqc_output. If \code{FALSE}, expects
 and does nothing. Following components are only checked if \code{run} is
 \code{TRUE}.
+\item \code{keep}: Logical indicating whether to keep fastqc files when all
+processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{cmd}: Name or path of the command-line interface. \code{NULL} indicates to
 use the default in \code{\link[=fastqc]{fastqc()}}.
 \item \code{args}: Additional arguments to pass to the command-line interface.
@@ -93,6 +99,8 @@ ids, and saves results to \code{parentDir}/\code{study}/salmon_output and
 \code{parentDir}/\code{study}/data/salmon_meta_info.csv. If \code{FALSE}, expects and
 does nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{indexDir}: Directory that contains salmon index.
+\item \code{keep}: Logical indicating whether to keep quantification results when
+all processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{cmd}: Name or path of the command-line interface. \code{NULL} indicates to
 use the default in \code{\link[=salmon]{salmon()}}.
 \item \code{args}: Additional arguments to pass to the command-line interface.

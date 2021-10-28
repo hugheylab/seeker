@@ -10,21 +10,25 @@ metadata:
     # values # [vector]
 fetch:
   run: TRUE # [logical]
+  # keep # [logical or NULL]
   # overwrite # [logical or NULL]
   # ascpCmd # [string or NULL]
   # ascpArgs # [character vector or NULL]
   # ascpPrefix # [string or NULL]
 trimgalore:
   run: TRUE # [logical]
+  # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
 fastqc:
   run: TRUE # [logical]
+  # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
 salmon:
   run: TRUE # [logical]
   indexDir: '' # [string]
+  # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
 multiqc:
