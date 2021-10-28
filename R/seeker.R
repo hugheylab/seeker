@@ -60,7 +60,7 @@ checkSeekerParams = function(params) {
 
   if (params$fastqc$run) {
     assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
-    assertFlag(params$salmon$keep, null.ok = TRUE)
+    assertFlag(params$fastqc$keep, null.ok = TRUE)
     assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$fastqc$cmd, 'fastqc',
                   defaultCommands[command == 'fastqc']$path)
