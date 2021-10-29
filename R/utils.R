@@ -101,6 +101,13 @@ getFastqcFilenames = function(fastqFilepaths) {
   return(z)}
 
 
+system3 = function(...) {
+  mc = getOption('seeker.miniconda', '~/miniconda3')
+  p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
+  withr::local_path(p)
+  system2(...)}
+
+
 safe = function(x) {
   y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
   return(y)}
@@ -111,7 +118,7 @@ checkCommand = function(cmd) {
   # give warning on mac and error on linux
   old = getOption('warn')
   options(warn = -1)
-  path = tryCatch({system2('command', c('-v', safe(cmd)), stdout = TRUE)},
+  path = tryCatch({system3('command', c('-v', safe(cmd)), stdout = TRUE)},
                   error = function(e) NA_character_)
   options(warn = old)
   if (length(path) == 0) path = NA_character_
@@ -137,7 +144,7 @@ checkDefaultCommands = function() {
     cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
     path = checkCommand(cmd)
     version = if (is.na(path)) NA_character_ else
-      system2(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
+      system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
     data.table(command = d$cmd[i], path = path, version = version)}
 
   return(r)}

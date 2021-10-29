@@ -39,7 +39,9 @@ These instructions are for Unix-based systems. If you're using Windows, you're d
 
 1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
 
-1. Install [Miniconda](https://conda.io/en/latest/miniconda.html). On Linux:
+1. Install [Miniconda](https://conda.io/en/latest/miniconda.html). Use the default install location (~/miniconda3).
+    
+    On Linux:
     
     ```sh
     curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -67,7 +69,7 @@ These instructions are for Unix-based systems. If you're using Windows, you're d
     conda install mamba -c conda-forge
     ```
 
-1. Install the other command-line tools. The code below will install the packages into the base conda environment; use `-n` to specify a different environment. When using `seeker`, you will need to ensure that R is running with the given conda environment.
+1. Install the other command-line tools. The code below will install the packages into the base conda environment. If you use an environment other than base, please see the last step of this readme.
 
     ```sh
     mamba install refgenie trim-galore fastqc fastq-screen salmon multiqc
@@ -99,4 +101,10 @@ These instructions are for Unix-based systems. If you're using Windows, you're d
 
     ```sh
     fastq_screen --get_genomes
+    ```
+
+1. If you install Miniconda at a non-default location or install the system dependencies to a conda environment other than base, you will need to set a global option in each R session so `seeker` knows where to look. For example, if the dependencies are in an environment called "seeker" that `conda env list` says is located at ~/miniconda3/envs/seeker, then you should do the following:
+
+    ```r
+    options(seeker.miniconda = '~/miniconda3/envs/seeker')
     ```

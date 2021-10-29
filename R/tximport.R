@@ -24,7 +24,7 @@ getTx2gene = function(
 
   if (is.null(version)) { # let's be strict
     arch = data.table::setDT(biomaRt::listEnsemblArchives())
-    version = as.numeric(arch[arch$current_release == '*']$version)}
+    version = as.integer(arch[arch$current_release == '*']$version)}
 
   if (!is.null(outputDir)) {
     assertPathForOutput(outputDir, overwrite = TRUE)}

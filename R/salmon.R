@@ -63,7 +63,7 @@ salmon = function(
     } else {
       args2 = c('-r', safe(unlist(f)))}
 
-    r = system2(path.expand(cmd), c(args1, args2))
+    r = system3(path.expand(cmd), c(args1, args2))
     if (compress) {
       R.utils::gzip(file.path(outputDir, samp, 'quant.sf'), overwrite = TRUE)}
     writeLogFile(logPath, samp, i, r)

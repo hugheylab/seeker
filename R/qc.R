@@ -39,7 +39,7 @@ fastqc = function(
 
   result = feo %dopar% {
     argsNow = c(args, '-o', safe(outputDir), safe(f))
-    r = system2(path.expand(cmd), argsNow)
+    r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
     r}
 
@@ -87,7 +87,7 @@ fastqscreen = function(
 
   result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
     argsNow = c(args, '--outdir', safe(outputDir), safe(f))
-    r = system2(path.expand(cmd), argsNow)
+    r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
     r}
 
@@ -144,7 +144,7 @@ trimgalore = function(
   result = feo %dopar% {
     argsNow = c(
       args, '-o', safe(outputDir), if (length(f) > 1) '--paired', safe(f))
-    r = system2(path.expand(cmd), argsNow)
+    r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, paste(f, collapse = ';'), i, r)
 
     fastqTrimmed = paste(
@@ -179,5 +179,5 @@ multiqc = function(
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
 
   argsNow = c(args, '-o', safe(outputDir), safe(parentDir))
-  r = system2(path.expand(cmd), argsNow)
+  r = system3(path.expand(cmd), argsNow)
   invisible(r)}

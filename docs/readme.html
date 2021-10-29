@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9033</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9034</span>
       </span>
     </div>
 
@@ -162,7 +162,8 @@
 <ol>
 <li><p>Download and install <a href="https://www.ibm.com/aspera/connect/">Aspera Connect</a>. On Linux, you will likely have to download a tar.gz file (using <code>wget</code> or <code>curl</code>), untar it (using <code>tar -zxvf</code>), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.</p></li>
 <li>
-<p>Install <a href="https://conda.io/en/latest/miniconda.html">Miniconda</a>. On Linux:</p>
+<p>Install <a href="https://conda.io/en/latest/miniconda.html">Miniconda</a>. Use the default install location (~/miniconda3).</p>
+<p>On Linux:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> Miniconda3-latest-Linux-x86_64.sh</span></code></pre></div>
 <p>On macOS:</p>
@@ -180,7 +181,7 @@
 <div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install mamba <span class="at">-c</span> conda-forge</span></code></pre></div>
 </li>
 <li>
-<p>Install the other command-line tools. The code below will install the packages into the base conda environment; use <code>-n</code> to specify a different environment. When using <code>seeker</code>, you will need to ensure that R is running with the given conda environment.</p>
+<p>Install the other command-line tools. The code below will install the packages into the base conda environment. If you use an environment other than base, please see the last step of this readme.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install refgenie trim-galore fastqc fastq-screen salmon multiqc</span></code></pre></div>
 </li>
 <li>
@@ -199,6 +200,11 @@
 <li>
 <p>Optionally, fetch the genomes for fastq-screen. This takes a long time, so don’t bother unless you actually plan to run fastq-screen.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fastq_screen</span> <span class="at">--get_genomes</span></span></code></pre></div>
+</li>
+<li>
+<p>If you install Miniconda at a non-default location or install the system dependencies to a conda environment other than base, you will need to set a global option in each R session so <code>seeker</code> knows where to look. For example, if the dependencies are in an environment called “seeker” that <code>conda env list</code> says is located at ~/miniconda3/envs/seeker, then you should do the following:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>seeker.miniconda <span class="op">=</span> <span class="st">'~/miniconda3/envs/seeker'</span><span class="op">)</span></code></pre></div>
 </li>
 </ol>
 </div>

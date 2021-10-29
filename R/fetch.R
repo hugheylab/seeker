@@ -111,9 +111,9 @@ fetch = function(
 
       if (startsWith(f, 'fasp')) {
         args = c(ascpArgs, sprintf('%s@%s', ascpPrefix, f), outputSafe)
-        r = system2(path.expand(ascpCmd), args)
+        r = system3(path.expand(ascpCmd), args)
       } else {
-        r = system2(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
+        r = system3(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
 
     writeLogFile(logPath, f, i, r)
     r}
