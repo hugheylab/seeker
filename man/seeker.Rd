@@ -128,15 +128,17 @@ quantification results, and saves results to
 nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{tx2gene}: Optional named list with components:
 \itemize{
-\item \code{dataset}: String indicating ensembl gene dataset. See \code{\link[=getTx2gene]{getTx2gene()}}.
-\item \code{version}: Number indicating ensembl version. See \code{\link[=getTx2gene]{getTx2gene()}}.
+\item \code{species}: String indicating species and thereby ensembl gene dataset.
+See \code{\link[=getTx2gene]{getTx2gene()}}.
+\item \code{version}: Optional number indicating ensembl version. \code{NULL} indicates
+the latest version. See \code{\link[=getTx2gene]{getTx2gene()}}.
 }
 
-If specified, saves a file \code{parentDir}/\code{study}/data/tx2gene.csv.gz.
+If not \code{NULL}, saves a file \code{parentDir}/\code{study}/data/tx2gene.csv.gz.
 \item \code{countsFromAbundance}: String indicating whether or how to estimate
 counts using estimated abundances. See \code{\link[tximport:tximport]{tximport::tximport()}}.
 \item \code{ignoreTxVersion}: Logical indicating whether to the version suffix on
-transcript ids. If \code{NULL}, indicates to use \code{TRUE}. See
+transcript ids. \code{NULL} indicates to use \code{TRUE}. See
 \code{\link[tximport:tximport]{tximport::tximport()}}.
 }
 }

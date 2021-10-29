@@ -3,34 +3,41 @@
 #' This function uses the
 #' [biomaRt package](https://doi.org/doi:10.18129/B9.bioc.biomaRt).
 #'
-#' @param dataset Ensembl gene dataset, passed to [biomaRt::useEnsembl()]. To
-#'   see which datasets are available, do
-#'   `mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)`.
-#' @param version Passed to [biomaRt::useEnsembl()].
+#' @param species String used to pass `paste0(species, '_gene_ensembl')` as the
+#'   `dataset` argument to [biomaRt::useEnsembl()]. To see available datasets,
+#'   do `mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)`.
+#' @param version Passed to [biomaRt::useEnsembl()]. `NULL` indicates the latest
+#'   version. To see available versions, do `biomaRt::listEnsemblArchives()`.
 #' @param outputDir Directory in which to save the result, a file named
 #'   "tx2gene.csv.gz". If `NULL`, no file is saved.
 #'
-#' @return A data.frame, as returned by [biomaRt::getBM()].
+#' @return A data.table based on the result from [biomaRt::getBM()], with an
+#'   attribute 'version'.
 #'
 #' @export
 getTx2gene = function(
-  dataset = 'mmusculus_gene_ensembl', version = NULL, outputDir = 'data') {
-  # x = biomaRt::listEnsemblArchives()
-  # version = max(as.integer(x$version[x$version != 'GRCh37']))
-  outputFilename = 'tx2gene.csv.gz'
+  species = 'mmusculus', version = NULL, outputDir = 'data') {
 
-  assertString(dataset)
+  if (is.null(version)) {
+    arch = data.table::setDT(biomaRt::listEnsemblArchives())
+    version = arch[arch$current_release == '*']$version}
+
+  assertString(species)
+  assert(checkNumber(version), checkString(version)) # useEnsembl allows both
   assertString(outputDir, null.ok = TRUE)
+
   if (!is.null(outputDir)) {
     assertPathForOutput(outputDir, overwrite = TRUE)
     if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)}
 
-  mart = biomaRt::useEnsembl('ensembl', dataset, version = version)
-  t2g = biomaRt::getBM(
-    attributes = c('ensembl_transcript_id', 'ensembl_gene_id'), mart = mart)
+  dataset = paste0(species, '_gene_ensembl')
+  mart = biomaRt::useEnsembl('genes', dataset, version = version)
+  attribs = c('ensembl_transcript_id', 'ensembl_gene_id')
+  t2g = data.table::setDT(biomaRt::getBM(attributes = attribs, mart = mart))
+  data.table::setattr(t2g, 'version', version)
 
   if (!is.null(outputDir)) {
-    fwrite(t2g, file.path(outputDir, outputFilename))}
+    fwrite(t2g, file.path(outputDir, 'tx2gene.csv.gz'))}
   return(t2g)}
 
 
@@ -59,8 +66,6 @@ tximport = function(
   type = c('salmon', 'kallisto'), countsFromAbundance = 'lengthScaledTPM',
   ignoreTxVersion = TRUE, ...) {
 
-  outputFilename = 'tximport_output.qs'
-
   assertString(inputDir)
   assertDirectoryExists(inputDir)
   assertDataFrame(tx2gene, null.ok = TRUE)
@@ -85,5 +90,5 @@ tximport = function(
     ignoreTxVersion = ignoreTxVersion, ...)
 
   if (!is.null(outputDir)) {
-    qs::qsave(txi, file.path(outputDir, outputFilename))}
+    qs::qsave(txi, file.path(outputDir, 'tximport_output.qs'))}
   invisible(txi)}

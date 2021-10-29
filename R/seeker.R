@@ -33,9 +33,9 @@ checkSeekerParams = function(params) {
 
     assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$tximport$tx2gene)) {
-      assertSetEqual(names(params$tximport$tx2gene), c('dataset', 'version'))
-      assertString(params$tximport$tx2gene$dataset, min.chars = 1L)
-      assertNumber(params$tximport$tx2gene$version)}
+      assertSubset(names(params$tximport$tx2gene), c('species', 'version'))
+      assertString(params$tximport$tx2gene$species, min.chars = 2L)
+      assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)}
 
    assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
    assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
@@ -211,14 +211,16 @@ checkSeekerParams = function(params) {
 #'     `parentDir`/`study`/data/tximport_output.qs. If `FALSE`, expects and does
 #'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `tx2gene`: Optional named list with components:
-#'     * `dataset`: String indicating ensembl gene dataset. See [getTx2gene()].
-#'     * `version`: Number indicating ensembl version. See [getTx2gene()].
+#'     * `species`: String indicating species and thereby ensembl gene dataset.
+#'       See [getTx2gene()].
+#'     * `version`: Optional number indicating ensembl version. `NULL` indicates
+#'       the latest version. See [getTx2gene()].
 #'
-#'     If specified, saves a file `parentDir`/`study`/data/tx2gene.csv.gz.
+#'     If not `NULL`, saves a file `parentDir`/`study`/data/tx2gene.csv.gz.
 #'   * `countsFromAbundance`: String indicating whether or how to estimate
 #'     counts using estimated abundances. See [tximport::tximport()].
 #'   * `ignoreTxVersion`: Logical indicating whether to the version suffix on
-#'     transcript ids. If `NULL`, indicates to use `TRUE`. See
+#'     transcript ids. `NULL` indicates to use `TRUE`. See
 #'     [tximport::tximport()].
 #'
 #' `params` can be derived from a yaml file, see
@@ -244,7 +246,6 @@ seeker = function(params, parentDir = '.') {
 
   dataDir = file.path(outputDir, 'data')
   if (!dir.exists(dataDir)) dir.create(dataDir)
-  yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
 
   ####################
   step = 'metadata'
@@ -349,11 +350,17 @@ seeker = function(params, parentDir = '.') {
   if (paramsNow$run) {
     paramsNow$run = NULL
 
-    tx2gene = if (is.list(paramsNow$tx2gene)) {
-      do.call(getTx2gene, c(list(outputDir = dataDir), paramsNow$tx2gene))
+    # tx2gene = if (is.list(paramsNow$tx2gene)) {
+    #   do.call(getTx2gene, c(list(outputDir = dataDir), paramsNow$tx2gene))
+    # } else {
+    #   NULL}
+    if (is.list(paramsNow$tx2gene)) {
+      tx2gene = do.call(getTx2gene, c(
+        list(outputDir = dataDir), paramsNow$tx2gene))
+      params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
+      paramsNow$tx2gene = NULL # for calling tximport
     } else {
-      NULL}
-    paramsNow$tx2gene = NULL
+      tx2gene = NULL}
 
     # samples don't have to be unique here
     result = do.call(tximport, c(
@@ -363,6 +370,7 @@ seeker = function(params, parentDir = '.') {
 
   ####################
   fwrite(metadata, metadataPath)
+  yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
     unlink(unlist(getFileList(metadata[[fetchColname]])))}

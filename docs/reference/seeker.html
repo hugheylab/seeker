@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9030</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9031</span>
       </span>
     </div>
 
@@ -246,15 +246,17 @@ quantification results, and saves results to
 <code>parentDir</code>/<code>study</code>/data/tximport_output.qs. If <code>FALSE</code>, expects and does
 nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>tx2gene</code>: Optional named list with components:</p><ul>
-<li><p><code>dataset</code>: String indicating ensembl gene dataset. See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
-<li><p><code>version</code>: Number indicating ensembl version. See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
+<li><p><code>species</code>: String indicating species and thereby ensembl gene dataset.
+See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
+<li><p><code>version</code>: Optional number indicating ensembl version. <code>NULL</code> indicates
+the latest version. See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
 </ul>
 
-<p>If specified, saves a file <code>parentDir</code>/<code>study</code>/data/tx2gene.csv.gz.</p></li>
+<p>If not <code>NULL</code>, saves a file <code>parentDir</code>/<code>study</code>/data/tx2gene.csv.gz.</p></li>
 <li><p><code>countsFromAbundance</code>: String indicating whether or how to estimate
 counts using estimated abundances. See <code><a href='https://rdrr.io/pkg/tximport/man/tximport.html'>tximport::tximport()</a></code>.</p></li>
 <li><p><code>ignoreTxVersion</code>: Logical indicating whether to the version suffix on
-transcript ids. If <code>NULL</code>, indicates to use <code>TRUE</code>. See
+transcript ids. <code>NULL</code> indicates to use <code>TRUE</code>. See
 <code><a href='https://rdrr.io/pkg/tximport/man/tximport.html'>tximport::tximport()</a></code>.</p></li>
 </ul></li>
 </ul>

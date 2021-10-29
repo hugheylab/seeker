@@ -73,7 +73,7 @@ biomaRt package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9030</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9031</span>
       </span>
     </div>
 
@@ -131,24 +131,21 @@ biomaRt package." />
 <a href='https://doi.org/doi:10.18129/B9.bioc.biomaRt'>biomaRt package</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getTx2gene</span><span class='op'>(</span>
-  dataset <span class='op'>=</span> <span class='st'>"mmusculus_gene_ensembl"</span>,
-  version <span class='op'>=</span> <span class='cn'>NULL</span>,
-  outputDir <span class='op'>=</span> <span class='st'>"data"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getTx2gene</span><span class='op'>(</span>species <span class='op'>=</span> <span class='st'>"mmusculus"</span>, version <span class='op'>=</span> <span class='cn'>NULL</span>, outputDir <span class='op'>=</span> <span class='st'>"data"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dataset</th>
-      <td><p>Ensembl gene dataset, passed to <code><a href='https://rdrr.io/pkg/biomaRt/man/useEnsembl.html'>biomaRt::useEnsembl()</a></code>. To
-see which datasets are available, do
-<code>mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)</code>.</p></td>
+      <th>species</th>
+      <td><p>String used to pass <code><a href='https://rdrr.io/r/base/paste.html'>paste0(species, '_gene_ensembl')</a></code> as the
+<code>dataset</code> argument to <code><a href='https://rdrr.io/pkg/biomaRt/man/useEnsembl.html'>biomaRt::useEnsembl()</a></code>. To see available datasets,
+do <code>mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)</code>.</p></td>
     </tr>
     <tr>
       <th>version</th>
-      <td><p>Passed to <code><a href='https://rdrr.io/pkg/biomaRt/man/useEnsembl.html'>biomaRt::useEnsembl()</a></code>.</p></td>
+      <td><p>Passed to <code><a href='https://rdrr.io/pkg/biomaRt/man/useEnsembl.html'>biomaRt::useEnsembl()</a></code>. <code>NULL</code> indicates the latest
+version. To see available versions, do <code><a href='https://rdrr.io/pkg/biomaRt/man/listEnsemblArchives.html'>biomaRt::listEnsemblArchives()</a></code>.</p></td>
     </tr>
     <tr>
       <th>outputDir</th>
@@ -159,7 +156,8 @@ see which datasets are available, do
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.frame, as returned by <code><a href='https://rdrr.io/pkg/biomaRt/man/getBM.html'>biomaRt::getBM()</a></code>.</p>
+    <p>A data.table based on the result from <code><a href='https://rdrr.io/pkg/biomaRt/man/getBM.html'>biomaRt::getBM()</a></code>, with an
+attribute 'version'.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

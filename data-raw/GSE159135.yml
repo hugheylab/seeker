@@ -40,7 +40,7 @@ tximport:
   run: TRUE # [logical]
   tx2gene:
     # [named list or NULL]
-    dataset: 'mmusculus_gene_ensembl' # [string]
-    version: 104 # [number; latest version is 104 as of Oct 2021]
+    species: 'mmusculus' # [string]
+    # version # [number or NULL]
   countsFromAbundance: 'no' # [string]
   # ignoreTxVersion # [logical or NULL]

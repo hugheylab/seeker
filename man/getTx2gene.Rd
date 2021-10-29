@@ -4,24 +4,22 @@
 \alias{getTx2gene}
 \title{Get mapping between transcripts and genes}
 \usage{
-getTx2gene(
-  dataset = "mmusculus_gene_ensembl",
-  version = NULL,
-  outputDir = "data"
-)
+getTx2gene(species = "mmusculus", version = NULL, outputDir = "data")
 }
 \arguments{
-\item{dataset}{Ensembl gene dataset, passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. To
-see which datasets are available, do
-\verb{mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)}.}
+\item{species}{String used to pass \code{paste0(species, '_gene_ensembl')} as the
+\code{dataset} argument to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. To see available datasets,
+do \verb{mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)}.}
 
-\item{version}{Passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}.}
+\item{version}{Passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. \code{NULL} indicates the latest
+version. To see available versions, do \code{biomaRt::listEnsemblArchives()}.}
 
 \item{outputDir}{Directory in which to save the result, a file named
 "tx2gene.csv.gz". If \code{NULL}, no file is saved.}
 }
 \value{
-A data.frame, as returned by \code{\link[biomaRt:getBM]{biomaRt::getBM()}}.
+A data.table based on the result from \code{\link[biomaRt:getBM]{biomaRt::getBM()}}, with an
+attribute 'version'.
 }
 \description{
 This function uses the
