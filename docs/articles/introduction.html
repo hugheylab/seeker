@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9031</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9032</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@
       <h1 data-toc-skip>Introduction to seeker</h1>
                         <h4 class="author">Jake Hughey</h4>
             
-            <h4 class="date">2021-10-28</h4>
+            <h4 class="date">2021-10-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -92,7 +92,7 @@
     
     
 <p>The <code>seeker</code> package is designed to be an R-based wrapper around various command-line tools. The main function in the <code>seeker</code> package is, well, <code><a href="../reference/seeker.html">seeker()</a></code>. Currently <code><a href="../reference/seeker.html">seeker()</a></code> is targeted at processing bulk RNA-seq data. The main input is a list of parameters specifying which steps of RNA-seq data processing to perform and how to perform them. Depending on the parameters, <code><a href="../reference/seeker.html">seeker()</a></code> will call other functions in the package.</p>
-<p>A convenient way to construct the list of parameters is to make a yaml file and read it into R using <code><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">yaml::read_yaml()</a></code>. A template yaml file is reproduced below and available at <code><a href="https://rdrr.io/r/base/system.file.html">system.file('extdata', 'params_template.yml', package = 'seeker')</a></code>.</p>
+<p>A convenient way to construct the list of parameters is to make a yaml file and read it into R using <code><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">yaml::read_yaml()</a></code>. A template yaml file is shown below.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">study</span><span class="op">:</span> <span class="st">''</span> <span class="co"># [string]</span>
 <span class="va">metadata</span><span class="op">:</span>
@@ -139,7 +139,7 @@
     <span class="co"># version # [number or NULL]</span>
   <span class="va">countsFromAbundance</span><span class="op">:</span> <span class="st">''</span> <span class="co"># [string]</span>
   <span class="co"># ignoreTxVersion # [logical or NULL]</span></code></pre></div>
-<p>A convenient way to run <code><a href="../reference/seeker.html">seeker()</a></code> is then using a script such as the one reproduced below and available at <code><a href="https://rdrr.io/r/base/system.file.html">system.file('extdata', 'run_seeker.R', package = 'seeker')</a></code>.</p>
+<p>A convenient way to run <code><a href="../reference/seeker.html">seeker()</a></code> is then using a script such as the one below.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -149,14 +149,18 @@
 
 <span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
 <span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seeker.html">seeker</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
-<p>If you copy the script to your current working directory, you can run it using something like</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="op">&lt;</span>path/to/study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
+<p>You can copy the template yaml file and script to your current working directory like so:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'params_template.yml'</span>, <span class="st">'run_seeker.R'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<p>Then you can rename and edit the yaml file and edit the script as appropriate, then run the script using something like</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
 <p>A fancier option, which saves stdout and stderr to a log file, would be something like</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">study</span><span class="op">=</span><span class="st">"&lt;study&gt;"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="va">parentDir</span><span class="op">=</span><span class="st">"&lt;path/to/parent/directory&gt;"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${parentDir}</span><span class="st">/</span><span class="va">${study}</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="st">"&lt;path/to&gt;/</span><span class="va">${study}</span><span class="st">.yml"</span> <span class="st">"</span><span class="va">${parentDir}</span><span class="st">"</span> <span class="op">&amp;&gt;</span> <span class="dt">\</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="va">${parentDir}</span><span class="st">/</span><span class="va">${study}</span><span class="st">/progress.log"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">study</span><span class="op">=</span><span class="st">"&lt;study&gt;"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="va">parentDir</span><span class="op">=</span><span class="st">"&lt;path/to/parent/directory&gt;"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">${parentDir}</span><span class="st">/</span><span class="va">${study}</span><span class="st">"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="st">"</span><span class="va">${study}</span><span class="st">.yml"</span> <span class="st">"</span><span class="va">${parentDir}</span><span class="st">"</span> <span class="op">&amp;&gt;</span> <span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span><span class="va">${parentDir}</span><span class="st">/</span><span class="va">${study}</span><span class="st">/progress.log"</span></span></code></pre></div>
 <p>This option assumes that the name of the yaml file (minus the file extension) is identical to the <code>study</code> variable within the yaml file, which we highly recommend.</p>
   </div>
 

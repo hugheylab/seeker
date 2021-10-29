@@ -15,20 +15,27 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 The `seeker` package is designed to be an R-based wrapper around various command-line tools. The main function in the `seeker` package is, well, `seeker()`. Currently `seeker()` is targeted at processing bulk RNA-seq data. The main input is a list of parameters specifying which steps of RNA-seq data processing to perform and how to perform them. Depending on the parameters, `seeker()` will call other functions in the package.
 
-A convenient way to construct the list of parameters is to make a yaml file and read it into R using `yaml::read_yaml()`. A template yaml file is reproduced below and available at `system.file('extdata', 'params_template.yml', package = 'seeker')`.
+A convenient way to construct the list of parameters is to make a yaml file and read it into R using `yaml::read_yaml()`. A template yaml file is shown below.
 
 ```{r, code = readLines(system.file('extdata', 'params_template.yml', package = 'seeker')), eval = FALSE}
 ```
 
-A convenient way to run `seeker()` is then using a script such as the one reproduced below and available at `system.file('extdata', 'run_seeker.R', package = 'seeker')`.
+A convenient way to run `seeker()` is then using a script such as the one below.
 
 ```{r, code = readLines(system.file('extdata', 'run_seeker.R', package = 'seeker')), eval = FALSE}
 ```
 
-If you copy the script to your current working directory, you can run it using something like
+You can copy the template yaml file and script to your current working directory like so:
+
+```{r, eval = FALSE}
+for (filename in c('params_template.yml', 'run_seeker.R')) {
+  file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
+```
+
+Then you can rename and edit the yaml file and edit the script as appropriate, then run the script using something like
 
 ```sh
-Rscript run_seeker.R <path/to/study>.yml <path/to/parent/directory>
+Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 ```
 
 A fancier option, which saves stdout and stderr to a log file, would be something like
@@ -37,7 +44,7 @@ A fancier option, which saves stdout and stderr to a log file, would be somethin
 study="<study>" && \
 parentDir="<path/to/parent/directory>" && \
 mkdir -p "${parentDir}/${study}" && \
-Rscript run_seeker.R "<path/to>/${study}.yml" "${parentDir}" &> \
+Rscript run_seeker.R "${study}.yml" "${parentDir}" &> \
   "${parentDir}/${study}/progress.log"
 ```
 

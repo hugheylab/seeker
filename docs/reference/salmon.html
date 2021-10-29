@@ -75,7 +75,7 @@ doFuture::registerDoFuture() or doParallel::registerDoParallel()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9031</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9032</span>
       </span>
     </div>
 
@@ -142,7 +142,8 @@ using <code><a href='https://rdrr.io/r/base/system2.html'>system2()</a></code>. 
   outputDir <span class='op'>=</span> <span class='st'>"salmon_output"</span>,
   cmd <span class='op'>=</span> <span class='st'>"salmon"</span>,
   args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"-l A -q --seqBias --gcBias --no-version-check -p"</span>,
-    <span class='fu'>foreach</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/foreach/man/getDoParWorkers.html'>getDoParWorkers</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='fu'>foreach</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/foreach/man/getDoParWorkers.html'>getDoParWorkers</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  compress <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -174,6 +175,11 @@ doesn't exist.</p></td>
     <tr>
       <th>args</th>
       <td><p>Additional arguments to pass to the command-line interface.</p></td>
+    </tr>
+    <tr>
+      <th>compress</th>
+      <td><p>Logical indicating whether to gzip the quantification file
+(quant.sf) from salmon. Does not affect downstream analysis.</p></td>
     </tr>
     </table>
 

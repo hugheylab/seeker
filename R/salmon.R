@@ -14,6 +14,8 @@
 #'   doesn't exist.
 #' @param cmd Name or path of the command-line interface.
 #' @param args Additional arguments to pass to the command-line interface.
+#' @param compress Logical indicating whether to gzip the quantification file
+#'   (quant.sf) from salmon. Does not affect downstream analysis.
 #'
 #' @return A vector of exit codes, invisibly.
 #'
@@ -21,7 +23,7 @@
 salmon = function(
   filepaths, samples, indexDir, outputDir = 'salmon_output', cmd = 'salmon',
   args = c('-l A -q --seqBias --gcBias --no-version-check -p',
-           foreach::getDoParWorkers())) {
+           foreach::getDoParWorkers()), compress = TRUE) {
 
   i = NULL
   assertCharacter(filepaths, any.missing = FALSE)
@@ -37,6 +39,7 @@ salmon = function(
   assertPathForOutput(outputDir, overwrite = TRUE)
   assertString(cmd)
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+  assertFlag(compress)
 
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', safe(indexDir))
@@ -61,6 +64,8 @@ salmon = function(
       args2 = c('-r', safe(unlist(f)))}
 
     r = system2(path.expand(cmd), c(args1, args2))
+    if (compress) {
+      R.utils::gzip(file.path(outputDir, samp, 'quant.sf'), overwrite = TRUE)}
     writeLogFile(logPath, samp, i, r)
     r}
 

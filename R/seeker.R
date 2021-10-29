@@ -350,10 +350,6 @@ seeker = function(params, parentDir = '.') {
   if (paramsNow$run) {
     paramsNow$run = NULL
 
-    # tx2gene = if (is.list(paramsNow$tx2gene)) {
-    #   do.call(getTx2gene, c(list(outputDir = dataDir), paramsNow$tx2gene))
-    # } else {
-    #   NULL}
     if (is.list(paramsNow$tx2gene)) {
       tx2gene = do.call(getTx2gene, c(
         list(outputDir = dataDir), paramsNow$tx2gene))
@@ -371,6 +367,8 @@ seeker = function(params, parentDir = '.') {
   ####################
   fwrite(metadata, metadataPath)
   yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
+  writeLines(utils::capture.output(utils::sessionInfo()),
+             file.path(dataDir, 'session_info.txt'))
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
     unlink(unlist(getFileList(metadata[[fetchColname]])))}
@@ -383,7 +381,7 @@ seeker = function(params, parentDir = '.') {
     unlink(file.path(fastqcDir, fastqcFilenames))}
 
   if (params$salmon$run && isFALSE(params$salmon$keep)) {
-    unlink(file.path(salmonDir, unique(metadata[[sampleColname]])),
+    unlink(file.path(salmonDir, unique(metadata[[sampleColname]]), 'quant.sf*'),
            recursive = TRUE)}
 
   invisible()}

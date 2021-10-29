@@ -83,12 +83,12 @@ These instructions are for Unix-based systems. If you're using Windows, you're d
     Then you can add the following line to ~/.bashrc, ~/.bash_profile, or ~/.zshrc, depending on your OS and shell.
     
     ```sh
-    REFGENIE="${HOME}/genomes/genome_config.yaml"
+    export REFGENIE="${HOME}/genomes/genome_config.yaml"
     ```
     
     Then `source` the file and run `refgenie init`.
 
-1. Optionally, use refgenie to fetch the salmon index files for the mouse and human transcriptomes.
+1. Optionally, use refgenie to fetch the salmon index files for the human and/or mouse transcriptomes.
 
     ```sh
     refgenie pull hg38/salmon_sa_index

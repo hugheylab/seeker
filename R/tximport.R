@@ -18,17 +18,16 @@
 getTx2gene = function(
   species = 'mmusculus', version = NULL, outputDir = 'data') {
 
-  if (is.null(version)) {
-    arch = data.table::setDT(biomaRt::listEnsemblArchives())
-    version = arch[arch$current_release == '*']$version}
-
   assertString(species)
-  assert(checkNumber(version), checkString(version)) # useEnsembl allows both
+  assertNumber(version, null.ok = TRUE)
   assertString(outputDir, null.ok = TRUE)
 
+  if (is.null(version)) { # let's be strict
+    arch = data.table::setDT(biomaRt::listEnsemblArchives())
+    version = as.numeric(arch[arch$current_release == '*']$version)}
+
   if (!is.null(outputDir)) {
-    assertPathForOutput(outputDir, overwrite = TRUE)
-    if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)}
+    assertPathForOutput(outputDir, overwrite = TRUE)}
 
   dataset = paste0(species, '_gene_ensembl')
   mart = biomaRt::useEnsembl('genes', dataset, version = version)
@@ -37,6 +36,7 @@ getTx2gene = function(
   data.table::setattr(t2g, 'version', version)
 
   if (!is.null(outputDir)) {
+    if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
     fwrite(t2g, file.path(outputDir, 'tx2gene.csv.gz'))}
   return(t2g)}
 
@@ -66,6 +66,8 @@ tximport = function(
   type = c('salmon', 'kallisto'), countsFromAbundance = 'lengthScaledTPM',
   ignoreTxVersion = TRUE, ...) {
 
+  path = .N = . = NULL
+
   assertString(inputDir)
   assertDirectoryExists(inputDir)
   assertDataFrame(tx2gene, null.ok = TRUE)
@@ -75,17 +77,20 @@ tximport = function(
     assertPathForOutput(outputDir, overwrite = TRUE)
     if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)}
 
+  txOut = is.null(tx2gene)
+
   type = match.arg(type)
-  pat = switch(type, salmon = 'quant\\.sf$', kallisto = 'abundance\\.h5$')
+  pat = switch(
+    type, salmon = 'quant\\.sf(\\.gz)?$', kallisto = 'abundance\\.h5$')
 
-  paths = dir(inputDir, pat, full.names = TRUE, recursive = TRUE)
-  names(paths) = basename(dirname(paths))
-
-  if (!is.null(samples)) {
-    paths = paths[names(paths) %in% samples]} # ok if samples has duplicates
+  d = data.table(path = dir(inputDir, pat, full.names = TRUE, recursive = TRUE))
+  set(d, j = 'sample', value = basename(dirname(d$path)))
+  d = d[, .(path = path[.N]), by = 'sample'] # in case quant.sf and quant.sf.gz
+  paths = d$path
+  names(paths) = d$sample
 
   txi = tximport::tximport(
-    paths, tx2gene = tx2gene, type = type,
+    paths, txOut = txOut, tx2gene = tx2gene, type = type,
     countsFromAbundance = countsFromAbundance,
     ignoreTxVersion = ignoreTxVersion, ...)
 

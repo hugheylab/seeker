@@ -11,7 +11,8 @@ salmon(
   outputDir = "salmon_output",
   cmd = "salmon",
   args = c("-l A -q --seqBias --gcBias --no-version-check -p",
-    foreach::getDoParWorkers())
+    foreach::getDoParWorkers()),
+  compress = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ doesn't exist.}
 \item{cmd}{Name or path of the command-line interface.}
 
 \item{args}{Additional arguments to pass to the command-line interface.}
+
+\item{compress}{Logical indicating whether to gzip the quantification file
+(quant.sf) from salmon. Does not affect downstream analysis.}
 }
 \value{
 A vector of exit codes, invisibly.
