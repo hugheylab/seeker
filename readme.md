@@ -86,7 +86,7 @@ These instructions are for Unix-based systems. If you're using Windows, you're d
     export REFGENIE="${HOME}/genomes/genome_config.yaml"
     ```
     
-    Then `source` the file and run `refgenie init`.
+    Then `source` the file.
 
 1. Optionally, use refgenie to fetch the salmon index files for the human and/or mouse transcriptomes.
 

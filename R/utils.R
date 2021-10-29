@@ -107,9 +107,12 @@ safe = function(x) {
 
 
 checkCommand = function(cmd) {
+  # if cmd doesn't exist, system2('command', ...) seems to
+  # give warning on mac and error on linux
   old = getOption('warn')
   options(warn = -1)
-  path = system2('command', c('-v', safe(cmd)), stdout = TRUE)
+  path = tryCatch({system2('command', c('-v', safe(cmd)), stdout = TRUE)},
+                  error = function(e) NA_character_)
   options(warn = old)
   if (length(path) == 0) path = NA_character_
   return(path)}
