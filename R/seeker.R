@@ -2,18 +2,7 @@
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom data.table data.table fread fwrite set
 NULL
-# readr not explicitly called, but used by tximport
-
-
-assertCommand = function(cmd, cmdName, defaultPath) {
-  if (is.null(cmd)) {
-    if (is.na(defaultPath)) {
-      stop(sprintf('%s is not available at the default location.', cmdName))}
-  } else {
-    path = checkCommand(cmd)
-    if (is.na(path)) {
-      stop(sprintf("'%s' is not a valid command.", cmd))}}
-  invisible()}
+# readr not called explicitly, but used by tximport
 
 
 checkSeekerParams = function(params) {

@@ -4,7 +4,7 @@ Title: Process sequencing data
 Version: 0.0.0.9034
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
-URL: https://github.com/hugheylab/seeker
+URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

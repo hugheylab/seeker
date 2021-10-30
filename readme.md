@@ -35,7 +35,7 @@
 
 ### System dependencies
 
-These instructions are for Unix-based systems. If you're using Windows, you're doing it wrong.
+These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
 
 1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
 

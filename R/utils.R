@@ -148,3 +148,14 @@ checkDefaultCommands = function() {
     data.table(command = d$cmd[i], path = path, version = version)}
 
   return(r)}
+
+
+assertCommand = function(cmd, cmdName, defaultPath) {
+  if (is.null(cmd)) {
+    if (is.na(defaultPath)) {
+      stop(sprintf('%s is not available at the default location.', cmdName))}
+  } else {
+    path = checkCommand(cmd)
+    if (is.na(path)) {
+      stop(sprintf("'%s' is not a valid command.", cmd))}}
+  invisible()}

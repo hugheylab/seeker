@@ -32,7 +32,7 @@ for (filename in c('params_template.yml', 'run_seeker.R')) {
   file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
 ```
 
-Then you can rename and edit the yaml file and edit the script as appropriate, then run the script using something like
+Then you can rename and edit the yaml file, edit the script as appropriate, run `install.packages('doParallel')` if necessary, and run the script using something like
 
 ```sh
 Rscript run_seeker.R <study>.yml <path/to/parent/directory>

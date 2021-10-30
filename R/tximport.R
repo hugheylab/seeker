@@ -23,7 +23,7 @@ getTx2gene = function(
   assertString(outputDir, null.ok = TRUE)
 
   if (is.null(version)) { # let's be strict
-    arch = data.table::setDT(biomaRt::listEnsemblArchives())
+    arch = data.table::setDT(biomaRt::listEnsemblArchives(https = TRUE))
     version = as.integer(arch[arch$current_release == '*']$version)}
 
   if (!is.null(outputDir)) {
