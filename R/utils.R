@@ -107,13 +107,20 @@ getRCondaInfo = function(outputDir = '.') {
     to_file = file.path(outputDir, 'session.log'))
 
   mc = getOption('seeker.miniconda')
-  envName = if (is.null(mc) || basename(dirname(mc)) != 'envs') {
-    'base'
+  if (is.null(mc)) {
+    envName = 'base'
+    condaCmd = '~/miniconda3'
+  } else if (basename(dirname(mc)) == 'envs') {
+    envName = basename(mc)
+    condaCmd = dirname(dirname(mc))
   } else {
-    basename(mc)}
+    envName = 'base'
+    condaPre = mc}
+  condaCmd = file.path(condaPre, 'condabin', 'conda')
+
   args = c('env', 'export', '--name', safe(envName), '>',
            safe(file.path(outputDir, 'environment.yml')))
-  system3('conda', args)
+  system2(path.expand(condaCmd), args)
   invisible()}
 
 
