@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process sequencing data
-Version: 0.0.0.9034
+Version: 0.0.0.9035
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data using various command-line tools.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
@@ -20,6 +20,7 @@ Imports:
   R.utils (>= 2.11.0),
   readr (>= 1.4.0),
   rjson (>= 0.2.20),
+  sessioninfo (>= 1.2.0),
   tximport (>= 1.8.0),
   qs (>= 0.21.2),
   withr (>= 2.4.2),

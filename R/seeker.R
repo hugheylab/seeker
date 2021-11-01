@@ -356,8 +356,7 @@ seeker = function(params, parentDir = '.') {
   ####################
   fwrite(metadata, metadataPath)
   yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
-  writeLines(utils::capture.output(utils::sessionInfo()),
-             file.path(dataDir, 'session_info.txt'))
+  getRCondaInfo(dataDir)
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
     unlink(unlist(getFileList(metadata[[fetchColname]])))}

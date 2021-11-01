@@ -101,6 +101,22 @@ getFastqcFilenames = function(fastqFilepaths) {
   return(z)}
 
 
+getRCondaInfo = function(outputDir = '.') {
+  sessioninfo::session_info(
+    info = c('platform', 'packages'),
+    to_file = file.path(outputDir, 'session.log'))
+
+  mc = getOption('seeker.miniconda')
+  envName = if (is.null(mc) || basename(dirname(mc)) != 'envs') {
+    'base'
+  } else {
+    basename(mc)}
+  args = c('env', 'export', '--name', safe(envName), '>',
+           safe(file.path(outputDir, 'environment.yml')))
+  system3('conda', args)
+  invisible()}
+
+
 system3 = function(...) {
   mc = getOption('seeker.miniconda', '~/miniconda3')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
