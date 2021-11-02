@@ -1,6 +1,6 @@
 # seeker
 
-[![check-coverage-deploy](https://github.com/hugheylab/seeker/workflows/check-coverage-deploy/badge.svg)](https://github.com/hugheylab/seeker/actions)
+[![check-deploy](https://github.com/hugheylab/seeker/workflows/check-deploy/badge.svg)](https://github.com/hugheylab/seeker/actions)
 [![codecov](https://codecov.io/gh/hugheylab/seeker/branch/master/graph/badge.svg)](https://codecov.io/gh/hugheylab/seeker)
 
 `seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after, before the day you die.
