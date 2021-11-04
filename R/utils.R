@@ -109,10 +109,10 @@ getRCondaInfo = function(outputDir = '.') {
   mc = getOption('seeker.miniconda')
   if (is.null(mc)) {
     envName = 'base'
-    condaCmd = '~/miniconda3'
+    condaPre = '~/miniconda3'
   } else if (basename(dirname(mc)) == 'envs') {
     envName = basename(mc)
-    condaCmd = dirname(dirname(mc))
+    condaPre = dirname(dirname(mc))
   } else {
     envName = 'base'
     condaPre = mc}

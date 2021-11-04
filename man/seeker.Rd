@@ -14,7 +14,7 @@ seeker(params, parentDir = ".")
 \itemize{
 \item \code{run}: Logical indicating whether to fetch metadata from ENA. See
 \code{\link[=fetchMetadata]{fetchMetadata()}}. If \code{TRUE}, saves a file
-\code{parentDir}/\code{study}/data/metadata.csv. If \code{FALSE}, expects that file to
+\code{parentDir}/\code{study}/metadata.csv. If \code{FALSE}, expects that file to
 already exist. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{bioproject}: String indicating the study's bioproject accession.
 \item \code{include}: Optional named list for specifying which rows of metadata to
@@ -96,8 +96,8 @@ have a column 'fastq_trimmed' containing paths to fastq files in
 paths to fastq files in \code{parentDir}/\code{study}/fetch_output. If \code{TRUE}, also
 expects metadata to have a column 'sample_accession' containing sample
 ids, and saves results to \code{parentDir}/\code{study}/salmon_output and
-\code{parentDir}/\code{study}/data/salmon_meta_info.csv. If \code{FALSE}, expects and
-does nothing. Following components are only checked if \code{run} is \code{TRUE}.
+\code{parentDir}/\code{study}/salmon_meta_info.csv. If \code{FALSE}, expects and does
+nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{indexDir}: Directory that contains salmon index.
 \item \code{keep}: Logical indicating whether to keep quantification results when
 all processing steps have completed. \code{NULL} indicates \code{TRUE}.
@@ -124,7 +124,7 @@ estimates for downstream analysis. See \code{\link[=tximport]{tximport()}}. If \
 metadata to have a column 'sample_accession' of sample ids, and expects a
 directory \code{parentDir}/\code{study}/salmon_output containing directories of
 quantification results, and saves results to
-\code{parentDir}/\code{study}/data/tximport_output.qs. If \code{FALSE}, expects and does
+\code{parentDir}/\code{study}/tximport_output.qs. If \code{FALSE}, expects and does
 nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{tx2gene}: Optional named list with components:
 \itemize{
@@ -134,7 +134,7 @@ See \code{\link[=getTx2gene]{getTx2gene()}}.
 the latest version. See \code{\link[=getTx2gene]{getTx2gene()}}.
 }
 
-If not \code{NULL}, saves a file \code{parentDir}/\code{study}/data/tx2gene.csv.gz.
+If not \code{NULL}, saves a file \code{parentDir}/\code{study}/tx2gene.csv.gz.
 \item \code{countsFromAbundance}: String indicating whether or how to estimate
 counts using estimated abundances. See \code{\link[tximport:tximport]{tximport::tximport()}}.
 \item \code{ignoreTxVersion}: Logical indicating whether to the version suffix on
@@ -145,7 +145,7 @@ transcript ids. \code{NULL} indicates to use \code{TRUE}. See
 
 \code{params} can be derived from a yaml file, see
 \code{vignette('introduction', package = 'seeker')}. The yaml representation
-of \code{params} will be saved to \code{parentDir}/\code{params$study}/data/params.yml.}
+of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.yml.}
 
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{params$study}.}

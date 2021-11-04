@@ -103,7 +103,7 @@ checkSeekerParams = function(params) {
 #' * `metadata`: Named list with components:
 #'   * `run`: Logical indicating whether to fetch metadata from ENA. See
 #'     [fetchMetadata()]. If `TRUE`, saves a file
-#'     `parentDir`/`study`/data/metadata.csv. If `FALSE`, expects that file to
+#'     `parentDir`/`study`/metadata.csv. If `FALSE`, expects that file to
 #'     already exist. Following components are only checked if `run` is `TRUE`.
 #'   * `bioproject`: String indicating the study's bioproject accession.
 #'   * `include`: Optional named list for specifying which rows of metadata to
@@ -173,8 +173,8 @@ checkSeekerParams = function(params) {
 #'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`, also
 #'     expects metadata to have a column 'sample_accession' containing sample
 #'     ids, and saves results to `parentDir`/`study`/salmon_output and
-#'     `parentDir`/`study`/data/salmon_meta_info.csv. If `FALSE`, expects and
-#'     does nothing. Following components are only checked if `run` is `TRUE`.
+#'     `parentDir`/`study`/salmon_meta_info.csv. If `FALSE`, expects and does
+#'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `indexDir`: Directory that contains salmon index.
 #'   * `keep`: Logical indicating whether to keep quantification results when
 #'     all processing steps have completed. `NULL` indicates `TRUE`.
@@ -197,7 +197,7 @@ checkSeekerParams = function(params) {
 #'     metadata to have a column 'sample_accession' of sample ids, and expects a
 #'     directory `parentDir`/`study`/salmon_output containing directories of
 #'     quantification results, and saves results to
-#'     `parentDir`/`study`/data/tximport_output.qs. If `FALSE`, expects and does
+#'     `parentDir`/`study`/tximport_output.qs. If `FALSE`, expects and does
 #'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `tx2gene`: Optional named list with components:
 #'     * `species`: String indicating species and thereby ensembl gene dataset.
@@ -205,7 +205,7 @@ checkSeekerParams = function(params) {
 #'     * `version`: Optional number indicating ensembl version. `NULL` indicates
 #'       the latest version. See [getTx2gene()].
 #'
-#'     If not `NULL`, saves a file `parentDir`/`study`/data/tx2gene.csv.gz.
+#'     If not `NULL`, saves a file `parentDir`/`study`/tx2gene.csv.gz.
 #'   * `countsFromAbundance`: String indicating whether or how to estimate
 #'     counts using estimated abundances. See [tximport::tximport()].
 #'   * `ignoreTxVersion`: Logical indicating whether to the version suffix on
@@ -214,7 +214,7 @@ checkSeekerParams = function(params) {
 #'
 #' `params` can be derived from a yaml file, see
 #' \code{vignette('introduction', package = 'seeker')}. The yaml representation
-#' of `params` will be saved to `parentDir`/`params$study`/data/params.yml.
+#' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
 #'
@@ -233,13 +233,10 @@ seeker = function(params, parentDir = '.') {
   outputDir = file.path(parentDir, params$study)
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
-  dataDir = file.path(outputDir, 'data')
-  if (!dir.exists(dataDir)) dir.create(dataDir)
-
   ####################
   step = 'metadata'
   paramsNow = params[[step]]
-  metadataPath = file.path(dataDir, 'metadata.csv')
+  metadataPath = file.path(outputDir, 'metadata.csv')
 
   if (paramsNow$run) {
     # host must be 'ena' to download fastq files using ascp
@@ -319,7 +316,7 @@ seeker = function(params, parentDir = '.') {
       list(filepaths = metadata[[fileColname]],
            samples = metadata[[sampleColname]], outputDir = salmonDir),
       paramsNow))
-    getSalmonMetadata(salmonDir, dataDir)}
+    getSalmonMetadata(salmonDir, outputDir)}
 
   ####################
   step = 'multiqc'
@@ -341,7 +338,7 @@ seeker = function(params, parentDir = '.') {
 
     if (is.list(paramsNow$tx2gene)) {
       tx2gene = do.call(getTx2gene, c(
-        list(outputDir = dataDir), paramsNow$tx2gene))
+        list(outputDir = outputDir), paramsNow$tx2gene))
       params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
       paramsNow$tx2gene = NULL # for calling tximport
     } else {
@@ -350,13 +347,13 @@ seeker = function(params, parentDir = '.') {
     # samples don't have to be unique here
     result = do.call(tximport, c(
       list(inputDir = salmonDir, tx2gene = tx2gene,
-           samples = metadata[[sampleColname]], outputDir = dataDir),
+           samples = metadata[[sampleColname]], outputDir = outputDir),
       paramsNow))}
 
   ####################
   fwrite(metadata, metadataPath)
-  yaml::write_yaml(params, file.path(dataDir, 'params.yml'))
-  getRCondaInfo(dataDir)
+  yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
+  getRCondaInfo(outputDir)
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
     unlink(unlist(getFileList(metadata[[fetchColname]])))}
