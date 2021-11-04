@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9035</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9036</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
 <li><p><code>metadata</code>: Named list with components:</p><ul>
 <li><p><code>run</code>: Logical indicating whether to fetch metadata from ENA. See
 <code><a href='fetchMetadata.html'>fetchMetadata()</a></code>. If <code>TRUE</code>, saves a file
-<code>parentDir</code>/<code>study</code>/data/metadata.csv. If <code>FALSE</code>, expects that file to
+<code>parentDir</code>/<code>study</code>/metadata.csv. If <code>FALSE</code>, expects that file to
 already exist. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>bioproject</code>: String indicating the study's bioproject accession.</p></li>
 <li><p><code>include</code>: Optional named list for specifying which rows of metadata to
@@ -217,8 +217,8 @@ have a column 'fastq_trimmed' containing paths to fastq files in
 paths to fastq files in <code>parentDir</code>/<code>study</code>/fetch_output. If <code>TRUE</code>, also
 expects metadata to have a column 'sample_accession' containing sample
 ids, and saves results to <code>parentDir</code>/<code>study</code>/salmon_output and
-<code>parentDir</code>/<code>study</code>/data/salmon_meta_info.csv. If <code>FALSE</code>, expects and
-does nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
+<code>parentDir</code>/<code>study</code>/salmon_meta_info.csv. If <code>FALSE</code>, expects and does
+nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>indexDir</code>: Directory that contains salmon index.</p></li>
 <li><p><code>keep</code>: Logical indicating whether to keep quantification results when
 all processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
@@ -243,7 +243,7 @@ estimates for downstream analysis. See <code><a href='tximport.html'>tximport()<
 metadata to have a column 'sample_accession' of sample ids, and expects a
 directory <code>parentDir</code>/<code>study</code>/salmon_output containing directories of
 quantification results, and saves results to
-<code>parentDir</code>/<code>study</code>/data/tximport_output.qs. If <code>FALSE</code>, expects and does
+<code>parentDir</code>/<code>study</code>/tximport_output.qs. If <code>FALSE</code>, expects and does
 nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>tx2gene</code>: Optional named list with components:</p><ul>
 <li><p><code>species</code>: String indicating species and thereby ensembl gene dataset.
@@ -252,7 +252,7 @@ See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
 the latest version. See <code><a href='getTx2gene.html'>getTx2gene()</a></code>.</p></li>
 </ul>
 
-<p>If not <code>NULL</code>, saves a file <code>parentDir</code>/<code>study</code>/data/tx2gene.csv.gz.</p></li>
+<p>If not <code>NULL</code>, saves a file <code>parentDir</code>/<code>study</code>/tx2gene.csv.gz.</p></li>
 <li><p><code>countsFromAbundance</code>: String indicating whether or how to estimate
 counts using estimated abundances. See <code><a href='https://rdrr.io/pkg/tximport/man/tximport.html'>tximport::tximport()</a></code>.</p></li>
 <li><p><code>ignoreTxVersion</code>: Logical indicating whether to the version suffix on
@@ -263,7 +263,7 @@ transcript ids. <code>NULL</code> indicates to use <code>TRUE</code>. See
 
 <p><code>params</code> can be derived from a yaml file, see
 <code><a href='../articles/introduction.html'>vignette('introduction', package = 'seeker')</a></code>. The yaml representation
-of <code>params</code> will be saved to <code>parentDir</code>/<code>params$study</code>/data/params.yml.</p></td>
+of <code>params</code> will be saved to <code>parentDir</code>/<code>params$study</code>/params.yml.</p></td>
     </tr>
     <tr>
       <th>parentDir</th>
