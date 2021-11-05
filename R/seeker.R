@@ -67,6 +67,12 @@ checkSeekerArgs = function(params, parentDir) {
                   defaultCommands[command == 'trim_galore']$path)
     assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)}
 
+  assert(checkFALSE(params$fastqc$run),
+         checkTRUE(params$trimgalore$run),
+         checkTRUE(params$fetch$run),
+         checkDirectoryExists(file.path(outputDir, 'fetch_output')),
+         combine = 'or')
+
   if (params$fastqc$run) {
     assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
     assertFlag(params$fastqc$keep, null.ok = TRUE)
@@ -74,6 +80,12 @@ checkSeekerArgs = function(params, parentDir) {
     assertCommand(params$fastqc$cmd, 'fastqc',
                   defaultCommands[command == 'fastqc']$path)
     assertCharacter(params$fastqc$args, any.missing = FALSE, null.ok = TRUE)}
+
+  assert(checkFALSE(params$salmon$run),
+         checkTRUE(params$trimgalore$run),
+         checkTRUE(params$fetch$run),
+         checkDirectoryExists(file.path(outputDir, 'fetch_output')),
+         combine = 'or')
 
   if (params$salmon$run) {
     assertSubset(names(params$salmon),
