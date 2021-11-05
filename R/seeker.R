@@ -5,7 +5,7 @@ NULL
 # readr not called explicitly, but used by tximport
 
 
-checkSeekerParams = function(params) {
+checkSeekerArgs = function(params, parentDir) {
   steps = c('metadata', 'fetch', 'trimgalore', 'fastqc', 'salmon', 'multiqc',
             'tximport')
 
@@ -13,66 +13,13 @@ checkSeekerParams = function(params) {
   defaultCommands = checkDefaultCommands()
   assertSetEqual(names(params), c('study', steps))
   assertString(params$study, min.chars = 1L)
+
+  assertString(parentDir)
+  assertDirectoryExists(parentDir)
+  outputDir = file.path(parentDir, params$study)
+
   for (step in steps) {
     assertFlag(params[[step]]$run, .var.name = sprintf('params$%s$run', step))}
-
-  if (params$tximport$run) {
-    assertSubset(names(params$tximport),
-                 c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
-
-    assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
-    if (!is.null(params$tximport$tx2gene)) {
-      assertSubset(names(params$tximport$tx2gene), c('species', 'version'))
-      assertString(params$tximport$tx2gene$species, min.chars = 2L)
-      assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)}
-
-   assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
-   assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
-
-  if (params$multiqc$run) {
-    assertSubset(names(params$multiqc), c('run', 'cmd', 'args'))
-    assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$multiqc$cmd, 'multiqc',
-                  defaultCommands[command == 'multiqc']$path)
-    assertCharacter(params$multiqc$args, any.missing = FALSE, null.ok = TRUE)}
-
-  if (params$salmon$run) {
-    assertSubset(names(params$salmon),
-                 c('run', 'indexDir', 'keep', 'cmd', 'args'))
-    assertString(params$salmon$indexDir, min.chars = 1L)
-    assertDirectoryExists(params$salmon$indexDir)
-    assertFlag(params$salmon$keep, null.ok = TRUE)
-    assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$salmon$cmd, 'salmon',
-                  defaultCommands[command == 'salmon']$path)
-    assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
-
-  if (params$fastqc$run) {
-    assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
-    assertFlag(params$fastqc$keep, null.ok = TRUE)
-    assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$fastqc$cmd, 'fastqc',
-                  defaultCommands[command == 'fastqc']$path)
-    assertCharacter(params$fastqc$args, any.missing = FALSE, null.ok = TRUE)}
-
-  if (params$trimgalore$run) {
-    assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
-    assertFlag(params$trimgalore$keep, null.ok = TRUE)
-    assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$trimgalore$cmd, 'trim_galore',
-                  defaultCommands[command == 'trim_galore']$path)
-    assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)}
-
-  if (params$fetch$run) {
-    assertSubset(names(params$fetch),
-                 c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
-    assertFlag(params$fetch$keep, null.ok = TRUE)
-    assertFlag(params$fetch$overwrite, null.ok = TRUE)
-    assertString(params$fetch$ascpCmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$fetch$ascpCmd, 'ascp',
-                  defaultCommands[command == 'ascp']$path)
-    assertCharacter(params$fetch$ascpArgs, any.missing = FALSE, null.ok = TRUE)
-    assertString(params$fetch$ascpPrefix, min.chars = 1L, null.ok = TRUE)}
 
   if (params$metadata$run) {
     assertSubset(names(params$metadata),
@@ -91,7 +38,79 @@ checkSeekerParams = function(params) {
       assertString(params$metadata$exclude$colname, min.chars = 1L)
       assertVector(params$metadata$exclude$values, strict = TRUE)}}
 
-  invisible()}
+  assert(checkFALSE(params$fetch$run),
+         checkTRUE(params$metadata$run),
+         checkFileExists(file.path(outputDir, 'metadata.csv')),
+         combine = 'or')
+
+  if (params$fetch$run) {
+    assertSubset(names(params$fetch),
+                 c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+    assertFlag(params$fetch$keep, null.ok = TRUE)
+    assertFlag(params$fetch$overwrite, null.ok = TRUE)
+    assertString(params$fetch$ascpCmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$fetch$ascpCmd, 'ascp',
+                  defaultCommands[command == 'ascp']$path)
+    assertCharacter(params$fetch$ascpArgs, any.missing = FALSE, null.ok = TRUE)
+    assertString(params$fetch$ascpPrefix, min.chars = 1L, null.ok = TRUE)}
+
+  assert(checkFALSE(params$trimgalore$run),
+         checkTRUE(params$fetch$run),
+         checkDirectoryExists(file.path(outputDir, 'fetch_output')),
+         combine = 'or')
+
+  if (params$trimgalore$run) {
+    assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
+    assertFlag(params$trimgalore$keep, null.ok = TRUE)
+    assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$trimgalore$cmd, 'trim_galore',
+                  defaultCommands[command == 'trim_galore']$path)
+    assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)}
+
+  if (params$fastqc$run) {
+    assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
+    assertFlag(params$fastqc$keep, null.ok = TRUE)
+    assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$fastqc$cmd, 'fastqc',
+                  defaultCommands[command == 'fastqc']$path)
+    assertCharacter(params$fastqc$args, any.missing = FALSE, null.ok = TRUE)}
+
+  if (params$salmon$run) {
+    assertSubset(names(params$salmon),
+                 c('run', 'indexDir', 'keep', 'cmd', 'args'))
+    assertString(params$salmon$indexDir, min.chars = 1L)
+    assertDirectoryExists(params$salmon$indexDir)
+    assertFlag(params$salmon$keep, null.ok = TRUE)
+    assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$salmon$cmd, 'salmon',
+                  defaultCommands[command == 'salmon']$path)
+    assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
+
+  if (params$multiqc$run) {
+    assertSubset(names(params$multiqc), c('run', 'cmd', 'args'))
+    assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$multiqc$cmd, 'multiqc',
+                  defaultCommands[command == 'multiqc']$path)
+    assertCharacter(params$multiqc$args, any.missing = FALSE, null.ok = TRUE)}
+
+  assert(checkFALSE(params$tximport$run),
+         checkTRUE(params$salmon$run),
+         checkDirectoryExists(file.path(outputDir, 'salmon_output')),
+         combine = 'or')
+
+  if (params$tximport$run) {
+    assertSubset(names(params$tximport),
+                 c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
+    assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
+    if (!is.null(params$tximport$tx2gene)) {
+      assertSubset(names(params$tximport$tx2gene), c('species', 'version'))
+      assertString(params$tximport$tx2gene$species, min.chars = 2L)
+      assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)}
+
+    assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
+    assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
+
+  return(outputDir)}
 
 
 #' Process RNA-seq data end to end
@@ -226,11 +245,7 @@ checkSeekerParams = function(params) {
 #' @export
 seeker = function(params, parentDir = '.') {
   assertOS(c('linux', 'mac', 'solaris'))
-  checkSeekerParams(params)
-
-  assertString(parentDir)
-  assertDirectoryExists(parentDir)
-  outputDir = file.path(parentDir, params$study)
+  outputDir = checkSeekerArgs(params, parentDir)
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
   ####################
