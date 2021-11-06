@@ -89,6 +89,9 @@ tximport = function(
   paths = d$path
   names(paths) = d$sample
 
+  if (!is.null(samples)) {
+    paths = paths[names(paths) %in% samples]} # ok if samples has duplicates
+
   txi = tximport::tximport(
     paths, txOut = txOut, tx2gene = tx2gene, type = type,
     countsFromAbundance = countsFromAbundance,
