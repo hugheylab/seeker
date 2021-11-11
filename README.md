@@ -8,6 +8,16 @@
 
 ## Installation
 
+### Docker image
+
+`seeker` and its dependencies are available in a Docker image called [socker](https://github.com/hugheylab/socker), based on [rocker/tidyverse](https://github.com/rocker-org/rocker-versioned2).
+
+```sh
+docker pull ghcr.io/hugheylab/socker:latest
+```
+
+If you don't want to use Docker, you can follow the instructions below.
+
 ### R package
 
 1. Install [`BiocManager`](https://cran.r-project.org/package=BiocManager).
