@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9039</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9040</span>
       </span>
     </div>
 
@@ -86,13 +86,20 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
+<div id="docker-image" class="section level3">
+<h3 class="hasAnchor">
+<a href="#docker-image" class="anchor"></a>Docker image</h3>
+<p><code>seeker</code> and its dependencies are available in a Docker image called <a href="https://github.com/hugheylab/socker">socker</a>, based on <a href="https://github.com/rocker-org/rocker-versioned2">rocker/tidyverse</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker:latest</span></code></pre></div>
+<p>If you don’t want to use Docker, you can follow the instructions below.</p>
+</div>
 <div id="r-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-package" class="anchor"></a>R package</h3>
 <ol>
 <li>
 <p>Install <a href="https://cran.r-project.org/package=BiocManager"><code>BiocManager</code></a>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></code></pre></div>
 </li>
@@ -104,10 +111,10 @@
 </li>
 </ul>
 <p>You only have to do this once. Then you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">'seeker'</span>, site_repository <span class="op">=</span> <span class="st">'https://hugheylab.github.io/drat/'</span><span class="op">)</span></code></pre></div>
 </li>
 </ol>
@@ -121,46 +128,46 @@
 <li>
 <p>Install <a href="https://conda.io/en/latest/miniconda.html">Miniconda</a>. Use the default install location (~/miniconda3).</p>
 <p>On Linux:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">curl</span> -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">sh</span> Miniconda3-latest-Linux-x86_64.sh</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">curl</span> -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">sh</span> Miniconda3-latest-Linux-x86_64.sh</span></code></pre></div>
 <p>On macOS:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">curl</span> -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">sh</span> Miniconda3-latest-MacOSX-x86_64.sh</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">curl</span> -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">sh</span> Miniconda3-latest-MacOSX-x86_64.sh</span></code></pre></div>
 </li>
 <li>
 <p>Set up conda channels, including <a href="https://bioconda.github.io/user/install.html">bioconda</a>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">conda</span> config --add channels defaults</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="ex">conda</span> config --add channels bioconda</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="ex">conda</span> config --add channels conda-forge</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">conda</span> config --add channels defaults</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="ex">conda</span> config --add channels bioconda</span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="ex">conda</span> config --add channels conda-forge</span></code></pre></div>
 </li>
 <li>
 <p>Install the <a href="https://github.com/mamba-org/mamba">mamba package manager</a>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">conda</span> install mamba -c conda-forge</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">conda</span> install mamba -c conda-forge</span></code></pre></div>
 </li>
 <li>
 <p>Install the other command-line tools. The code below will install the packages into the base conda environment. If you use an environment other than base, please see the last step of this readme.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">mamba</span> install refgenie trim-galore fastqc fastq-screen salmon multiqc</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="ex">mamba</span> install refgenie trim-galore fastqc fastq-screen salmon multiqc</span></code></pre></div>
 </li>
 <li>
 <p>Optionally, configure <a href="http://refgenie.databio.org/en/latest/install">refgenie</a>. For example:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">mkdir</span> -p <span class="va">${HOME}</span>/genomes</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="ex">refgenie</span> init -c <span class="va">${HOME}</span>/genomes/genome_config.yaml</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">mkdir</span> -p <span class="va">${HOME}</span>/genomes</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="ex">refgenie</span> init -c <span class="va">${HOME}</span>/genomes/genome_config.yaml</span></code></pre></div>
 <p>Then you can add the following line to ~/.bashrc, ~/.bash_profile, or ~/.zshrc, depending on your OS and shell.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a><span class="bu">export</span> <span class="va">REFGENIE=</span><span class="st">"</span><span class="va">${HOME}</span><span class="st">/genomes/genome_config.yaml"</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1"></a><span class="bu">export</span> <span class="va">REFGENIE=</span><span class="st">"</span><span class="va">${HOME}</span><span class="st">/genomes/genome_config.yaml"</span></span></code></pre></div>
 <p>Then <code>source</code> the file.</p>
 </li>
 <li>
 <p>Optionally, use refgenie to fetch the salmon index files for the human and/or mouse transcriptomes.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1"></a><span class="ex">refgenie</span> pull hg38/salmon_sa_index</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="ex">refgenie</span> pull mm10/salmon_sa_index</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1"></a><span class="ex">refgenie</span> pull hg38/salmon_sa_index</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="ex">refgenie</span> pull mm10/salmon_sa_index</span></code></pre></div>
 </li>
 <li>
 <p>Optionally, fetch the genomes for fastq-screen. This takes a long time, so don’t bother unless you actually plan to run fastq-screen.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1"></a><span class="ex">fastq_screen</span> --get_genomes</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1"></a><span class="ex">fastq_screen</span> --get_genomes</span></code></pre></div>
 </li>
 <li>
 <p>If you install Miniconda at a non-default location or install the system dependencies to a conda environment other than base, you will need to set a global option in each R session so <code>seeker</code> knows where to look. For example, if the dependencies are in an environment called “seeker” that <code>conda env list</code> says is located at ~/miniconda3/envs/seeker, then you should do the following:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>seeker.miniconda <span class="op">=</span> <span class="st">'~/miniconda3/envs/seeker'</span><span class="op">)</span></code></pre></div>
 </li>
 </ol>
