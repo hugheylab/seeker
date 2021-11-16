@@ -1,0 +1,7 @@
+datetime	task	idx	status
+2021-11-01T01:46:14.654114Z	started 4 tasks	0	0
+2021-11-01T01:46:14.679997Z	fasp.sra.ebi.ac.uk:/vol1/fastq/SRR108/045/SRR10876945/SRR10876945_1.fastq.gz	1	0
+2021-11-01T01:46:14.681028Z	fasp.sra.ebi.ac.uk:/vol1/fastq/SRR108/045/SRR10876945/SRR10876945_2.fastq.gz	2	0
+2021-11-01T01:46:14.681400Z	fasp.sra.ebi.ac.uk:/vol1/fastq/SRR108/046/SRR10876946/SRR10876946_1.fastq.gz	3	0
+2021-11-01T01:46:14.681986Z	fasp.sra.ebi.ac.uk:/vol1/fastq/SRR108/046/SRR10876946/SRR10876946_2.fastq.gz	4	0
+2021-11-01T01:46:14.691424Z	finished 4 tasks	0	0
