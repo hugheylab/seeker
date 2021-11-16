@@ -1,5 +1,6 @@
 library('data.table')
 params = yaml::read_yaml('test_data/GSE143524.yml')
+params$fetch$run = FALSE
 parentDir = 'test_data/staging'
 dir.create(parentDir)
 withr::local_file(parentDir)
