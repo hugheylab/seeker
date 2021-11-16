@@ -6,13 +6,8 @@ withr::local_file(parentDir)
 file.copy('test_data/GSE143524', parentDir, recursive = TRUE)
 foreach::registerDoSEQ()
 
-test_that('Test seeker', {
-  seeker(params, parentDir)
+test_that('Run seeker', {
+  seeker::seeker(params, parentDir)
   expect_true(file.exists(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv')))
   expect_equal(2L, nrow(fread(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv'))))
-})
-
-test_that('Test checkSeekerArgs', {
-  outputDirObs = seeker:::checkSeekerArgs(params, parentDir)
-  expect_equal(outputDirObs, file.path(parentDir, 'GSE143524'))
 })
