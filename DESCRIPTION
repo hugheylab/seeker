@@ -1,9 +1,9 @@
 Package: seeker
 Type: Package
-Title: Process sequencing data
-Version: 0.0.0.9040
+Title: Process genomic data
+Version: 0.0.0.9041
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
-Description: Process sequencing data using various command-line tools.
+Description: Process sequencing data and microarray using various command-line tools.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
@@ -12,14 +12,20 @@ RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5)
 Imports:
+  affy (>= 1.70.0),
+  AnnotationDbi (>= 1.54.1),
+  ArrayExpress (>= 1.52.0),
+  BiocManager (>= 1.30.16),
   biomaRt (>= 2.36.1),
   checkmate (>= 2.0.0),
   curl (>= 3.2),
   data.table (>= 1.11.8),
   foreach (>= 1.4.4),
+  GEOquery (>= 2.60.0),
+  glue (>= 1.5.0),
+  jsonlite (>= 1.7.2),
   R.utils (>= 2.11.0),
   readr (>= 1.4.0),
-  rjson (>= 0.2.20),
   sessioninfo (>= 1.2.0),
   tximport (>= 1.8.0),
   qs (>= 0.21.2),
@@ -29,7 +35,6 @@ Suggests:
   doFuture (>= 0.10.0),
   doParallel (>= 1.0.16),
   knitr,
-  rhdf5 (>= 2.24.0),
   rmarkdown,
   testthat (>= 3.1.0)
 Config/testthat/edition: 3

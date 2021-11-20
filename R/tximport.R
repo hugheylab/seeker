@@ -23,7 +23,7 @@ getTx2gene = function(
   assertString(outputDir, null.ok = TRUE)
 
   if (is.null(version)) { # let's be strict
-    arch = data.table::setDT(biomaRt::listEnsemblArchives(https = TRUE))
+    arch = setDT(biomaRt::listEnsemblArchives(https = TRUE))
     version = as.integer(arch[arch$current_release == '*']$version)}
 
   if (!is.null(outputDir)) {
@@ -32,7 +32,7 @@ getTx2gene = function(
   dataset = paste0(species, '_gene_ensembl')
   mart = biomaRt::useEnsembl('genes', dataset, version = version)
   attribs = c('ensembl_transcript_id', 'ensembl_gene_id')
-  t2g = data.table::setDT(biomaRt::getBM(attributes = attribs, mart = mart))
+  t2g = setDT(biomaRt::getBM(attributes = attribs, mart = mart))
   data.table::setattr(t2g, 'version', version)
 
   if (!is.null(outputDir)) {

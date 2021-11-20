@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/hugheylab/seeker/branch/master/graph/badge.svg)](https://codecov.io/gh/hugheylab/seeker)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/a3d002cf-ca5c-427f-9963-061d282b1d1b/deploy-status)](https://app.netlify.com/sites/hardcore-aryabhata-980673/deploys)
 
-`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data. Hopefully it helps you get what you're after, before the day you die.
+`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data, as well as microarray data. Hopefully it helps you get what you're after, before the day you die.
 
 ## Installation
 
@@ -46,7 +46,7 @@ If you don't want to use Docker, you can follow the instructions below.
 
 ### System dependencies
 
-These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
+The system dependencies are required for sequencing data, but not microarray data. These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
 
 1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
 
