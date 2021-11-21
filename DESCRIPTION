@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process genomic data
-Version: 0.0.0.9041
+Version: 0.0.0.9042
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
 Description: Process sequencing data and microarray using various command-line tools.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker

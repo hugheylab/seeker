@@ -16,29 +16,33 @@ getCdfname = function(anno, geneIdType) {
   return(cdfname)}
 
 
-#' Install custom CDF packages from Brainarray.
+#' Install custom CDF packages.
 #'
 #' Install Brainarray custom CDFs for processing raw Affymetrix data. See
 #' <http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp>.
 #'
-#' @param pkgs character vector of package names, e.g., 'hgu133ahsentrezgcdf'
-#' @param ver integer version number (25 as of 5 Jan 2021)
+#' @param pkgs Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.
+#' @param ver Integer version number (25 as of 5 Jan 2021).
 #'
 #' @export
 installCustomCdfPackages = function(pkgs, ver = 25) {
+  assertCharacter(pkgs, any.missing = FALSE)
+  assertIntegerish(ver, len = 1L, any.missing = FALSE)
   urlPre = glue('http://mbni.org/customcdf/{ver}.0.0')
-  for (pkg in pkgs) {
+  for (pkg in unique(pkgs)) {
     hint = substr(pkg, nchar(pkg) - 6, nchar(pkg) - 3)
-    # TODO: deal with other cdf packages
     urlMid = switch(hint, ensg = 'ensg', rezg = 'entrezg')
-    if (!is.null(urlMid)) {
+    if (is.null(urlMid)) {
+      warning(glue('Cannot install {pkg}, since it doesn\'t correspond ',
+                   'to gene IDs from Ensembl or Entrez.'))
+    } else {
       urlFull = glue('{urlPre}/{urlMid}.download/{pkg}_{ver}.0.0.tar.gz')
       utils::install.packages(urlFull, repos = NULL)}}
   invisible()}
 
 
 getNaiveEsetGeo = function(study, outputDir, rawDir) {
-  eset = GEOquery::getGEO(study, destdir = outputDir)[[1L]]
+  eset = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)[[1L]]
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
 
   if (rmaOk) {

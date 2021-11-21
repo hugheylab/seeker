@@ -2,14 +2,14 @@
 % Please edit documentation in R/array_utils.R
 \name{installCustomCdfPackages}
 \alias{installCustomCdfPackages}
-\title{Install custom CDF packages from Brainarray.}
+\title{Install custom CDF packages.}
 \usage{
 installCustomCdfPackages(pkgs, ver = 25)
 }
 \arguments{
-\item{pkgs}{character vector of package names, e.g., 'hgu133ahsentrezgcdf'}
+\item{pkgs}{Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.}
 
-\item{ver}{integer version number (25 as of 5 Jan 2021)}
+\item{ver}{Integer version number (25 as of 5 Jan 2021).}
 }
 \description{
 Install Brainarray custom CDFs for processing raw Affymetrix data. See
