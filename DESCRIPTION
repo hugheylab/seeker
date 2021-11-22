@@ -12,16 +12,16 @@ RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5)
 Imports:
-  affy (>= 1.70.0),
-  AnnotationDbi (>= 1.54.1),
-  ArrayExpress (>= 1.52.0),
-  BiocManager (>= 1.30.16),
+  affy (>= 1.68.0),
+  AnnotationDbi (>= 1.52.0),
+  ArrayExpress (>= 1.50.0),
+  BiocManager (>= 1.30.0),
   biomaRt (>= 2.36.1),
   checkmate (>= 2.0.0),
   curl (>= 3.2),
   data.table (>= 1.11.8),
   foreach (>= 1.4.4),
-  GEOquery (>= 2.60.0),
+  GEOquery (>= 2.58.0),
   glue (>= 1.5.0),
   jsonlite (>= 1.7.2),
   R.utils (>= 2.11.0),
