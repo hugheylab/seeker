@@ -31,6 +31,9 @@
     <loc>https://seeker.hugheylab.org/reference/getTx2gene.html</loc>
   </url>
   <url>
+    <loc>https://seeker.hugheylab.org/reference/installCustomCdfPackages.html</loc>
+  </url>
+  <url>
     <loc>https://seeker.hugheylab.org/reference/multiqc.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>https://seeker.hugheylab.org/reference/seeker.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/reference/seekerArray.html</loc>
   </url>
   <url>
     <loc>https://seeker.hugheylab.org/reference/trimgalore.html</loc>

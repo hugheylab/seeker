@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get ascp command — getAscpCmd • seeker</title>
+<title>Install custom CDF packages. — installCustomCdfPackages • seeker</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Get ascp command — getAscpCmd" />
-<meta property="og:description" content="This function returns the default path to the aspera ascp command-line
-interface, based on the operating system. Windows is not supported." />
+<meta property="og:title" content="Install custom CDF packages. — installCustomCdfPackages" />
+<meta property="og:description" content="Install Brainarray custom CDFs for processing raw Affymetrix data. See
+http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp." />
 
 
 
@@ -121,25 +121,31 @@ interface, based on the operating system. Windows is not supported." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get ascp command</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hugheylab/seeker/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
-    <div class="hidden name"><code>getAscpCmd.Rd</code></div>
+    <h1>Install custom CDF packages.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/hugheylab/seeker/blob/master/R/array_utils.R'><code>R/array_utils.R</code></a></small>
+    <div class="hidden name"><code>installCustomCdfPackages.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function returns the default path to the aspera ascp command-line
-interface, based on the operating system. Windows is not supported.</p>
+    <p>Install Brainarray custom CDFs for processing raw Affymetrix data. See
+<a href='http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp'>http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getAscpCmd</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>installCustomCdfPackages</span><span class='op'>(</span><span class='va'>pkgs</span>, ver <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pkgs</th>
+      <td><p>Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.</p></td>
+    </tr>
+    <tr>
+      <th>ver</th>
+      <td><p>Integer version number (25 as of 5 Jan 2021).</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A string.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='getAscpArgs.html'>getAscpArgs()</a></code>, <code><a href='fetch.html'>fetch()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
