@@ -11,5 +11,4 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: hugheylab/socker
       - uses: hugheylab/actions/test-coverage@main
