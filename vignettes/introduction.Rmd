@@ -57,7 +57,7 @@ A convenient way to run `seekerArray()` is then using a script such as the one b
 Copy the script to your working directory like so:
 
 ```{r, eval = FALSE}
-file.copy(system.file('extdata', 'run_seeker_array.R, package = 'seeker'), '.')
+file.copy(system.file('extdata', 'run_seeker_array.R', package = 'seeker'), '.')
 ```
 
 Then you can create the yaml file for the dataset you want and run the script using something like
