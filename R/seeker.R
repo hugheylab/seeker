@@ -1,6 +1,7 @@
 #' @import checkmate
+#' @importFrom data.table data.table fread fwrite set setDT setnames
 #' @importFrom foreach foreach %do% %dopar%
-#' @importFrom data.table data.table fread fwrite set
+#' @importFrom glue glue
 NULL
 # readr not called explicitly, but used by tximport
 
@@ -11,6 +12,7 @@ checkSeekerArgs = function(params, parentDir) {
 
   command = NULL
   defaultCommands = checkDefaultCommands()
+  assertList(params)
   assertSetEqual(names(params), c('study', steps))
   assertString(params$study, min.chars = 1L)
 
@@ -19,7 +21,8 @@ checkSeekerArgs = function(params, parentDir) {
   outputDir = file.path(parentDir, params$study)
 
   for (step in steps) {
-    assertFlag(params[[step]]$run, .var.name = sprintf('params$%s$run', step))}
+    assertFlag(params[[step]]$run, .var.name = glue('params${step}$run'))}
+    # assertFlag(params[[step]]$run, .var.name = sprintf('params$%s$run', step))}
 
   if (params$metadata$run) {
     assertSubset(names(params$metadata),

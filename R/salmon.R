@@ -98,7 +98,7 @@ getSalmonMetadata = function(inputDir, outputDir = 'data') {
   sampleNames = sapply(
     strsplit(filepaths, .Platform$file.sep), function(x) x[length(x) - 2L])
 
-  metaList = lapply(filepaths, function(x) rjson::fromJSON(file = x))
+  metaList = lapply(filepaths, jsonlite::fromJSON)
   names(metaList) = sampleNames
 
   fieldNames = c('eq_class_properties', 'length_classes')

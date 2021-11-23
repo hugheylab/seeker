@@ -13,7 +13,8 @@ writeLogFile = function(path, task, idx, status, n = NULL) {
       append = FALSE
     } else {
       x = 'finished'}
-    d = data.table(d, task = sprintf('%s %d tasks', x, abs(n)), idx = 0, status = 0)}
+    d = data.table(d, task = glue('{x} {abs(n)} tasks'), idx = 0, status = 0)}
+    # d = data.table(d, task = sprintf('%s %d tasks', x, abs(n)), idx = 0, status = 0)}
   fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
   invisible(d)}
 
@@ -89,7 +90,8 @@ getTrimmedFilenames = function(x) {
     y[i] = gsub(pat, '_trimmed.fq.gz', x[i])
 
     if (length(y) > 1) {
-      y[i] = gsub('trimmed\\.fq\\.gz', sprintf('val_%d.fq.gz', i), y[i])}}
+      y[i] = gsub('trimmed\\.fq\\.gz', glue('val_{i}.fq.gz'), y[i])}}
+      # y[i] = gsub('trimmed\\.fq\\.gz', sprintf('val_%d.fq.gz', i), y[i])}}
 
   return(y)}
 
@@ -132,7 +134,8 @@ system3 = function(...) {
 
 
 safe = function(x) {
-  y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
+  # y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
+  y = glue("'{path.expand(x)}'")
   return(y)}
 
 
@@ -176,9 +179,11 @@ checkDefaultCommands = function() {
 assertCommand = function(cmd, cmdName, defaultPath) {
   if (is.null(cmd)) {
     if (is.na(defaultPath)) {
-      stop(sprintf('%s is not available at the default location.', cmdName))}
+      stop(glue('{cmdName} is not available at the default location.'))}
+      # stop(sprintf('%s is not available at the default location.', cmdName))}
   } else {
     path = checkCommand(cmd)
     if (is.na(path)) {
-      stop(sprintf("'%s' is not a valid command.", cmd))}}
+      stop(glue("'{cmd}' is not a valid command."))}}
+      # stop(sprintf("'%s' is not a valid command.", cmd))}}
   invisible()}
