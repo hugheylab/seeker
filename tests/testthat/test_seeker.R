@@ -1,0 +1,41 @@
+library('data.table')
+params = yaml::read_yaml('test_data/GSE143524_josh.yml')
+params$fetch$run = FALSE
+parentDir = 'test_data/staging'
+dir.create(parentDir)
+withr::local_file(parentDir)
+file.copy('test_data/GSE143524', parentDir, recursive = TRUE)
+foreach::registerDoSEQ()
+
+metadata = fread('test_data/metadata.csv')
+
+test_that('Test seeker', {
+  seeker(params, parentDir)
+  expect_true(file.exists(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv')))
+  expect_equal(2L, nrow(fread(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv'))))
+})
+
+test_that('Test checkSeekerArgs', {
+  outputDirObs = seeker:::checkSeekerArgs(params, parentDir)
+  expect_equal(outputDirObs, file.path(parentDir, 'GSE143524'))
+})
+
+test_that('Test fetchMetadata', {
+  originalColumns = c('study_accession', 'sample_accession', 'secondary_sample_accession',
+                      'sample_alias', 'sample_title', 'experiment_accession',
+                      'run_accession', 'fastq_md5', 'fastq_ftp', 'fastq_aspera')
+  metadataControl = metadata[, ..originalColumns]
+  outputDir = file.path(parentDir, 'GSE143524')
+  if (!dir.exists(outputDir)) dir.create(outputDir)
+  step = 'metadata'
+  paramsNow = params[[step]]
+  metadataObs = fetchMetadata(paramsNow$bioproject)
+
+  idx = metadataObs[[paramsNow$include$colname]] %in% paramsNow$include$values
+  metadataObs = metadataObs[idx]
+
+
+  expect_equal(metadataObs, metadataControl)
+
+
+})
