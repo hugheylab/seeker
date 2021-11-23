@@ -10,17 +10,20 @@ foreach::registerDoSEQ()
 metadata = fread('test_data/metadata.csv')
 
 test_that('Test seeker', {
+  skip_on_os('windows', arch = NULL)
   seeker(params, parentDir)
   expect_true(file.exists(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv')))
   expect_equal(2L, nrow(fread(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv'))))
 })
 
 test_that('Test checkSeekerArgs', {
+  skip_on_os('windows', arch = NULL)
   outputDirObs = seeker:::checkSeekerArgs(params, parentDir)
   expect_equal(outputDirObs, file.path(parentDir, 'GSE143524'))
 })
 
 test_that('Test fetchMetadata', {
+  skip_on_os('windows', arch = NULL)
   originalColumns = c('study_accession', 'sample_accession', 'secondary_sample_accession',
                       'sample_alias', 'sample_title', 'experiment_accession',
                       'run_accession', 'fastq_md5', 'fastq_ftp', 'fastq_aspera')
