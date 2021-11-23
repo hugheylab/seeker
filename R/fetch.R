@@ -6,7 +6,7 @@
 #' @param bioproject String indicating bioproject accession.
 #' @param host String indicating from where to fetch the metadata.
 #' @param fields Character vector indicating which fields to fetch, if `host`
-#'   is 'ena'.
+#'   is "ena".
 #'
 #' @return A `data.table`.
 #'

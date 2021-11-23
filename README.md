@@ -13,7 +13,7 @@
 `seeker` and its dependencies are available in a Docker image called [socker](https://github.com/hugheylab/socker), based on [rocker/tidyverse](https://github.com/rocker-org/rocker-versioned2).
 
 ```sh
-docker pull ghcr.io/hugheylab/socker:latest
+docker pull ghcr.io/hugheylab/socker
 ```
 
 If you don't want to use Docker, you can follow the instructions below.
@@ -46,7 +46,7 @@ If you don't want to use Docker, you can follow the instructions below.
 
 ### System dependencies
 
-The system dependencies are required for sequencing data, but not microarray data. These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
+The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
 
 1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
 
@@ -119,3 +119,7 @@ The system dependencies are required for sequencing data, but not microarray dat
     ```r
     options(seeker.miniconda = '~/miniconda3/envs/seeker')
     ```
+
+## Usage
+
+For an introduction to the package, read the [vignette](https://seeker.hugheylab.org/articles/introduction.html). For more details, check out the [reference documentation](https://seeker.hugheylab.org/reference/index.html).

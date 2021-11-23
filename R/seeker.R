@@ -13,7 +13,8 @@ checkSeekerArgs = function(params, parentDir) {
   command = NULL
   defaultCommands = checkDefaultCommands()
   assertList(params)
-  assertSetEqual(names(params), c('study', steps))
+  # assertSetEqual(names(params), c('study', steps))
+  assertNames(names(params), permutation.of = c('study', steps))
   assertString(params$study, min.chars = 1L)
 
   assertString(parentDir)
@@ -25,19 +26,25 @@ checkSeekerArgs = function(params, parentDir) {
     # assertFlag(params[[step]]$run, .var.name = sprintf('params$%s$run', step))}
 
   if (params$metadata$run) {
-    assertSubset(names(params$metadata),
-                 c('run', 'bioproject', 'include', 'exclude'))
+    # assertSubset(names(params$metadata),
+    #              c('run', 'bioproject', 'include', 'exclude'))
+    assertNames(names(params$metadata),
+                subset.of = c('run', 'bioproject', 'include', 'exclude'))
     assertString(params$metadata$bioproject, min.chars = 1L)
 
     assertList(params$metadata$include, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$metadata$include)) {
-      assertSetEqual(names(params$metadata$include), c('colname', 'values'))
+      # assertSetEqual(names(params$metadata$include), c('colname', 'values'))
+      assertNames(names(params$metadata$include),
+                  permutation.of = c('colname', 'values'))
       assertString(params$metadata$include$colname, min.chars = 1L)
       assertVector(params$metadata$include$values, strict = TRUE)}
 
     assertList(params$metadata$exclude, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$metadata$exclude)) {
-      assertSetEqual(names(params$metadata$exclude), c('colname', 'values'))
+      # assertSetEqual(names(params$metadata$exclude), c('colname', 'values'))
+      assertNames(names(params$metadata$exclude),
+                  permutation.of = c('colname', 'values'))
       assertString(params$metadata$exclude$colname, min.chars = 1L)
       assertVector(params$metadata$exclude$values, strict = TRUE)}}
 
@@ -47,8 +54,11 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$fetch$run) {
-    assertSubset(names(params$fetch),
-                 c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+    # assertSubset(names(params$fetch),
+    #              c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+    assertNames(
+      names(params$fetch),
+      subset.of = c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
     assertFlag(params$fetch$keep, null.ok = TRUE)
     assertFlag(params$fetch$overwrite, null.ok = TRUE)
     assertString(params$fetch$ascpCmd, min.chars = 1L, null.ok = TRUE)
@@ -63,7 +73,9 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$trimgalore$run) {
-    assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
+    # assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
+    assertNames(names(params$trimgalore),
+                subset.of = c('run', 'keep', 'cmd', 'args'))
     assertFlag(params$trimgalore$keep, null.ok = TRUE)
     assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$trimgalore$cmd, 'trim_galore',
@@ -77,7 +89,8 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$fastqc$run) {
-    assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
+    # assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
+    assertNames(names(params$fastqc), subset.of = c('run', 'keep', 'cmd', 'args'))
     assertFlag(params$fastqc$keep, null.ok = TRUE)
     assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$fastqc$cmd, 'fastqc',
@@ -91,8 +104,10 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$salmon$run) {
-    assertSubset(names(params$salmon),
-                 c('run', 'indexDir', 'keep', 'cmd', 'args'))
+    # assertSubset(names(params$salmon),
+    #              c('run', 'indexDir', 'keep', 'cmd', 'args'))
+    assertNames(names(params$salmon),
+                subset.of = c('run', 'indexDir', 'keep', 'cmd', 'args'))
     assertString(params$salmon$indexDir, min.chars = 1L)
     assertDirectoryExists(params$salmon$indexDir)
     assertFlag(params$salmon$keep, null.ok = TRUE)
@@ -102,7 +117,8 @@ checkSeekerArgs = function(params, parentDir) {
     assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
 
   if (params$multiqc$run) {
-    assertSubset(names(params$multiqc), c('run', 'cmd', 'args'))
+    # assertSubset(names(params$multiqc), c('run', 'cmd', 'args'))
+    assertNames(names(params$multiqc), subset.of = c('run', 'cmd', 'args'))
     assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$multiqc$cmd, 'multiqc',
                   defaultCommands[command == 'multiqc']$path)
@@ -114,8 +130,11 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$tximport$run) {
-    assertSubset(names(params$tximport),
-                 c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
+    # assertSubset(names(params$tximport),
+    #              c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
+    assertNames(
+      names(params$tximport),
+      subset.of = c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
     assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$tximport$tx2gene)) {
       assertSubset(names(params$tximport$tx2gene), c('species', 'version'))
@@ -247,7 +266,7 @@ checkSeekerArgs = function(params, parentDir) {
 #'     [tximport::tximport()].
 #'
 #' `params` can be derived from a yaml file, see
-#' \code{vignette('introduction', package = 'seeker')}. The yaml representation
+#' \code{vignette("introduction", package = "seeker")}. The yaml representation
 #' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.

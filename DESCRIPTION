@@ -1,9 +1,9 @@
 Package: seeker
 Type: Package
 Title: Process genomic data
-Version: 0.0.0.9043
+Version: 0.0.0.9044
 Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
-Description: Process sequencing data and microarray using various command-line tools.
+Description: Simplified processing of sequencing and microarray data.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
@@ -24,6 +24,7 @@ Imports:
   GEOquery (>= 2.58.0),
   glue (>= 1.5.0),
   jsonlite (>= 1.7.2),
+  methods,
   R.utils (>= 2.11.0),
   readr (>= 1.4.0),
   sessioninfo (>= 1.2.0),

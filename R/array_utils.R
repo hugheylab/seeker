@@ -1,3 +1,10 @@
+#' Get supported microarray platforms
+#'
+#' @param type String indicating whether to get supported platforms for
+#'   processing raw Affymetrix data using custom CDF or for mapping already
+#'   processed data from probes to genes.
+#'
+#' @export
 getPlatforms = function(type = c('cdf', 'mapping')) {
   type = match.arg(type)
   f = if (type == 'cdf') 'platform_cdf.csv' else 'platform_mapping.csv'
@@ -16,7 +23,7 @@ getCdfname = function(anno, geneIdType) {
   return(cdfname)}
 
 
-#' Install custom CDF packages.
+#' Install custom CDF packages
 #'
 #' Install Brainarray custom CDFs for processing raw Affymetrix data. See
 #' <http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp>.
@@ -44,20 +51,28 @@ installCustomCdfPackages = function(pkgs, ver = 25) {
 getNaiveEsetGeo = function(study, outputDir, rawDir) {
   eset = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)[[1L]]
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
+  procOk = eset@annotation %in% getPlatforms('mapping')$platform
 
-  if (rmaOk) {
+  dSuppTmp = GEOquery::getGEOSuppFiles(
+    study, makeDirectory = FALSE, baseDir = outputDir, fetch_files = FALSE)
+  isRaw = grepl('_RAW\\.tar$', dSuppTmp$fname)
+
+  if (rmaOk && any(isRaw)) {
     dSupp = GEOquery::getGEOSuppFiles(
       study, makeDirectory = FALSE, baseDir = outputDir)
-    paths = rownames(dSupp)[grepl('\\.tar$', rownames(dSupp))]
+    paths = rownames(dSupp)[isRaw]
+    for (path in paths) {
+      utils::untar(path, exdir = rawDir)}
+    unlink(paths)
 
-    if (length(paths) > 0) {
-      for (path in paths) {
-        utils::untar(path, exdir = rawDir)}
-      unlink(paths)
-    } else {
-      rmaOk = FALSE}}
+  } else if (procOk) {
+    rmaOk = FALSE
 
-  return(list(eset, rmaOk))}
+  } else {
+    return(glue('{study} uses platform {eset@annotation}, ',
+                'which is not supported with the available data.'))}
+
+  return(list(eset = eset, rmaOk = rmaOk))}
 
 
 getAeMetadata = function(study, type = c('experiments', 'files')) {
@@ -96,7 +111,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
     return(glue('{study} does not have raw data from a supported ',
-                'Affymetrix array. You take it from here.'))}
+                'Affymetrix platform. You take it from here.'))}
 
   if (!is.null(mage$rawArchive)) {
     unlink(file.path(outputDir, mage$rawArchive))}
@@ -106,7 +121,22 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
   . = file.rename(file.path(outputDir, mage$rawFiles),
                   file.path(rawDir, mage$rawFiles))
 
-  return(list(eset, rmaOk))}
+  return(list(eset = eset, rmaOk = rmaOk))}
+
+
+methods::setClass('Eset', slots = c(annotation = 'character'))
+
+
+getNaiveEsetLocal = function(study, platform) {
+  rmaOk = platform %in% getPlatforms('cdf')$platform
+  # procOk = platform %in% getPlatforms('mapping')$platform
+  # TODO: allow processed data?
+  if (rmaOk) {
+    eset = methods::new('Eset', annotation = platform)
+  } else {
+    return(glue('{study} uses platform {platform}, which is not supported ',
+                'for local data.'))}
+  return(list(eset = eset, rmaOk = rmaOk))}
 
 
 seekerRma = function(inputDir, cdfname) {

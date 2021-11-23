@@ -2,7 +2,7 @@
 % Please edit documentation in R/array_utils.R
 \name{installCustomCdfPackages}
 \alias{installCustomCdfPackages}
-\title{Install custom CDF packages.}
+\title{Install custom CDF packages}
 \usage{
 installCustomCdfPackages(pkgs, ver = 25)
 }

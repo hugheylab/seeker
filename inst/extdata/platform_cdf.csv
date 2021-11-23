@@ -1,6 +1,7 @@
 platform,custom_cdf_prefix,ae_accession
 GPL570,hgu133plus2hs,
 GPL1261,mouse4302mm,
+GPL6244,hugene10sths,
 GPL6246,mogene10stmm,
 pd.mouse430.2,mouse4302mm,A-AFFY-45
 pd.u133.x3p,u133x3phs,A-AFFY-54

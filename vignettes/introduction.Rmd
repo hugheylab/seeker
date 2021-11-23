@@ -42,11 +42,12 @@ Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 
 ## Microarray data
 
-To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` is targeted at processing data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). The main input is again a list of parameters, but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
+To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
 
 ```yaml
 study: '' # [string indicating study accession]
 geneIdType: '' # [string 'ensembl' or 'entrez']
+# platform: '' # [string indicating GEO-based platform accession for local data]
 ```
 
 A convenient way to run `seekerArray()` is then using a script such as the one below.
