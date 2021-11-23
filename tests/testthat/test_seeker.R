@@ -40,6 +40,14 @@ test_that('Test fetchMetadata', {
 
 
   expect_equal(metadataObs, metadataControl)
+  expect_true(grepl(';', metadataObs$fastq_aspera[1], fixed = TRUE))
 
+  params2 = yaml::read_yaml('test_data/GSE159135.yml')
+  paramsNow2 = params2[[step]]
+  metadataObs2 = fetchMetadata(paramsNow2$bioproject)
+  idx2 = metadataObs2[[paramsNow2$include$colname]] %in% paramsNow2$include$values
+  metadataObs2 = metadataObs2[idx2]
+
+  expect_false(grepl(';', metadataObs2$fastq_aspera[1], fixed = TRUE))
 
 })
