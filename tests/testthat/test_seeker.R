@@ -1,5 +1,6 @@
 library('data.table')
 params = yaml::read_yaml('test_data/GSE143524.yml')
+if(Sys.info()$sysname == "Darwin") params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
 dir.create(parentDir)
