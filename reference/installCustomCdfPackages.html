@@ -73,7 +73,7 @@ http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9045</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9046</span>
       </span>
     </div>
 
@@ -134,7 +134,7 @@ http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.
 <a href='http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp'>http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>installCustomCdfPackages</span><span class='op'>(</span><span class='va'>pkgs</span>, ver <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>installCustomCdfPackages</span><span class='op'>(</span><span class='va'>pkgs</span>, ver <span class='op'>=</span> <span class='fl'>25</span>, dryRun <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,8 +147,15 @@ http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.
       <th>ver</th>
       <td><p>Integer version number (25 as of 5 Jan 2021).</p></td>
     </tr>
+    <tr>
+      <th>dryRun</th>
+      <td><p>Logical indicating whether to actually install the packages.</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A character vector of URLs, invisibly.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
