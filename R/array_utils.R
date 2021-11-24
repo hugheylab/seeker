@@ -4,6 +4,8 @@
 #'   processing raw Affymetrix data using custom CDF or for mapping already
 #'   processed data from probes to genes.
 #'
+#' @return A `data.table`.
+#'
 #' @export
 getPlatforms = function(type = c('cdf', 'mapping')) {
   type = match.arg(type)
@@ -30,22 +32,31 @@ getCdfname = function(anno, geneIdType) {
 #'
 #' @param pkgs Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.
 #' @param ver Integer version number (25 as of 5 Jan 2021).
+#' @param dryRun Logical indicating whether to actually install the packages.
+#'
+#' @return A character vector of URLs, invisibly.
 #'
 #' @export
-installCustomCdfPackages = function(pkgs, ver = 25) {
+installCustomCdfPackages = function(pkgs, ver = 25, dryRun = FALSE) {
   assertCharacter(pkgs, any.missing = FALSE)
   assertIntegerish(ver, len = 1L, any.missing = FALSE)
+  assertFlag(dryRun)
   urlPre = glue('http://mbni.org/customcdf/{ver}.0.0')
-  for (pkg in unique(pkgs)) {
+  pkg = NULL
+
+  urls = foreach(pkg = unique(pkgs), .combine = c) %do% {
     hint = substr(pkg, nchar(pkg) - 6, nchar(pkg) - 3)
     urlMid = switch(hint, ensg = 'ensg', rezg = 'entrezg')
     if (is.null(urlMid)) {
       warning(glue('Cannot install {pkg}, since it doesn\'t correspond ',
                    'to gene IDs from Ensembl or Entrez.'))
+      NA_character_
     } else {
-      urlFull = glue('{urlPre}/{urlMid}.download/{pkg}_{ver}.0.0.tar.gz')
-      utils::install.packages(urlFull, repos = NULL)}}
-  invisible()}
+      glue('{urlPre}/{urlMid}.download/{pkg}_{ver}.0.0.tar.gz')}}
+
+  names(urls) = pkgs
+  if (!dryRun) utils::install.packages(urls[!is.na(urls)], repos = NULL)
+  invisible(urls)}
 
 
 getNaiveEsetGeo = function(study, outputDir, rawDir) {
@@ -159,15 +170,6 @@ getNewEmatColnames = function(old, repo) {
   } else {
     new = stripFileExt(old)}
   return(new)}
-
-
-getProbeGeneMappingAffy = function(mappingFilePath) {
-  mapping = fread(mappingFilePath)
-  old = c('Affy.Probe.Set.Name', 'Probe.Set.Name')
-  mappingUnique = unique(mapping[, old, with = FALSE])
-  mappingUnique = mappingUnique[apply(mappingUnique, MARGIN = 1, function(r) !any(is.na(r))), ]
-  setnames(mappingUnique, old, c('probe_set', 'gene_id'))
-  return(mappingUnique)}
 
 
 getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID') {

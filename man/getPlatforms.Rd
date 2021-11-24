@@ -11,6 +11,9 @@ getPlatforms(type = c("cdf", "mapping"))
 processing raw Affymetrix data using custom CDF or for mapping already
 processed data from probes to genes.}
 }
+\value{
+A \code{data.table}.
+}
 \description{
 Get supported microarray platforms
 }
