@@ -25,6 +25,9 @@
     <loc>https://seeker.hugheylab.org/reference/getAscpCmd.html</loc>
   </url>
   <url>
+    <loc>https://seeker.hugheylab.org/reference/getPlatforms.html</loc>
+  </url>
+  <url>
     <loc>https://seeker.hugheylab.org/reference/getSalmonMetadata.html</loc>
   </url>
   <url>
@@ -53,5 +56,8 @@
   </url>
   <url>
     <loc>https://seeker.hugheylab.org/articles/introduction.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/articles/reproducibility.html</loc>
   </url>
 </urlset>

@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Process genomic data">
-<meta property="og:description" content="Process sequencing data and microarray using various command-line tools.">
+<meta property="og:description" content="Simplified processing of sequencing and microarray data.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9043</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9045</span>
       </span>
     </div>
 
@@ -55,6 +55,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="articles/introduction.html">Introduction to seeker</a>
+    </li>
+    <li>
+      <a href="articles/reproducibility.html">Reproducibility with seeker</a>
     </li>
   </ul>
 </li>
@@ -90,7 +93,7 @@
 <h3 class="hasAnchor">
 <a href="#docker-image" class="anchor"></a>Docker image</h3>
 <p><code>seeker</code> and its dependencies are available in a Docker image called <a href="https://github.com/hugheylab/socker">socker</a>, based on <a href="https://github.com/rocker-org/rocker-versioned2">rocker/tidyverse</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker:latest</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
 <p>If you don’t want to use Docker, you can follow the instructions below.</p>
 </div>
 <div id="r-package" class="section level3">
@@ -122,7 +125,7 @@
 <div id="system-dependencies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#system-dependencies" class="anchor"></a>System dependencies</h3>
-<p>The system dependencies are required for sequencing data, but not microarray data. These instructions are for Unix-based systems, primarily Linux and macOS. If you’re using Windows, you’re doing it wrong.</p>
+<p>The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you’re using Windows, you’re doing it wrong.</p>
 <ol>
 <li><p>Download and install <a href="https://www.ibm.com/aspera/connect/">Aspera Connect</a>. On Linux, you will likely have to download a tar.gz file (using <code>wget</code> or <code>curl</code>), untar it (using <code>tar -zxvf</code>), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.</p></li>
 <li>
@@ -172,6 +175,11 @@
 </li>
 </ol>
 </div>
+</div>
+<div id="usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>For an introduction to the package, read the <a href="https://seeker.hugheylab.org/articles/introduction.html">vignette</a>. For more details, check out the <a href="https://seeker.hugheylab.org/reference/index.html">reference documentation</a>.</p>
 </div>
 </div>
   </div>

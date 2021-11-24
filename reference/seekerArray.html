@@ -74,7 +74,7 @@ maps probes to genes." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9043</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9045</span>
       </span>
     </div>
 
@@ -98,6 +98,9 @@ maps probes to genes." />
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/introduction.html">Introduction to seeker</a>
+    </li>
+    <li>
+      <a href="../articles/reproducibility.html">Reproducibility with seeker</a>
     </li>
   </ul>
 </li>
@@ -142,15 +145,22 @@ maps probes to genes.</p>
       <th>params</th>
       <td><p>Named list of parameters with components:</p><ul>
 <li><p><code>study</code>: String indicating the study accession and used to name the output
-directory within <code>parentDir</code>. If <code>study</code> starts with 'GSE', data are
-fetched using <code><a href='https://rdrr.io/pkg/GEOquery/man/getGEO.html'>GEOquery::getGEO()</a></code>. Otherwise the data are fetched
-using <code><a href='https://rdrr.io/pkg/ArrayExpress/man/getAE.html'>ArrayExpress::getAE()</a></code>.</p></li>
+directory within <code>parentDir</code>. Must start with "GSE", "E-", or "LOCAL". If
+starts with "GSE", data are fetched using <code><a href='https://rdrr.io/pkg/GEOquery/man/getGEO.html'>GEOquery::getGEO()</a></code>. If starts
+with "E-", data are fetched using <code><a href='https://rdrr.io/pkg/ArrayExpress/man/getAE.html'>ArrayExpress::getAE()</a></code>. If starts with
+"LOCAL", data in the form of cel(.gz) files must in the directory
+<code>parentDir</code>/<code>params$study</code>/raw, and <code>parentDir</code>/<code>params$study</code> must contain
+a file "sample_metadata.csv" that has a column <code>sample_id</code> containing the
+names of the cel(.gz) files without the file extension.</p></li>
 <li><p><code>geneIdType</code>: String indicating whether to map probes to gene IDs from
-Ensembl ('ensembl') or Entrez ('entrez').</p></li>
+Ensembl ("ensembl") or Entrez ("entrez").</p></li>
+<li><p><code>platform</code>: String indicating the GEO-based platform accession for the raw
+data. See <a href='https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms'>https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms</a>.
+Only necessary if <code>params$study</code> starts with "LOCAL".</p></li>
 </ul>
 
 <p><code>params</code> can be derived from a yaml file, see
-<code><a href='../articles/introduction.html'>vignette('introduction', package = 'seeker')</a></code>. The yaml representation
+<code><a href='../articles/introduction.html'>vignette("introduction", package = "seeker")</a></code>. The yaml representation
 of <code>params</code> will be saved to <code>parentDir</code>/<code>params$study</code>/params.yml.</p></td>
     </tr>
     <tr>
@@ -180,7 +190,7 @@ from processed data.</p></li>
 matrix was generated from processed data.</p></li>
 <li><p>"raw" directory: Contains raw Affymetrix files.</p></li>
 <li><p>params.yml: Parameters used to process the dataset.</p></li>
-<li><p>session.log: Detailed R session information.</p></li>
+<li><p>session.log: R session information.</p></li>
 </ul>
 
 <p>The output may include other files from NCBI GEO or ArrayExpress. Files with

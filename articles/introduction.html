@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9043</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9045</span>
       </span>
     </div>
 
@@ -55,6 +55,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="../articles/introduction.html">Introduction to seeker</a>
+    </li>
+    <li>
+      <a href="../articles/reproducibility.html">Reproducibility with seeker</a>
     </li>
   </ul>
 </li>
@@ -82,7 +85,7 @@
       <h1 data-toc-skip>Introduction to seeker</h1>
                         <h4 class="author">Jake Hughey</h4>
             
-            <h4 class="date">2021-11-22</h4>
+            <h4 class="date">2021-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -162,9 +165,10 @@
 <div id="microarray-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#microarray-data" class="anchor"></a>Microarray data</h2>
-<p>To process microarray data, use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function. Currently <code><a href="../reference/seekerArray.html">seekerArray()</a></code> is targeted at processing data from <a href="https://www.ncbi.nlm.nih.gov/geo/">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/">ArrayExpress</a>. The main input is again a list of parameters, but much simpler than for <code><a href="../reference/seeker.html">seeker()</a></code>. A template yaml file for the parameters is shown below.</p>
+<p>To process microarray data, use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function. Currently <code><a href="../reference/seekerArray.html">seekerArray()</a></code> can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/">ArrayExpress</a>. It can also raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for <code><a href="../reference/seeker.html">seeker()</a></code>. A template yaml file for the parameters is shown below.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">study</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string indicating study accession]</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">geneIdType</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string 'ensembl' or 'entrez']</span></span></code></pre></div>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">geneIdType</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string 'ensembl' or 'entrez']</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co"># platform: '' # [string indicating GEO-based platform accession for local data]</span></span></code></pre></div>
 <p>A convenient way to run <code><a href="../reference/seekerArray.html">seekerArray()</a></code> is then using a script such as the one below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
