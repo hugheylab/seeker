@@ -10,7 +10,7 @@
 
 ### Docker image
 
-`seeker` and its dependencies are available in a Docker image called [socker](https://github.com/hugheylab/socker), based on [rocker/tidyverse](https://github.com/rocker-org/rocker-versioned2).
+`seeker` and its dependencies are available in a Docker image called [socker](https://github.com/hugheylab/socker), based on [rocker/rstudio](https://github.com/rocker-org/rocker-versioned2).
 
 ```sh
 docker pull ghcr.io/hugheylab/socker
