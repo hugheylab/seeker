@@ -1,0 +1,84 @@
+---
+title: "Reproducibility with seeker"
+author: "Jake Hughey"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reproducibility with seeker}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+```
+
+Using `seeker` together with docker, it's easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the [socker](https://github.com/hugheylab/socker) image, which has seeker and its dependencies already installed.
+
+```sh
+docker pull ghcr.io/hugheylab/socker
+```
+
+## RNA-seq data
+
+The `seeker` package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Copy the files to your working directory:
+
+```{r, eval = FALSE}
+for (filename in c('PRJNA600892.yml', 'run_seeker.R', 'run_seeker.sh')) {
+  file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
+```
+
+PRJNA600892.yml:
+
+```{r, code = readLines(system.file('extdata', 'PRJNA600892.yml', package = 'seeker')), eval = FALSE}
+```
+
+run_seeker.R:
+
+```{r, code = readLines(system.file('extdata', 'run_seeker.R', package = 'seeker')), eval = FALSE}
+```
+
+run_seeker.sh:
+
+```{r, code = readLines(system.file('extdata', 'run_seeker.sh', package = 'seeker')), eval = FALSE}
+```
+
+Now simply run the shell script:
+
+```sh
+sh run_seeker.sh
+```
+
+The output will appear in your working directory. You can follow `seeker()`'s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Note: the example yaml file and shell script use salmon_partial_sa_index to minimize computational requirements; for actual use we recommend salmon_sa_index.
+
+## Microarray data
+
+The `seeker` package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Copy the files to your working directory:
+
+```{r, eval = FALSE}
+for (filename in c('GSE25585.yml', 'run_seeker_array.R', 'run_seeker_array.sh')) {
+  file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
+```
+
+GSE25585.yml:
+
+```{r, code = readLines(system.file('extdata', 'GSE25585.yml', package = 'seeker')), eval = FALSE}
+```
+
+run_seeker_array.R:
+
+```{r, code = readLines(system.file('extdata', 'run_seeker_array.R', package = 'seeker')), eval = FALSE}
+```
+
+run_seeker_array.sh:
+
+```{r, code = readLines(system.file('extdata', 'run_seeker_array.sh', package = 'seeker')), eval = FALSE}
+```
+
+Now simply run the shell script:
+```sh
+sh run_seeker_array.sh
+```
+
+The output will appear in your working directory. You can follow `seekerArray()`'s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly.
+

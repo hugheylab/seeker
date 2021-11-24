@@ -1,11 +1,11 @@
-study: 'GSE113883' # [string]
+study: 'PRJNA600892' # [string]
 metadata:
   run: TRUE # [logical]
-  bioproject: 'PRJNA454445' # [string]
+  bioproject: 'PRJNA600892' # [string]
   include:
     # [named list or NULL]
-    colname: 'sample_accession' # [string]
-    values: ['SAMN09006773', 'SAMN09006774'] # [vector]
+    colname: 'run_accession' # [string]
+    values: ['SRR10876945', 'SRR10876946'] # [vector]
   # exclude # [named list or NULL]
     # colname # [string]
     # values # [vector]
@@ -28,7 +28,7 @@ fastqc:
   # args # [character vector or NULL]
 salmon:
   run: TRUE # [logical]
-  indexDir: '~/genomes/alias/hg38/salmon_partial_sa_index/default' # [string]
+  indexDir: '~/genomes/alias/mm10/salmon_partial_sa_index/default' # [string]
   # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
@@ -40,7 +40,7 @@ tximport:
   run: TRUE # [logical]
   tx2gene:
     # [named list or NULL]
-    species: 'hsapiens' # [string]
+    species: 'mmusculus' # [string]
     # version # [number or NULL]
   countsFromAbundance: 'lengthScaledTPM' # [string]
   # ignoreTxVersion # [logical or NULL]

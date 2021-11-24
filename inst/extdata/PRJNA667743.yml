@@ -1,4 +1,4 @@
-study: 'GSE159135' # [string]
+study: 'PRJNA667743' # [string]
 metadata:
   run: TRUE # [logical]
   bioproject: 'PRJNA667743' # [string]
