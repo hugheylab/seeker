@@ -247,9 +247,10 @@ getProbeGeneMapping = function(featureDt, platformDt, geneIdType) {
 
 getEmatGene = function(ematProbe, mapping) {
   .SD = NULL
-  dProbe = data.table(ematProbe, keep.rownames = 'probe_set')
+  idx = rowSums(is.na(ematProbe)) == 0
+  dProbe = data.table(ematProbe[idx, , drop = FALSE], keep.rownames = 'probe_set')
   dProbe = merge(mapping, dProbe, by = 'probe_set', sort = FALSE)
-  dGene = dProbe[, lapply(.SD, stats::median, na.rm = TRUE),
+  dGene = dProbe[, lapply(.SD, stats::median),
                  by = 'gene_id', .SDcols = !'probe_set']
   ematGene = as.matrix(dGene[, !'gene_id'])
   rownames(ematGene) = dGene$gene_id

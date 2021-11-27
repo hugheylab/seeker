@@ -45,11 +45,11 @@ test_that('getNaiveEsetLocal', {
 
 test_that('getAeMetadata', {
   study = 'E-MEXP-3780'
-  expers = seeker:::getAeMetadata(study, type = 'experiments')
+  expers = getAeMetadata(study, type = 'experiments')
   expect_s3_class(expers, 'data.frame')
   expect_equal(nrow(expers), 1L)
 
-  files = seeker:::getAeMetadata(study, type = 'files')
+  files = getAeMetadata(study, type = 'files')
   expect_s3_class(files, 'data.frame')
 })
 
@@ -83,14 +83,9 @@ test_that('getEmatGene', {
     dimnames = list(paste0('probe', 1:4), paste0('sample', 1:2)))
   mapping = data.table(probe_set = paste0('probe', 4:1),
                        gene_id = paste0('gene', c(1, 1, 2, 3)))
-  ematGeneObs = seeker:::getEmatGene(ematProbe, mapping)
+  ematGeneObs = getEmatGene(ematProbe, mapping)
   ematGeneExp = matrix(
     c(3.5, 2, 1, 7.5, 6, 5), nrow = 3L,
     dimnames = list(paste0('gene', 1:3), paste0('sample', 1:2)))
   expect_equal(ematGeneObs, ematGeneExp)
 })
-
-
-
-
-
