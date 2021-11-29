@@ -21,7 +21,8 @@ names of the cel(.gz) files without the file extension.
 Ensembl ("ensembl") or Entrez ("entrez").
 \item \code{platform}: String indicating the GEO-based platform accession for the raw
 data. See \url{https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms}.
-Only necessary if \code{params$study} starts with "LOCAL".
+Only necessary if \code{params$study} starts with "LOCAL", or starts with "GSE"
+and the study uses multiple platforms.
 }
 
 \code{params} can be derived from a yaml file, see

@@ -47,7 +47,7 @@ To process microarray data, use the `seekerArray()` function. Currently `seekerA
 ```yaml
 study: '' # [string indicating study accession]
 geneIdType: '' # [string 'ensembl' or 'entrez']
-# platform: '' # [string indicating GEO-based platform accession for local data]
+# platform: '' # [string indicating GEO-based platform accession for local data or for GEO-based data using multiple platforms]
 ```
 
 A convenient way to run `seekerArray()` is then using a script such as the one below.

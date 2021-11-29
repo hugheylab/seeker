@@ -2,21 +2,8 @@ checkSeekerArrayArgs = function(params, parentDir) {
   assertList(params)
   assertNames(names(params), must.include = 'study')
   assertString(params$study)
-
-  assert(
-    checkTRUE(setequal(names(params), c('study', 'geneIdType')) &
-                any(startsWith(params$study, c('GSE', 'E-')))),
-    checkTRUE(setequal(names(params), c('study', 'geneIdType', 'platform')) &
-                startsWith(params$study, 'LOCAL')),
-    combine = 'or')
-
-  repo = if (startsWith(params$study, 'GSE')) {
-    'geo'
-  } else if (startsWith(params$study, 'E-')) {
-    'ae'
-  } else {
-    'local'}
-
+  assertTRUE(any(startsWith(params$study, c('GSE', 'E-', 'LOCAL'))))
+  assertNames(names(params), must.include = c('study', 'geneIdType'))
   assertChoice(params$geneIdType, c('ensembl', 'entrez'))
 
   assertString(parentDir)
@@ -26,8 +13,20 @@ checkSeekerArrayArgs = function(params, parentDir) {
   metadataPath = file.path(outputDir, 'sample_metadata.csv')
   sampColname = 'sample_id'
 
-  if (repo == 'local') {
+  if (startsWith(params$study, 'GSE')) {
+    repo = 'geo'
+    assertNames(names(params), subset.of = c('study', 'geneIdType', 'platform'))
+    assertString(params$platform, min.chars = 4, null.ok = TRUE)
+    assert(is.null(params$platform), startsWith(params$platform, 'GPL'))
+  } else if (startsWith(params$study, 'E-')) {
+    repo = 'ae'
+    assertNames(names(params), permutation.of = c('study', 'geneIdType'))
+  } else {
+    repo = 'local'
+    assertNames(
+      names(params), permutation.of = c('study', 'geneIdType', 'platform'))
     assertString(params$platform, min.chars = 4)
+    assertTRUE(startsWith(params$platform), 'GPL')
     assertDirectoryExists(rawDir)
     assertFileExists(metadataPath)
     d = fread(metadataPath, na.strings = '')
@@ -79,7 +78,8 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #'   Ensembl ("ensembl") or Entrez ("entrez").
 #' * `platform`: String indicating the GEO-based platform accession for the raw
 #'   data. See <https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms>.
-#'   Only necessary if `params$study` starts with "LOCAL".
+#'   Only necessary if `params$study` starts with "LOCAL", or starts with "GSE"
+#'   and the study uses multiple platforms.
 #'
 #' `params` can be derived from a yaml file, see
 #' \code{vignette("introduction", package = "seeker")}. The yaml representation
@@ -104,7 +104,7 @@ seekerArray = function(params, parentDir) {
   withr::local_envvar(VROOM_CONNECTION_SIZE = 131072 * 20)
 
   result = if (repo == 'geo') {
-    getNaiveEsetGeo(params$study, outputDir, rawDir)
+    getNaiveEsetGeo(params$study, outputDir, rawDir, params$platform)
   } else if (repo == 'ae') {
     getNaiveEsetAe(params$study, outputDir, rawDir)
   } else {
@@ -126,12 +126,6 @@ seekerArray = function(params, parentDir) {
 
   if (rmaOk) {
     cdfname = getCdfname(eset@annotation, params$geneIdType)
-    # if (length(cdfname) == 0) {
-    #   warning(glue(
-    #     '{params$study} uses platform {eset@annotation}, which is ',
-    #     'unsupported for mapping probes to genes using raw data.'))
-    #   return(invisible())}
-
     if (!requireNamespace(cdfname, quietly = TRUE)) {
       installCustomCdfPackages(cdfname)}
     fwrite(list(cdfname), file.path(outputDir, 'custom_cdf_name.txt'))
@@ -152,12 +146,6 @@ seekerArray = function(params, parentDir) {
 
     platforms = getPlatforms('mapping')
     platformDt = platforms[platforms$platform == eset@annotation]
-
-    # if (nrow(platformDt) == 0) {
-    #   warning(glue(
-    #     '{params$study} uses platform {eset@annotation}, which is ',
-    #     'unsupported for mapping probes to genes using processed data.'))
-    #   return(invisible())}
 
     mapping = getProbeGeneMapping(featureDt, platformDt, params$geneIdType)
     fwrite(mapping, file.path(outputDir, 'probe_gene_mapping.csv.gz'))

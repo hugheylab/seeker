@@ -59,8 +59,20 @@ installCustomCdfPackages = function(pkgs, ver = 25, dryRun = FALSE) {
   invisible(urls)}
 
 
-getNaiveEsetGeo = function(study, outputDir, rawDir) {
-  eset = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)[[1L]]
+getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
+  gq = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)
+  idx = if (length(gq) == 1L) {
+    1L
+  } else if (is.null(platform)) {
+    return(glue('{study} uses multiple platforms, but params does not ',
+                'specify which one to use for processing.'))
+  } else {
+    which(sapply(gq, function(x) x@annotation) == platform)}
+
+  if (length(idx) == 0) {
+    return(glue('{study} uses multiple platforms, none of which is {platform}.'))}
+  eset = gq[[idx]]
+
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
   procOk = eset@annotation %in% getPlatforms('mapping')$platform
 
