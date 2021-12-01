@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9047</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9048</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -64,7 +60,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/hugheylab/seeker/">
+  <a href="https://github.com/hugheylab/seeker/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -83,22 +79,22 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to seeker</h1>
-                        <h4 class="author">Jake Hughey</h4>
+                        <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 class="date">2021-11-27</h4>
+            <h4 data-toc-skip class="date">2021-12-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
 
     </div>
 
     
     
-<div id="rna-seq-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#rna-seq-data" class="anchor"></a>RNA-seq data</h2>
+<div class="section level2">
+<h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
+</h2>
 <p>The <code>seeker</code> package is designed to be a wrapper around various command-line and R-based tools. The main function in the <code>seeker</code> package is, well, <code><a href="../reference/seeker.html">seeker()</a></code>. Currently <code><a href="../reference/seeker.html">seeker()</a></code> is targeted at processing bulk RNA-seq data. The main input is a list of parameters specifying which steps of RNA-seq data processing to perform and how to perform them. Depending on the parameters, <code><a href="../reference/seeker.html">seeker()</a></code> will call other functions in the package.</p>
-<p>A convenient way to construct the list of parameters is to make a yaml file and read it into R using <code><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">yaml::read_yaml()</a></code>. A template yaml file is shown below.</p>
+<p>A convenient way to construct the list of parameters is to make a yaml file and read it into R using <code><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">yaml::read_yaml()</a></code>. A template yaml file is shown below.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">study</span><span class="op">:</span> <span class="st">''</span> <span class="co"># [string]</span>
 <span class="va">metadata</span><span class="op">:</span>
@@ -147,39 +143,39 @@
   <span class="co"># ignoreTxVersion # [logical or NULL]</span></code></pre></div>
 <p>A convenient way to run <code><a href="../reference/seeker.html">seeker()</a></code> is then using a script such as the one below.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html" class="external-link">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">yamlPath</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span>
 <span class="va">parentDir</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">2L</span><span class="op">]</span>
 
-<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
+<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
 <span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seeker.html">seeker</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
 <p>You can copy the template yaml file and script to your current working directory like so:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'params_template.yml'</span>, <span class="st">'run_seeker.R'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'params_template.yml'</span>, <span class="st">'run_seeker.R'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p>Then you can rename and edit the yaml file, edit the script as appropriate, run <code>install.packages('doParallel')</code> if necessary, and run the script using something like</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
 </div>
-<div id="microarray-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#microarray-data" class="anchor"></a>Microarray data</h2>
-<p>To process microarray data, use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function. Currently <code><a href="../reference/seekerArray.html">seekerArray()</a></code> can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/">ArrayExpress</a>. It can also process raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for <code><a href="../reference/seeker.html">seeker()</a></code>. A template yaml file for the parameters is shown below.</p>
+<div class="section level2">
+<h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
+</h2>
+<p>To process microarray data, use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function. Currently <code><a href="../reference/seekerArray.html">seekerArray()</a></code> can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/" class="external-link">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/" class="external-link">ArrayExpress</a>. It can also process raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for <code><a href="../reference/seeker.html">seeker()</a></code>. A template yaml file for the parameters is shown below.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">study</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string indicating study accession]</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="fu">geneIdType</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string 'ensembl' or 'entrez']</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="co"># platform: '' # [string indicating GEO-based platform accession for local data]</span></span></code></pre></div>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co"># platform: '' # [string indicating GEO-based platform accession for local data or for GEO-based data using multiple platforms]</span></span></code></pre></div>
 <p>A convenient way to run <code><a href="../reference/seekerArray.html">seekerArray()</a></code> is then using a script such as the one below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html" class="external-link">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">yamlPath</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span>
 <span class="va">parentDir</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">2L</span><span class="op">]</span>
 
-<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
+<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
 <span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
 <p>Copy the script to your working directory like so:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="st">'run_seeker_array.R'</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="st">'run_seeker_array.R'</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span></code></pre></div>
 <p>Then you can create the yaml file for the dataset you want and run the script using something like</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">Rscript</span> run_seeker_array.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
 </div>
@@ -196,11 +192,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Jake Hughey.</p>
+  <p></p>
+<p>Developed by Jake Hughey.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -208,6 +206,8 @@
 
   
 
+
+  
 
   </body>
 </html>

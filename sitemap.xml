@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://seeker.hugheylab.org/404.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/articles/introduction.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/articles/reproducibility.html</loc>
+  </url>
+  <url>
+    <loc>https://seeker.hugheylab.org/authors.html</loc>
+  </url>
+  <url>
     <loc>https://seeker.hugheylab.org/index.html</loc>
   </url>
   <url>
@@ -34,6 +49,9 @@
     <loc>https://seeker.hugheylab.org/reference/getTx2gene.html</loc>
   </url>
   <url>
+    <loc>https://seeker.hugheylab.org/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://seeker.hugheylab.org/reference/installCustomCdfPackages.html</loc>
   </url>
   <url>
@@ -53,11 +71,5 @@
   </url>
   <url>
     <loc>https://seeker.hugheylab.org/reference/tximport.html</loc>
-  </url>
-  <url>
-    <loc>https://seeker.hugheylab.org/articles/introduction.html</loc>
-  </url>
-  <url>
-    <loc>https://seeker.hugheylab.org/articles/reproducibility.html</loc>
   </url>
 </urlset>
