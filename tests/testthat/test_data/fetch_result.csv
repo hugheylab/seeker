@@ -1,0 +1,3 @@
+V1,localFilepaths
+test_data/staging/GSM5694054/fetch_output/SRR10876945_1.fastq.gz,test_data/staging/GSM5694054/fetch_output/SRR10876945_1.fastq.gz;test_data/staging/GSM5694054/fetch_output/SRR10876945_2.fastq.gz
+test_data/staging/GSM5694054/fetch_output/SRR10876946_1.fastq.gz,test_data/staging/GSM5694054/fetch_output/SRR10876946_1.fastq.gz;test_data/staging/GSM5694054/fetch_output/SRR10876946_2.fastq.gz

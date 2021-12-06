@@ -1,5 +1,5 @@
 library('data.table')
-params = yaml::read_yaml('test_data/GSE143524.yml')
+params = yaml::read_yaml('test_data/GSE143524_josh.yml')
 if(Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
@@ -49,5 +49,38 @@ test_that('Test fetchMetadata', {
   metadataObs2 = metadataObs2[idx2]
 
   expect_false(grepl(';', metadataObs2$fastq_aspera[1], fixed = TRUE))
+
+})
+
+
+
+test_that('Test fetch', {
+  skip_on_os('windows', arch = NULL)
+  outputDir = file.path(parentDir, 'GSM5694054')
+  if (!dir.exists(outputDir)) dir.create(outputDir)
+  step = 'metadata'
+
+  paramsFetch = yaml::read_yaml('test_data/GSM5694054_josh.yml')
+  paramsFetchNow = paramsFetch[[step]]
+  metadataGSM = fetchMetadata(paramsFetchNow$bioproject, host = 'ena')
+  idx = metadataGSM[[paramsFetchNow$include$colname]] %in% paramsFetchNow$include$values
+  metadataGSM = metadataGSM[idx]
+
+  step = 'fetch'
+  paramsFetchNow = paramsFetch[[step]]
+  fetchDir = file.path(outputDir, paste0(step, '_output'))
+  remoteColname = 'fastq_aspera'
+  fetchColname = 'fastq_fetched'
+  paramsFetchNow[c('run', 'keep')] = NULL
+
+  result = do.call(fetch, c(
+    list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
+    paramsFetchNow))
+
+  resultControl = fread('test_data/fetch_result.csv')
+
+  expect_equal(result$localFilepaths, resultControl$localFilepaths)
+
+
 
 })
