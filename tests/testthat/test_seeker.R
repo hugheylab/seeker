@@ -1,5 +1,5 @@
 library('data.table')
-params = yaml::read_yaml('test_data/GSE143524_josh.yml')
+params = yaml::read_yaml('test_data/GSE143524.yml')
 if(Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
@@ -60,7 +60,7 @@ test_that('Test fetch', {
   if (!dir.exists(outputDir)) dir.create(outputDir)
   step = 'metadata'
 
-  paramsFetch = yaml::read_yaml('test_data/GSM5694054_josh.yml')
+  paramsFetch = yaml::read_yaml('test_data/GSM5694054.yml')
   paramsFetchNow = paramsFetch[[step]]
   metadataGSM = fetchMetadata(paramsFetchNow$bioproject, host = 'ena')
   idx = metadataGSM[[paramsFetchNow$include$colname]] %in% paramsFetchNow$include$values
