@@ -1,5 +1,5 @@
 library('data.table')
-params = yaml::read_yaml('test_data/GSE143524.yml')
+params = yaml::read_yaml('test_data/GSE143524_josh.yml')
 if(Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
@@ -9,19 +9,6 @@ file.copy('test_data/GSE143524', parentDir, recursive = TRUE)
 foreach::registerDoSEQ()
 
 metadata = fread('test_data/metadata.csv')
-
-test_that('Test seeker', {
-  skip_on_os('windows', arch = NULL)
-  seeker(params, parentDir)
-  expect_true(file.exists(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv')))
-  expect_equal(2L, nrow(fread(file.path(parentDir, 'GSE143524', 'salmon_meta_info.csv'))))
-})
-
-test_that('Test checkSeekerArgs', {
-  skip_on_os('windows', arch = NULL)
-  outputDirObs = seeker:::checkSeekerArgs(params, parentDir)
-  expect_equal(outputDirObs, file.path(parentDir, 'GSE143524'))
-})
 
 test_that('Test fetchMetadata', {
   skip_on_os('windows', arch = NULL)
@@ -42,7 +29,7 @@ test_that('Test fetchMetadata', {
   expect_equal(metadataObs, metadataControl)
   expect_true(grepl(';', metadataObs$fastq_aspera[1], fixed = TRUE))
 
-  params2 = yaml::read_yaml('test_data/GSE159135.yml')
+  params2 = yaml::read_yaml('test_data/GSE159135_josh.yml')
   paramsNow2 = params2[[step]]
   metadataObs2 = fetchMetadata(paramsNow2$bioproject)
   idx2 = metadataObs2[[paramsNow2$include$colname]] %in% paramsNow2$include$values
@@ -52,15 +39,13 @@ test_that('Test fetchMetadata', {
 
 })
 
-
-
 test_that('Test fetch', {
   skip_on_os('windows', arch = NULL)
   outputDir = file.path(parentDir, 'GSM5694054')
   if (!dir.exists(outputDir)) dir.create(outputDir)
   step = 'metadata'
 
-  paramsFetch = yaml::read_yaml('test_data/GSM5694054.yml')
+  paramsFetch = yaml::read_yaml('test_data/GSM5694054_josh.yml')
   paramsFetchNow = paramsFetch[[step]]
   metadataGSM = fetchMetadata(paramsFetchNow$bioproject, host = 'ena')
   idx = metadataGSM[[paramsFetchNow$include$colname]] %in% paramsFetchNow$include$values
@@ -73,8 +58,21 @@ test_that('Test fetch', {
   fetchColname = 'fastq_fetched'
   paramsFetchNow[c('run', 'keep')] = NULL
 
+  ascpCmd = getAscpCmd()
+  ascpArgs = getAscpArgs()
+
+  if(Sys.info()['sysname'] == "Darwin") {
+    ascpCmd = '/Applications/Aspera Connect.app/Contents/Resources/ascp'
+
+    a = c('-QT -l 300m -P33001 -i')
+    f = 'asperaweb_id_dsa.openssh'
+    ascpArgs = c(a, safe(file.path('/Applications/Aspera Connect.app/Contents/Resources', f)))}
+
+
   result = do.call(fetch, c(
-    list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
+    list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir,
+         ascpCmd = ascpCmd,
+         ascpArgs = ascpArgs),
     paramsFetchNow))
 
   resultControl = fread('test_data/fetch_result.csv')
