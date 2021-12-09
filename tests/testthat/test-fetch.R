@@ -58,21 +58,9 @@ test_that('Test fetch', {
   fetchColname = 'fastq_fetched'
   paramsFetchNow[c('run', 'keep')] = NULL
 
-  ascpCmd = getAscpCmd()
-  ascpArgs = getAscpArgs()
-
-  if(Sys.info()['sysname'] == "Darwin") {
-    ascpCmd = '/Applications/Aspera Connect.app/Contents/Resources/ascp'
-
-    a = c('-QT -l 300m -P33001 -i')
-    f = 'asperaweb_id_dsa.openssh'
-    ascpArgs = c(a, safe(file.path('/Applications/Aspera Connect.app/Contents/Resources', f)))}
-
 
   result = do.call(fetch, c(
-    list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir,
-         ascpCmd = ascpCmd,
-         ascpArgs = ascpArgs),
+    list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir),
     paramsFetchNow))
 
   resultControl = fread('test_data/fetch_result.csv')
