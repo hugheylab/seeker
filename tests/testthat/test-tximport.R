@@ -1,4 +1,5 @@
 test_that("Test tx2gene", {
+  skip_on_os('windows', arch = NULL)
   step = 'tximport'
   paramsNow = params[[step]]
 
@@ -14,6 +15,7 @@ test_that("Test tx2gene", {
 })
 
 test_that("Test tximport", {
+  skip_on_os('windows', arch = NULL)
   step = 'tximport'
   paramsNow = params[[step]]
 
