@@ -25,6 +25,7 @@ test_that('Test trimgalore', {
 })
 
 test_that('Test fastqc', {
+  skip_on_os('windows', arch = NULL)
   step = 'fastqc'
   paramsNow = params[[step]]
   fastqcDir = file.path(outputDir, paste0(step, '_output'))
