@@ -1,6 +1,15 @@
 library('data.table')
 params = yaml::read_yaml('test_data/GSE143524.yml')
-if(Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)
+# Do away with josh params and regular params, instead modify below if statement
+# to build the path using Sys.info()['user'] in addition to OS.
+# salmonPartialDir = '/genomes/alias/mm10/salmon_partial_sa_index/default'
+if (Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/',
+                                                                    '/Users/',
+                                                                    params$salmon$indexDir)
+if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
+                                                                  paste0('/', Sys.info()['user'], '/'),
+                                                                  params$salmon$indexDir)
+
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
 dir.create(parentDir)
