@@ -123,7 +123,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
 
   files = getAeMetadata(study, 'files') # for one study, should be a data.frame
   hasRaw = any(files$kind == 'raw')
-  hasProc = any(sapply(files$kind, function(k) any(k == 'processed')))
+  hasProc = any(sapply(files$kind, function(k) any(k == 'processed', na.rm = TRUE)))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
     mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')
@@ -186,7 +186,7 @@ getNewEmatColnames = function(old, repo) {
 
 getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID') {
   mapping = featureDt[, c(probeColname, geneColname), with = FALSE]
-  mapping = mapping[apply(mapping, MARGIN = 1, function(x) all(!is.na(x) & x != '')), ]
+  mapping = mapping[apply(mapping, 1, function(x) all(!is.na(x) & x != '')), ]
   setnames(mapping, c(probeColname, geneColname), c('probe_set', 'gene_id'))
   return(mapping)}
 
