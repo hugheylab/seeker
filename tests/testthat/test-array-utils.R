@@ -179,6 +179,22 @@ test_that('getEntrezEnsemblMapping', {
 })
 
 
+test_that('getProbeGeneMapping', {
+  platforms = getPlatforms('mapping')
+  annos = c('GPL6887', 'GPL7202')
+
+  for (anno in annos) {
+    featureMetadata = GEOquery::getGEO(anno)
+    featureDt = setDT(featureMetadata@dataTable@table)
+    platformDt = platforms[platforms$platform == anno]
+    mappingObs = getProbeGeneMapping(featureDt, platformDt, 'ensembl')
+
+    if (setExpected) qs::qsave(mappingObs, paste0(anno, '.qs'))
+    mappingExp = qs::qread(paste0(anno, '.qs'))
+    expect_equal(mappingObs, mappingExp)}
+})
+
+
 test_that('getEmatGene', {
   ematProbe = matrix(
     as.numeric(1:8), nrow = 4L,
