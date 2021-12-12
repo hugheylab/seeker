@@ -1,4 +1,5 @@
-setExpected = FALSE
+dataDir = 'data'
+if (!dir.exists(dataDir)) dir.create(dataDir)
 
 
 test_that('getPlatforms', {
@@ -42,12 +43,14 @@ test_that('getNaiveEsetGeo supported', {
 
     resObs = getNaiveEsetGeo(study, outputDir, file.path(outputDir, 'raw'))
     filesObs = dir(outputDir, recursive = TRUE)
-    if (setExpected) {
-      qs::qsave(resObs, paste0(study, '.qs'))
-      fwrite(list(filesObs), paste0(study, '.txt'))}
 
-    resExp = qs::qread(paste0(study, '.qs'))
-    filesExp = fread(paste0(study, '.txt'), header = FALSE)$V1
+    path = file.path(dataDir, paste0(study, '.qs'))
+    if (!file.exists(path)) {
+      qs::qsave(resObs, path)
+      fwrite(list(filesObs), gsub('\\.qs$', '.txt', path))}
+
+    resExp = qs::qread(path)
+    filesExp = fread(gsub('\\.qs$', '.txt', path), header = FALSE)$V1
 
     expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
     expect_equal(resObs$rmaOk, resExp$rmaOk)
@@ -67,12 +70,14 @@ test_that('getNaiveEsetGeo unsupported', {
 
   resObs = getNaiveEsetGeo(study, outputDir, file.path(outputDir, 'raw'))
   filesObs = dir(outputDir, recursive = TRUE)
-  if (setExpected) {
-    qs::qsave(resObs, paste0(study, '.qs'))
-    fwrite(list(filesObs), paste0(study, '.txt'))}
 
-  resExp = qs::qread(paste0(study, '.qs'))
-  filesExp = fread(paste0(study, '.txt'), header = FALSE)$V1
+  path = file.path(dataDir, paste0(study, '.qs'))
+  if (!file.exists(path)) {
+    qs::qsave(resObs, path)
+    fwrite(list(filesObs), gsub('\\.qs$', '.txt', path))}
+
+  resExp = qs::qread(path)
+  filesExp = fread(gsub('\\.qs$', '.txt', path), header = FALSE)$V1
 
   expect_equal(resObs, resExp)
   expect_equal(filesObs, filesExp)
@@ -88,12 +93,14 @@ test_that('getNaiveEsetAe supported', {
 
     resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
     filesObs = dir(outputDir, recursive = TRUE)
-    if (setExpected) {
-      qs::qsave(resObs, paste0(study, '.qs'))
-      fwrite(list(filesObs), paste0(study, '.txt'))}
 
-    resExp = qs::qread(paste0(study, '.qs'))
-    filesExp = fread(paste0(study, '.txt'), header = FALSE)$V1
+    path = file.path(dataDir, paste0(study, '.qs'))
+    if (!file.exists(path)) {
+      qs::qsave(resObs, path)
+      fwrite(list(filesObs), gsub('\\.qs$', '.txt', path))}
+
+    resExp = qs::qread(path)
+    filesExp = fread(gsub('\\.qs$', '.txt', path), header = FALSE)$V1
 
     expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
     expect_equal(resObs$rmaOk, resExp$rmaOk)
@@ -113,12 +120,14 @@ test_that('getNaiveEsetAe unsupported', {
 
   resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
   filesObs = dir(outputDir, recursive = TRUE)
-  if (setExpected) {
-    qs::qsave(resObs, paste0(study, '.qs'))
-    fwrite(list(filesObs), paste0(study, '.txt'))}
 
-  resExp = qs::qread(paste0(study, '.qs'))
-  filesExp = fread(paste0(study, '.txt'), header = FALSE)$V1
+  path = file.path(dataDir, paste0(study, '.qs'))
+  if (!file.exists(path)) {
+    qs::qsave(resObs, path)
+    fwrite(list(filesObs), gsub('\\.qs$', '.txt', path))}
+
+  resExp = qs::qread(path)
+  filesExp = fread(gsub('\\.qs$', '.txt', path), header = FALSE)$V1
 
   expect_equal(resObs, resExp)
   expect_equal(filesObs, filesExp)
@@ -189,8 +198,9 @@ test_that('getProbeGeneMapping', {
     platformDt = platforms[platforms$platform == anno]
     mappingObs = getProbeGeneMapping(featureDt, platformDt, 'ensembl')
 
-    if (setExpected) qs::qsave(mappingObs, paste0(anno, '.qs'))
-    mappingExp = qs::qread(paste0(anno, '.qs'))
+    path = file.path(dataDir, paste0(anno, '.qs'))
+    if (!file.exists(path)) qs::qsave(mappingObs, path)
+    mappingExp = qs::qread(path)
     expect_equal(mappingObs, mappingExp)}
 })
 
