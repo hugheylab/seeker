@@ -1,5 +1,0 @@
-A-AFFY-130.adf.txt
-E-MTAB-8714.idf.txt
-E-MTAB-8714.sdrf.txt
-raw/LPS.CEL
-raw/REL_KO_LPS.CEL
