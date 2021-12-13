@@ -1,6 +1,12 @@
 library('seeker')
 library('data.table')
-params = yaml::read_yaml('test_data/GSE143524_josh.yml')
+params = yaml::read_yaml('test_data/GSE143524.yml')
+if (Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/',
+                                                                     '/Users/',
+                                                                     params$salmon$indexDir)
+if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
+                                                                  paste0('/', Sys.info()['user'], '/'),
+                                                                  params$salmon$indexDir)
 params$fetch$run = FALSE
 parentDir = 'test_data/staging'
 dir.create(parentDir)

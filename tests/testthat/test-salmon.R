@@ -1,5 +1,4 @@
 test_that("Test salmon and getSalmonMetadata", {
-  skip("Skipping until done.")
   skip_on_os('windows', arch = NULL)
   step = 'salmon'
   paramsNow = params[[step]]
@@ -13,5 +12,8 @@ test_that("Test salmon and getSalmonMetadata", {
     list(filepaths = metadata[[fileColname]],
          samples = metadata[[sampleColname]], outputDir = salmonDir),
     paramsNow))
+  salmonOutputObs = list.files(salmonDir, recursive = TRUE)
+  salmonOutputControl = readRDS('test_data/salmon_output.rds')
+  expect_equal(sort(salmonOutputObs), sort(salmonOutputControl))
   getSalmonMetadata(salmonDir, outputDir)
 })
