@@ -17,7 +17,8 @@ test_that("Test salmon and getSalmonMetadata", {
   expect_equal(sort(salmonOutputObs), sort(salmonOutputControl))
 
   excludeColumns = c('frag_length_mean', 'frag_length_sd', 'start_time',
-                     'end_time', 'eq_class_properties', 'length_classes')
+                     'end_time', 'eq_class_properties', 'length_classes',
+                     'salmon_version')
   salmonMetaObs = getSalmonMetadata(salmonDir, outputDir)[, .SD, .SDcols = !excludeColumns]
   salmonMetaControl = fread('test_data/salmon_meta_info.csv')[, .SD, .SDcols = !excludeColumns]
   expect_equal(salmonMetaObs, salmonMetaControl)

@@ -1,4 +1,4 @@
-test_that("Test tx2gene", {
+test_that("Test getTx2gene", {
   skip("Skipping until done.")
   skip_on_os('windows', arch = NULL)
   step = 'tximport'
