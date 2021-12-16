@@ -10,8 +10,8 @@ test_that('Test seeker', {
 
   seeker(params, parentDirSeeker)
 
-  seekerOutputObs = sort(list.files(outputDirSeeker, recursive = TRUE))
-  seekerOutputControl = sort(readRDS('test_data/seeker_output_full.rds'))
+  seekerOutputObs = list.files(outputDirSeeker, recursive = TRUE)
+  seekerOutputControl = snapshot(seekerOutputObs, 'test_data/seeker_output_full.qs')
 
   expect_equal(seekerOutputObs, seekerOutputControl)
 })
@@ -29,8 +29,8 @@ test_that('Test seeker skip all', {
 
   seeker(paramsSkip, parentDirSeekerSkip)
 
-  seekerOutputObs = sort(list.files(outputDirSeekerSkip, recursive = TRUE))
-  seekerOutputControl = sort(readRDS('test_data/seeker_output_skip.rds'))
+  seekerOutputObs = list.files(outputDirSeekerSkip, recursive = TRUE)
+  seekerOutputControl = snapshot(seekerOutputObs, 'test_data/seeker_output_skip.qs')
 
   expect_equal(seekerOutputObs, seekerOutputControl)
 })

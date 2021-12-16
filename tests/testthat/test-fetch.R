@@ -47,7 +47,6 @@ test_that('Test fetch', {
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir),
     paramsFetchNow))
 
-  # resultControl = fread('test_data/fetch_result.csv')
   print(result)
   file1 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][1])
   file2 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][2])

@@ -13,13 +13,13 @@ test_that("Test salmon and getSalmonMetadata", {
          samples = metadata[[sampleColname]], outputDir = salmonDir),
     paramsNow))
   salmonOutputObs = list.files(salmonDir, recursive = TRUE)
-  salmonOutputControl = readRDS('test_data/salmon_output.rds')
+  salmonOutputControl = snapshot(salmonOutputObs, 'test_data/salmon_output.qs')
   expect_equal(sort(salmonOutputObs), sort(salmonOutputControl))
 
   excludeColumns = c('frag_length_mean', 'frag_length_sd', 'start_time',
                      'end_time', 'eq_class_properties', 'length_classes',
                      'salmon_version')
   salmonMetaObs = getSalmonMetadata(salmonDir, outputDir)[, .SD, .SDcols = !excludeColumns]
-  salmonMetaControl = fread('test_data/salmon_meta_info.csv')[, .SD, .SDcols = !excludeColumns]
+  salmonMetaControl = snapshot(salmonMetaObs, 'test_data/salmon_meta_info.qs')
   expect_equal(salmonMetaObs, salmonMetaControl)
 })
