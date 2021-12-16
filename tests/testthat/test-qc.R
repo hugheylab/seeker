@@ -17,7 +17,6 @@ test_that('Test fastqscreen', {
 })
 
 test_that('Test trimgalore', {
-  skip("Skipping until done.")
   skip_on_os('windows', arch = NULL)
   step = 'trimgalore'
   paramsNow = params[[step]]
@@ -27,6 +26,12 @@ test_that('Test trimgalore', {
   result = do.call(trimgalore, c(
     list(filepaths = metadata[[fetchColname]], outputDir = trimDir),
     paramsNow))
+
+  trimFilesObs = list.files(trimDir)
+  trimFilesControl = snapshot(trimFilesObs, 'test_data/trimgalore_output.qs')
+
+  expect_equal(trimFilesObs, trimFilesControl)
+
 })
 
 test_that('Test multiqc', {

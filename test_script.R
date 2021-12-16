@@ -13,6 +13,13 @@ dir.create(parentDir)
 withr::local_file(parentDir)
 file.copy('test_data/GSE143524', parentDir, recursive = TRUE)
 foreach::registerDoSEQ()
+snapshot = function(xObs, path) {
+  if (file.exists(path)) {
+    xExp = qs::qread(path)
+  } else {
+    qs::qsave(xObs, path)
+    xExp = xObs}
+  return(xExp)}
 
 outputDir = seeker:::checkSeekerArgs(params, parentDir)
 if (!dir.exists(outputDir)) dir.create(outputDir)

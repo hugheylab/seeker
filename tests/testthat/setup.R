@@ -1,4 +1,5 @@
 library('data.table')
+library('qs')
 params = yaml::read_yaml('test_data/GSE143524.yml')
 # Do away with josh params and regular params, instead modify below if statement
 # to build the path using Sys.info()['user'] in addition to OS.
@@ -32,3 +33,11 @@ fileColname = if (params$trimgalore$run) trimColname else fetchColname
 salmonDir = file.path(outputDir, 'salmon_output')
 sampleColname = 'sample_accession'
 fileColname = 'fastq_fetched'
+
+snapshot = function(xObs, path) {
+  if (file.exists(path)) {
+    xExp = qs::qread(path)
+  } else {
+    qs::qsave(xObs, path)
+    xExp = xObs}
+  return(xExp)}
