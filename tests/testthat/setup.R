@@ -33,6 +33,7 @@ fileColname = if (params$trimgalore$run) trimColname else fetchColname
 salmonDir = file.path(outputDir, 'salmon_output')
 sampleColname = 'sample_accession'
 fileColname = 'fastq_fetched'
+multiqcDir = file.path(outputDir, 'multiqc_output')
 
 snapshot = function(xObs, path) {
   if (file.exists(path)) {

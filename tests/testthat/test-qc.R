@@ -1,5 +1,4 @@
 test_that('Test fastqc', {
-  skip("Skipping until done.")
   skip_on_os('windows', arch = NULL)
   step = 'fastqc'
   paramsNow = params[[step]]
@@ -9,10 +8,11 @@ test_that('Test fastqc', {
   result = do.call(fastqc, c(
     list(filepaths = metadata[[fileColname]], outputDir = fastqcDir),
     paramsNow))
-})
 
-test_that('Test fastqscreen', {
-  skip("Skipping until done.")
+  fastqcFilesObs = list.files(fastqcDir, recursive = TRUE)
+  fastqcFilesControl = snapshot(fastqcFilesObs, 'test_data/fastqc_output.qs')
+
+  expect_equal(fastqcFilesObs, fastqcFilesControl)
 
 })
 
@@ -35,6 +35,17 @@ test_that('Test trimgalore', {
 })
 
 test_that('Test multiqc', {
-  skip("Skipping until done.")
+  skip_on_os('windows', arch = NULL)
+  step = 'multiqc'
 
+  paramsNow = params[[step]]
+  paramsNow$run = NULL
+
+  result = do.call(multiqc, c(
+    list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))
+
+  multiqcFilesObs = list.files(multiqcDir)
+  multiqcFilesControl = snapshot(multiqcFilesObs, 'test_data/multiqc_output.qs')
+
+  expect_equal(multiqcFilesObs, multiqcFilesControl)
 })

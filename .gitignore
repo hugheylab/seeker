@@ -6,3 +6,4 @@ inst/doc
 data-raw/GSE143524.yml
 inst/extdata/archive
 test_script*.R
+*.DS_Store
