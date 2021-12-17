@@ -42,5 +42,6 @@ tximport:
     # [named list or NULL]
     species: 'mmusculus' # [string]
     # version # [number or NULL]
+    # filename # [string or NULL]
   countsFromAbundance: 'no' # [string]
   # ignoreTxVersion # [logical or NULL]

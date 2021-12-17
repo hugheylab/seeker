@@ -13,7 +13,6 @@ checkSeekerArgs = function(params, parentDir) {
   command = NULL
   defaultCommands = checkDefaultCommands()
   assertList(params)
-  # assertSetEqual(names(params), c('study', steps))
   assertNames(names(params), permutation.of = c('study', steps))
   assertString(params$study, min.chars = 1L)
 
@@ -23,18 +22,14 @@ checkSeekerArgs = function(params, parentDir) {
 
   for (step in steps) {
     assertFlag(params[[step]]$run, .var.name = glue('params${step}$run'))}
-    # assertFlag(params[[step]]$run, .var.name = sprintf('params$%s$run', step))}
 
   if (params$metadata$run) {
-    # assertSubset(names(params$metadata),
-    #              c('run', 'bioproject', 'include', 'exclude'))
     assertNames(names(params$metadata),
                 subset.of = c('run', 'bioproject', 'include', 'exclude'))
     assertString(params$metadata$bioproject, min.chars = 1L)
 
     assertList(params$metadata$include, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$metadata$include)) {
-      # assertSetEqual(names(params$metadata$include), c('colname', 'values'))
       assertNames(names(params$metadata$include),
                   permutation.of = c('colname', 'values'))
       assertString(params$metadata$include$colname, min.chars = 1L)
@@ -42,7 +37,6 @@ checkSeekerArgs = function(params, parentDir) {
 
     assertList(params$metadata$exclude, any.missing = FALSE, null.ok = TRUE)
     if (!is.null(params$metadata$exclude)) {
-      # assertSetEqual(names(params$metadata$exclude), c('colname', 'values'))
       assertNames(names(params$metadata$exclude),
                   permutation.of = c('colname', 'values'))
       assertString(params$metadata$exclude$colname, min.chars = 1L)
@@ -54,8 +48,6 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$fetch$run) {
-    # assertSubset(names(params$fetch),
-    #              c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
     assertNames(
       names(params$fetch),
       subset.of = c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
@@ -73,7 +65,6 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$trimgalore$run) {
-    # assertSubset(names(params$trimgalore), c('run', 'keep', 'cmd', 'args'))
     assertNames(names(params$trimgalore),
                 subset.of = c('run', 'keep', 'cmd', 'args'))
     assertFlag(params$trimgalore$keep, null.ok = TRUE)
@@ -89,7 +80,6 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$fastqc$run) {
-    # assertSubset(names(params$fastqc), c('run', 'keep', 'cmd', 'args'))
     assertNames(names(params$fastqc), subset.of = c('run', 'keep', 'cmd', 'args'))
     assertFlag(params$fastqc$keep, null.ok = TRUE)
     assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
@@ -104,8 +94,6 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$salmon$run) {
-    # assertSubset(names(params$salmon),
-    #              c('run', 'indexDir', 'keep', 'cmd', 'args'))
     assertNames(names(params$salmon),
                 subset.of = c('run', 'indexDir', 'keep', 'cmd', 'args'))
     assertString(params$salmon$indexDir, min.chars = 1L)
@@ -117,7 +105,6 @@ checkSeekerArgs = function(params, parentDir) {
     assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
 
   if (params$multiqc$run) {
-    # assertSubset(names(params$multiqc), c('run', 'cmd', 'args'))
     assertNames(names(params$multiqc), subset.of = c('run', 'cmd', 'args'))
     assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$multiqc$cmd, 'multiqc',
@@ -130,16 +117,25 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$tximport$run) {
-    # assertSubset(names(params$tximport),
-    #              c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
     assertNames(
       names(params$tximport),
       subset.of = c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
     assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
+
     if (!is.null(params$tximport$tx2gene)) {
-      assertSubset(names(params$tximport$tx2gene), c('species', 'version'))
-      assertString(params$tximport$tx2gene$species, min.chars = 2L)
-      assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)}
+      assert(checkNames(names(params$tximport$tx2gene), must.include = 'species',
+                        subset.of = c('species', 'version')),
+             checkNames(names(params$tximport$tx2gene), identical.to = 'filename'),
+             combine = 'or')
+
+      if ('species' %in% names(params$tximport$tx2gene)) {
+        assertString(params$tximport$tx2gene$species, min.chars = 2L)
+        assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)
+      } else {
+        assertFileExists(file.path(outputDir, params$tximport$tx2gene$filename))
+        tx2gene = fread(file.path(outputDir, params$tximport$tx2gene$filename))
+        assertDataTable(
+          tx2gene, types = 'character', any.missing = FALSE, ncols = 2L)}}
 
     assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
     assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
@@ -257,6 +253,11 @@ checkSeekerArgs = function(params, parentDir) {
 #'       See [getTx2gene()].
 #'     * `version`: Optional number indicating ensembl version. `NULL` indicates
 #'       the latest version. See [getTx2gene()].
+#'     * `filename`: Optional string indicating name of pre-existing text file
+#'       in `parentDir`/`params$study` containing mapping between transcripts
+#'       (first column) and genes (second column), with column names in the
+#'       first row. If `filename` is specified, `species` and `version` must not
+#'       be specified.
 #'
 #'     If not `NULL`, saves a file `parentDir`/`study`/tx2gene.csv.gz.
 #'   * `countsFromAbundance`: String indicating whether or how to estimate
@@ -386,9 +387,12 @@ seeker = function(params, parentDir = '.') {
     paramsNow$run = NULL
 
     if (is.list(paramsNow$tx2gene)) {
-      tx2gene = do.call(getTx2gene, c(
-        list(outputDir = outputDir), paramsNow$tx2gene))
-      params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
+      if ('species' %in% names(paramsNow$tx2gene)) {
+        tx2gene = do.call(getTx2gene, c(
+          list(outputDir = outputDir), paramsNow$tx2gene))
+        params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
+      } else {
+        tx2gene = fread(file.path(outputDir, paramsNow$tx2gene$filename))}
       paramsNow$tx2gene = NULL # for calling tximport
     } else {
       tx2gene = NULL}

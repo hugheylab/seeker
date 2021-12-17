@@ -2,8 +2,8 @@
 #'
 #' This function calls
 #' [salmon](https://combine-lab.github.io/salmon/)
-#' using [system2()]. To run in parallel, register a parallel backend using
-#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#' using [system2()]. To run in parallel, register a parallel backend, e.g.,
+#' using [doParallel::registerDoParallel()].
 #'
 #' @param filepaths Paths to fastq files. For single-end reads, each element
 #'   should be a single filepath. For paired-end reads, each element should be
