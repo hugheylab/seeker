@@ -33,6 +33,6 @@ A vector of exit codes, invisibly.
 This function calls
 \href{https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/}{trim_galore}
 using \code{\link[=system2]{system2()}}, and is only designed to handle standard adapter/quality
-trimming. To run in parallel, register a parallel backend using
-\code{\link[doFuture:registerDoFuture]{doFuture::registerDoFuture()}} or \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
+trimming. To run in parallel, register a parallel backend, e.g., using
+\code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }

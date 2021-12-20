@@ -45,7 +45,7 @@ fetchMetadata = function(
 #'
 #' This function can download files using aspera ascp (recommended) or wget, by
 #' calling command-line interfaces using [system2()]. To download files in
-#' parallel, register a parallel backend using [doFuture::registerDoFuture()] or
+#' parallel, register a parallel backend, e.g., using
 #' [doParallel::registerDoParallel()].
 #'
 #' @param remoteFilepaths Character vector of remote filepaths. For single-end
