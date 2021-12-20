@@ -1,46 +1,25 @@
-study: 'GSE143524' # [string]
+study: GSE143524
 metadata:
-  run: TRUE # [logical]
-  bioproject: 'PRJNA600892' # [string]
+  run: yes
+  bioproject: PRJNA600892
   include:
-    # [named list or NULL]
-    colname: 'run_accession' # [string]
-    values: ['SRR10876945', 'SRR10876946'] # [vector]
-  # exclude # [named list or NULL]
-    # colname # [string]
-    # values # [vector]
+    colname: run_accession
+    values:
+    - SRR10876945
+    - SRR10876946
 fetch:
-  run: TRUE # [logical]
-  # keep # [logical or NULL]
-  # overwrite # [logical or NULL]
-  # ascpCmd # [string or NULL]
-  # ascpArgs # [character vector or NULL]
-  # ascpPrefix # [string or NULL]
+  run: yes
 trimgalore:
-  run: TRUE # [logical]
-  # keep # [logical or NULL]
-  # cmd # [string or NULL]
-  # args # [character vector or NULL]
+  run: yes
 fastqc:
-  run: TRUE # [logical]
-  # keep # [logical or NULL]
-  # cmd # [string or NULL]
-  # args # [character vector or NULL]
+  run: yes
 salmon:
-  run: TRUE # [logical]
-  indexDir: '/home/runner/genomes/alias/mm10/salmon_partial_sa_index/default' # [string]
-  # keep # [logical or NULL]
-  # cmd # [string or NULL]
-  # args # [character vector or NULL]
+  run: yes
+  indexDir: /home/runner/genomes/alias/mm10/salmon_partial_sa_index/default
 multiqc:
-  run: TRUE # [logical]
-  # cmd # [string or NULL]
-  # args # [character vector or NULL]
+  run: yes
 tximport:
-  run: TRUE # [logical]
+  run: yes
   tx2gene:
-    # [named list or NULL]
-    species: 'mmusculus' # [string]
-    # version # [number or NULL]
-  countsFromAbundance: 'lengthScaledTPM' # [string]
-  # ignoreTxVersion # [logical or NULL]
+    filename: tx2gene.csv
+  countsFromAbundance: lengthScaledTPM

@@ -1,14 +1,6 @@
 dataDir = 'data'
 if (!dir.exists(dataDir)) dir.create(dataDir)
 
-snapshot = function(xObs, path) {
-  if (file.exists(path)) {
-    xExp = qs::qread(path)
-  } else {
-    qs::qsave(xObs, path)
-    xExp = xObs}
-  return(xExp)}
-
 
 test_that('getPlatforms', {
   d = getPlatforms('cdf')
