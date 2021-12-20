@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9049</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9050</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
       <h1 data-toc-skip>Reproducibility with seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2021-12-12</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/reproducibility.Rmd" class="external-link"><code>vignettes/reproducibility.Rmd</code></a></small>
       <div class="hidden name"><code>reproducibility.Rmd</code></div>
@@ -144,8 +144,9 @@
 <span id="cb3-42"><a href="#cb3-42"></a><span class="st">    </span><span class="co"># [named list or NULL]</span></span>
 <span id="cb3-43"><a href="#cb3-43"></a><span class="st">    </span>species<span class="op">:</span><span class="st"> 'mmusculus'</span> <span class="co"># [string]</span></span>
 <span id="cb3-44"><a href="#cb3-44"></a>    <span class="co"># version # [number or NULL]</span></span>
-<span id="cb3-45"><a href="#cb3-45"></a>  countsFromAbundance<span class="op">:</span><span class="st"> 'lengthScaledTPM'</span> <span class="co"># [string]</span></span>
-<span id="cb3-46"><a href="#cb3-46"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
+<span id="cb3-45"><a href="#cb3-45"></a>    <span class="co"># filename # [string or NULL]</span></span>
+<span id="cb3-46"><a href="#cb3-46"></a>  countsFromAbundance<span class="op">:</span><span class="st"> 'lengthScaledTPM'</span> <span class="co"># [string]</span></span>
+<span id="cb3-47"><a href="#cb3-47"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
 <p>run_seeker.R:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>

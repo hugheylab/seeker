@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9049</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9050</span>
       </span>
     </div>
 
@@ -172,6 +172,11 @@ nothing. Following components are only checked if <code>run</code> is <code>TRUE
 See <code><a href="getTx2gene.html">getTx2gene()</a></code>.</p></li>
 <li><p><code>version</code>: Optional number indicating ensembl version. <code>NULL</code> indicates
 the latest version. See <code><a href="getTx2gene.html">getTx2gene()</a></code>.</p></li>
+<li><p><code>filename</code>: Optional string indicating name of pre-existing text file
+in <code>parentDir</code>/<code>params$study</code> containing mapping between transcripts
+(first column) and genes (second column), with column names in the
+first row. If <code>filename</code> is specified, <code>species</code> and <code>version</code> must not
+be specified.</p></li>
 </ul><p>If not <code>NULL</code>, saves a file <code>parentDir</code>/<code>study</code>/tx2gene.csv.gz.</p></li>
 <li><p><code>countsFromAbundance</code>: String indicating whether or how to estimate
 counts using estimated abundances. See <code><a href="https://rdrr.io/pkg/tximport/man/tximport.html" class="external-link">tximport::tximport()</a></code>.</p></li>
