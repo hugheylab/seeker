@@ -10,15 +10,23 @@ seekerArray(params, parentDir)
 \item{params}{Named list of parameters with components:
 \itemize{
 \item \code{study}: String indicating the study accession and used to name the output
-directory within \code{parentDir}. If \code{study} starts with 'GSE', data are
-fetched using \code{\link[GEOquery:getGEO]{GEOquery::getGEO()}}. Otherwise the data are fetched
-using \code{\link[ArrayExpress:getAE]{ArrayExpress::getAE()}}.
+directory within \code{parentDir}. Must start with "GSE", "E-", or "LOCAL". If
+starts with "GSE", data are fetched using \code{\link[GEOquery:getGEO]{GEOquery::getGEO()}}. If starts
+with "E-", data are fetched using \code{\link[ArrayExpress:getAE]{ArrayExpress::getAE()}}. If starts with
+"LOCAL", data in the form of cel(.gz) files must in the directory
+\code{parentDir}/\code{params$study}/raw, and \code{parentDir}/\code{params$study} must contain
+a file "sample_metadata.csv" that has a column \code{sample_id} containing the
+names of the cel(.gz) files without the file extension.
 \item \code{geneIdType}: String indicating whether to map probes to gene IDs from
-Ensembl ('ensembl') or Entrez ('entrez').
+Ensembl ("ensembl") or Entrez ("entrez").
+\item \code{platform}: String indicating the GEO-based platform accession for the raw
+data. See \url{https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms}.
+Only necessary if \code{params$study} starts with "LOCAL", or starts with "GSE"
+and the study uses multiple platforms.
 }
 
 \code{params} can be derived from a yaml file, see
-\code{vignette('introduction', package = 'seeker')}. The yaml representation
+\code{vignette("introduction", package = "seeker")}. The yaml representation
 of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.yml.}
 
 \item{parentDir}{Directory in which to store the output, which will be a
@@ -49,7 +57,7 @@ from processed data.
 matrix was generated from processed data.
 \item "raw" directory: Contains raw Affymetrix files.
 \item params.yml: Parameters used to process the dataset.
-\item session.log: Detailed R session information.
+\item session.log: R session information.
 }
 
 The output may include other files from NCBI GEO or ArrayExpress. Files with

@@ -1,12 +1,42 @@
 checkSeekerArrayArgs = function(params, parentDir) {
   assertList(params)
-  assertSetEqual(names(params), c('study', 'geneIdType'))
-  assertString(params$study, min.chars = 1L)
+  assertNames(names(params), must.include = 'study')
+  assertString(params$study)
+  assertTRUE(any(startsWith(params$study, c('GSE', 'E-', 'LOCAL'))))
+  assertNames(names(params), must.include = c('study', 'geneIdType'))
   assertChoice(params$geneIdType, c('ensembl', 'entrez'))
+
   assertString(parentDir)
   assertDirectoryExists(parentDir)
   outputDir = file.path(path.expand(parentDir), params$study) # untar no like ~
-  return(outputDir)}
+  rawDir = file.path(outputDir, 'raw')
+  metadataPath = file.path(outputDir, 'sample_metadata.csv')
+  sampColname = 'sample_id'
+
+  if (startsWith(params$study, 'GSE')) {
+    repo = 'geo'
+    assertNames(names(params), subset.of = c('study', 'geneIdType', 'platform'))
+    assertString(params$platform, min.chars = 4, null.ok = TRUE)
+    assert(is.null(params$platform), startsWith(params$platform, 'GPL'))
+  } else if (startsWith(params$study, 'E-')) {
+    repo = 'ae'
+    assertNames(names(params), permutation.of = c('study', 'geneIdType'))
+  } else {
+    repo = 'local'
+    assertNames(
+      names(params), permutation.of = c('study', 'geneIdType', 'platform'))
+    assertString(params$platform, min.chars = 4)
+    assertTRUE(startsWith(params$platform), 'GPL')
+    assertDirectoryExists(rawDir)
+    assertFileExists(metadataPath)
+    d = fread(metadataPath, na.strings = '')
+    assertNames(colnames(d), must.include = sampColname)
+    files = dir(rawDir, '\\.cel(\\.gz)?$', ignore.case = TRUE)
+    fileSamples = gsub('\\.cel(\\.gz)?$', '', files, ignore.case = TRUE)
+    assertSetEqual(fileSamples, d[[sampColname]])}
+
+  return(list(repo = repo, outputDir = outputDir, rawDir = rawDir,
+              metadataPath = metadataPath, sampColname = sampColname))}
 
 
 #' Process microarray data end to end
@@ -30,21 +60,29 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #'   matrix was generated from processed data.
 #' * "raw" directory: Contains raw Affymetrix files.
 #' * params.yml: Parameters used to process the dataset.
-#' * session.log: Detailed R session information.
+#' * session.log: R session information.
 #'
 #' The output may include other files from NCBI GEO or ArrayExpress. Files with
 #' extension "qs" can be read into R using [qs::qread()].
 #'
 #' @param params Named list of parameters with components:
 #' * `study`: String indicating the study accession and used to name the output
-#'   directory within `parentDir`. If `study` starts with 'GSE', data are
-#'   fetched using [GEOquery::getGEO()]. Otherwise the data are fetched
-#'   using [ArrayExpress::getAE()].
+#'   directory within `parentDir`. Must start with "GSE", "E-", or "LOCAL". If
+#'   starts with "GSE", data are fetched using [GEOquery::getGEO()]. If starts
+#'   with "E-", data are fetched using [ArrayExpress::getAE()]. If starts with
+#'   "LOCAL", data in the form of cel(.gz) files must in the directory
+#'   `parentDir`/`params$study`/raw, and `parentDir`/`params$study` must contain
+#'   a file "sample_metadata.csv" that has a column `sample_id` containing the
+#'   names of the cel(.gz) files without the file extension.
 #' * `geneIdType`: String indicating whether to map probes to gene IDs from
-#'   Ensembl ('ensembl') or Entrez ('entrez').
+#'   Ensembl ("ensembl") or Entrez ("entrez").
+#' * `platform`: String indicating the GEO-based platform accession for the raw
+#'   data. See <https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms>.
+#'   Only necessary if `params$study` starts with "LOCAL", or starts with "GSE"
+#'   and the study uses multiple platforms.
 #'
 #' `params` can be derived from a yaml file, see
-#' \code{vignette('introduction', package = 'seeker')}. The yaml representation
+#' \code{vignette("introduction", package = "seeker")}. The yaml representation
 #' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
@@ -53,41 +91,41 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #'
 #' @export
 seekerArray = function(params, parentDir) {
-  outputDir = checkSeekerArrayArgs(params, parentDir)
+  r = checkSeekerArrayArgs(params, parentDir)
+  repo = r$repo
+  outputDir = r$outputDir
+  rawDir = r$rawDir
+  metadataPath = r$metadataPath
+  sampColname = r$sampColname
+
   if (!dir.exists(outputDir)) dir.create(outputDir)
-  rawDir = file.path(outputDir, 'raw')
 
   withr::local_options(timeout = 600)
   withr::local_envvar(VROOM_CONNECTION_SIZE = 131072 * 20)
 
-  repo = if (startsWith(params$study, 'GSE')) 'geo' else 'ae'
-
   result = if (repo == 'geo') {
-    getNaiveEsetGeo(params$study, outputDir, rawDir)
+    getNaiveEsetGeo(params$study, outputDir, rawDir, params$platform)
+  } else if (repo == 'ae') {
+    getNaiveEsetAe(params$study, outputDir, rawDir)
   } else {
-    getNaiveEsetAe(params$study, outputDir, rawDir)}
+    getNaiveEsetLocal(params$study, params$platform)}
 
   if (is.character(result)) {
     warning(result)
     return(invisible())}
-  eset = result[[1L]]
-  rmaOk = result[[2L]]
+  eset = result$eset
+  rmaOk = result$rmaOk
 
-  qs::qsave(eset, file.path(outputDir, 'naive_expression_set.qs'))
-
-  sampColname = 'sample_id'
-  metadata = data.table(eset@phenoData@data, keep.rownames = sampColname)
-  set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))
-  fwrite(metadata, file.path(outputDir, 'sample_metadata.csv'))
+  if (repo != 'local') {
+    qs::qsave(eset, file.path(outputDir, 'naive_expression_set.qs'))
+    metadata = data.table(eset@phenoData@data, keep.rownames = sampColname)
+    set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))
+    fwrite(metadata, metadataPath)
+  } else {
+    metadata = fread(metadataPath, na.strings = '')}
 
   if (rmaOk) {
     cdfname = getCdfname(eset@annotation, params$geneIdType)
-    if (length(cdfname) == 0) {
-      warning(glue(
-        '{params$study} uses platform {eset@annotation}, which is ',
-        'unsupported for mapping probes to genes using raw data.'))
-      return(invisible())}
-
     if (!requireNamespace(cdfname, quietly = TRUE)) {
       installCustomCdfPackages(cdfname)}
     fwrite(list(cdfname), file.path(outputDir, 'custom_cdf_name.txt'))
@@ -101,19 +139,13 @@ seekerArray = function(params, parentDir) {
       R.utils::gzip(path, overwrite = TRUE)}
 
   } else {
-    # this is only datasets from GEO
+    # only GEO datasets
     featureMetadata = GEOquery::getGEO(eset@annotation)
     qs::qsave(featureMetadata, file.path(outputDir, 'feature_metadata.qs'))
     featureDt = setDT(featureMetadata@dataTable@table)
 
     platforms = getPlatforms('mapping')
     platformDt = platforms[platforms$platform == eset@annotation]
-
-    if (nrow(platformDt) == 0) {
-      warning(glue(
-        '{params$study} uses platform {eset@annotation}, which is ',
-        'unsupported for mapping probes to genes using processed data.'))
-      return(invisible())}
 
     mapping = getProbeGeneMapping(featureDt, platformDt, params$geneIdType)
     fwrite(mapping, file.path(outputDir, 'probe_gene_mapping.csv.gz'))

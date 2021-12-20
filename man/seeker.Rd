@@ -132,6 +132,11 @@ nothing. Following components are only checked if \code{run} is \code{TRUE}.
 See \code{\link[=getTx2gene]{getTx2gene()}}.
 \item \code{version}: Optional number indicating ensembl version. \code{NULL} indicates
 the latest version. See \code{\link[=getTx2gene]{getTx2gene()}}.
+\item \code{filename}: Optional string indicating name of pre-existing text file
+in \code{parentDir}/\code{params$study} containing mapping between transcripts
+(first column) and genes (second column), with column names in the
+first row. If \code{filename} is specified, \code{species} and \code{version} must not
+be specified.
 }
 
 If not \code{NULL}, saves a file \code{parentDir}/\code{study}/tx2gene.csv.gz.
@@ -144,7 +149,7 @@ transcript ids. \code{NULL} indicates to use \code{TRUE}. See
 }
 
 \code{params} can be derived from a yaml file, see
-\code{vignette('introduction', package = 'seeker')}. The yaml representation
+\code{vignette("introduction", package = "seeker")}. The yaml representation
 of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.yml.}
 
 \item{parentDir}{Directory in which to store the output, which will be a

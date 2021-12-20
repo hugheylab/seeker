@@ -30,6 +30,6 @@ A vector of exit codes, invisibly.
 \description{
 This function calls
 \href{https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/}{fastq_screen}
-using \code{\link[=system2]{system2()}}. To run in parallel, register a parallel backend using
-\code{\link[doFuture:registerDoFuture]{doFuture::registerDoFuture()}} or \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
+using \code{\link[=system2]{system2()}}. To run in parallel, register a parallel backend, e.g.,
+using \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }

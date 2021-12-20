@@ -39,13 +39,13 @@ getFileVec = function(fileList) {
 #'
 #' @export
 getAscpCmd = function() {
-  osName = Sys.info()[['sysname']]
-  cmd = if (osName == "Linux") {
+  os = Sys.info()[['sysname']]
+  cmd = if (os == 'Linux') {
     '~/.aspera/connect/bin/ascp'
-  } else if (osName == "Darwin" && file.exists('~/Applications/Aspera Connect.app')) {
-    '~/Applications/Aspera Connect.app/Contents/Resources/ascp'
-  } else if (osName == "Darwin") {
-    '/Applications/Aspera Connect.app/Contents/Resources/ascp'
+  } else if (os == 'Darwin') {
+    appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
+    if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
+    file.path(appDir, 'ascp')
   } else {
     NULL}
   return(cmd)}
@@ -65,14 +65,13 @@ getAscpCmd = function() {
 getAscpArgs = function() {
   a = c('-QT -l 300m -P33001 -i')
   f = 'asperaweb_id_dsa.openssh'
-
-  osName = Sys.info()[['sysname']]
-  rgs = if (osName == "Linux") {
+  os = Sys.info()[['sysname']]
+  rgs = if (os == 'Linux') {
     c(a, safe(file.path('~/.aspera/connect/etc', f)))
-  } else if (osName == "Darwin" && file.exists('~/Applications/Aspera Connect.app')) {
-    c(a, safe(file.path('~/Applications/Aspera Connect.app/Contents/Resources', f)))
-  } else if (osName == "Darwin") {
-    c(a, safe(file.path('/Applications/Aspera Connect.app/Contents/Resources', f)))
+  } else if (os == 'Darwin') {
+    appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
+    if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
+    c(a, safe(file.path(appDir, f)))
   } else {
     NULL}
   return(rgs)}

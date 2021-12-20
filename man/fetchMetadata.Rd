@@ -18,7 +18,7 @@ fetchMetadata(
 \item{host}{String indicating from where to fetch the metadata.}
 
 \item{fields}{Character vector indicating which fields to fetch, if \code{host}
-is 'ena'.}
+is "ena".}
 }
 \value{
 A \code{data.table}.

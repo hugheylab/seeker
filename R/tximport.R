@@ -3,9 +3,9 @@
 #' This function uses the
 #' [biomaRt package](https://doi.org/doi:10.18129/B9.bioc.biomaRt).
 #'
-#' @param species String used to pass `paste0(species, '_gene_ensembl')` as the
+#' @param species String used to pass `paste0(species, "_gene_ensembl")` as the
 #'   `dataset` argument to [biomaRt::useEnsembl()]. To see available datasets,
-#'   do `mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)`.
+#'   do `mart = biomaRt::useEnsembl("genes"); biomaRt::listDatasets(mart)`.
 #' @param version Passed to [biomaRt::useEnsembl()]. `NULL` indicates the latest
 #'   version. To see available versions, do `biomaRt::listEnsemblArchives()`.
 #' @param outputDir Directory in which to save the result, a file named

@@ -1,4 +1,4 @@
 library(testthat)
 library(seeker)
 
-test_check("seeker")
+test_check('seeker')

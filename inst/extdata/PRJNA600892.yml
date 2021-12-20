@@ -1,11 +1,11 @@
-study: 'GSE159135' # [string]
+study: 'PRJNA600892' # [string]
 metadata:
   run: TRUE # [logical]
-  bioproject: 'PRJNA667743' # [string]
+  bioproject: 'PRJNA600892' # [string]
   include:
     # [named list or NULL]
     colname: 'run_accession' # [string]
-    values: ['SRR12782103', 'SRR12782104'] # [vector]
+    values: ['SRR10876945', 'SRR10876946'] # [vector]
   # exclude # [named list or NULL]
     # colname # [string]
     # values # [vector]
@@ -42,5 +42,6 @@ tximport:
     # [named list or NULL]
     species: 'mmusculus' # [string]
     # version # [number or NULL]
-  countsFromAbundance: 'no' # [string]
+    # filename # [string or NULL]
+  countsFromAbundance: 'lengthScaledTPM' # [string]
   # ignoreTxVersion # [logical or NULL]

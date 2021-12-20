@@ -2,8 +2,8 @@
 #'
 #' This function calls
 #' [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) using
-#' [system2()]. To run in parallel, register a parallel backend using
-#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#' [system2()]. To run in parallel, register a parallel backend, e.g., using
+#' [doParallel::registerDoParallel()].
 #'
 #' @param filepaths Paths to fastq files. For single-end reads, each element
 #'   should be a single filepath. For paired-end reads, each element can be two
@@ -51,8 +51,8 @@ fastqc = function(
 #'
 #' This function calls
 #' [fastq_screen](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)
-#' using [system2()]. To run in parallel, register a parallel backend using
-#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#' using [system2()]. To run in parallel, register a parallel backend, e.g.,
+#' using [doParallel::registerDoParallel()].
 #'
 #' @param filepaths Paths to fastq files. For single-end reads, each element
 #'   should be a single filepath. For paired-end reads, each element can be two
@@ -100,8 +100,8 @@ fastqscreen = function(
 #' This function calls
 #' [trim_galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 #' using [system2()], and is only designed to handle standard adapter/quality
-#' trimming. To run in parallel, register a parallel backend using
-#' [doFuture::registerDoFuture()] or [doParallel::registerDoParallel()].
+#' trimming. To run in parallel, register a parallel backend, e.g., using
+#' [doParallel::registerDoParallel()].
 #'
 #' @param filepaths Paths to fastq files. For single-end reads, each element
 #'   should be a single filepath. For paired-end reads, each element should be

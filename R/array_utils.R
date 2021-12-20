@@ -1,3 +1,12 @@
+#' Get supported microarray platforms
+#'
+#' @param type String indicating whether to get supported platforms for
+#'   processing raw Affymetrix data using custom CDF or for mapping already
+#'   processed data from probes to genes.
+#'
+#' @return A `data.table`.
+#'
+#' @export
 getPlatforms = function(type = c('cdf', 'mapping')) {
   type = match.arg(type)
   f = if (type == 'cdf') 'platform_cdf.csv' else 'platform_mapping.csv'
@@ -16,48 +25,77 @@ getCdfname = function(anno, geneIdType) {
   return(cdfname)}
 
 
-#' Install custom CDF packages.
+#' Install custom CDF packages
 #'
 #' Install Brainarray custom CDFs for processing raw Affymetrix data. See
 #' <http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp>.
 #'
 #' @param pkgs Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.
 #' @param ver Integer version number (25 as of 5 Jan 2021).
+#' @param dryRun Logical indicating whether to actually install the packages.
+#'
+#' @return A character vector of URLs, invisibly.
 #'
 #' @export
-installCustomCdfPackages = function(pkgs, ver = 25) {
+installCustomCdfPackages = function(pkgs, ver = 25, dryRun = FALSE) {
   assertCharacter(pkgs, any.missing = FALSE)
   assertIntegerish(ver, len = 1L, any.missing = FALSE)
+  assertFlag(dryRun)
   urlPre = glue('http://mbni.org/customcdf/{ver}.0.0')
-  for (pkg in unique(pkgs)) {
+  pkg = NULL
+
+  urls = foreach(pkg = unique(pkgs), .combine = c) %do% {
     hint = substr(pkg, nchar(pkg) - 6, nchar(pkg) - 3)
     urlMid = switch(hint, ensg = 'ensg', rezg = 'entrezg')
     if (is.null(urlMid)) {
       warning(glue('Cannot install {pkg}, since it doesn\'t correspond ',
                    'to gene IDs from Ensembl or Entrez.'))
+      NA_character_
     } else {
-      urlFull = glue('{urlPre}/{urlMid}.download/{pkg}_{ver}.0.0.tar.gz')
-      utils::install.packages(urlFull, repos = NULL)}}
-  invisible()}
+      glue('{urlPre}/{urlMid}.download/{pkg}_{ver}.0.0.tar.gz')}}
+
+  names(urls) = pkgs
+  if (!dryRun) utils::install.packages(urls[!is.na(urls)], repos = NULL)
+  invisible(urls)}
 
 
-getNaiveEsetGeo = function(study, outputDir, rawDir) {
-  eset = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)[[1L]]
+getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
+  gq = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)
+  idx = if (length(gq) == 1L) {
+    1L
+  } else if (is.null(platform)) {
+    return(glue('{study} uses multiple platforms, but params does not ',
+                'specify which one to use for processing.'))
+  } else {
+    which(sapply(gq, function(x) x@annotation) == platform)}
+
+  if (length(idx) == 0) {
+    return(glue('{study} uses multiple platforms, none of which is {platform}.'))}
+  eset = gq[[idx]]
+
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
+  procOk = eset@annotation %in% getPlatforms('mapping')$platform
 
-  if (rmaOk) {
+  dSuppTmp = GEOquery::getGEOSuppFiles(
+    study, makeDirectory = FALSE, baseDir = outputDir, fetch_files = FALSE)
+  isRaw = grepl('_RAW\\.tar$', dSuppTmp$fname)
+
+  if (rmaOk && any(isRaw)) {
     dSupp = GEOquery::getGEOSuppFiles(
       study, makeDirectory = FALSE, baseDir = outputDir)
-    paths = rownames(dSupp)[grepl('\\.tar$', rownames(dSupp))]
+    paths = rownames(dSupp)[isRaw]
+    for (path in paths) {
+      utils::untar(path, exdir = rawDir)}
+    unlink(paths)
 
-    if (length(paths) > 0) {
-      for (path in paths) {
-        utils::untar(path, exdir = rawDir)}
-      unlink(paths)
-    } else {
-      rmaOk = FALSE}}
+  } else if (procOk) {
+    rmaOk = FALSE
 
-  return(list(eset, rmaOk))}
+  } else {
+    return(glue('{study} uses platform {eset@annotation}, ',
+                'which is not supported with the available data.'))}
+
+  return(list(eset = eset, rmaOk = rmaOk))}
 
 
 getAeMetadata = function(study, type = c('experiments', 'files')) {
@@ -85,7 +123,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
 
   files = getAeMetadata(study, 'files') # for one study, should be a data.frame
   hasRaw = any(files$kind == 'raw')
-  hasProc = any(sapply(files$kind, function(k) any(k == 'processed')))
+  hasProc = any(sapply(files$kind, function(k) any(k == 'processed', na.rm = TRUE)))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
     mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')
@@ -96,7 +134,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
     return(glue('{study} does not have raw data from a supported ',
-                'Affymetrix array. You take it from here.'))}
+                'Affymetrix platform. You take it from here.'))}
 
   if (!is.null(mage$rawArchive)) {
     unlink(file.path(outputDir, mage$rawArchive))}
@@ -106,7 +144,22 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
   . = file.rename(file.path(outputDir, mage$rawFiles),
                   file.path(rawDir, mage$rawFiles))
 
-  return(list(eset, rmaOk))}
+  return(list(eset = eset, rmaOk = rmaOk))}
+
+
+methods::setClass('Eset', slots = c(annotation = 'character'))
+
+
+getNaiveEsetLocal = function(study, platform) {
+  rmaOk = platform %in% getPlatforms('cdf')$platform
+  # procOk = platform %in% getPlatforms('mapping')$platform
+  # TODO: allow processed data?
+  if (rmaOk) {
+    eset = methods::new('Eset', annotation = platform)
+  } else {
+    return(glue('{study} uses platform {platform}, which is not supported ',
+                'for local data.'))}
+  return(list(eset = eset, rmaOk = rmaOk))}
 
 
 seekerRma = function(inputDir, cdfname) {
@@ -131,18 +184,9 @@ getNewEmatColnames = function(old, repo) {
   return(new)}
 
 
-getProbeGeneMappingAffy = function(mappingFilePath) {
-  mapping = fread(mappingFilePath)
-  old = c('Affy.Probe.Set.Name', 'Probe.Set.Name')
-  mappingUnique = unique(mapping[, old, with = FALSE])
-  mappingUnique = mappingUnique[apply(mappingUnique, MARGIN = 1, function(r) !any(is.na(r))), ]
-  setnames(mappingUnique, old, c('probe_set', 'gene_id'))
-  return(mappingUnique)}
-
-
 getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID') {
   mapping = featureDt[, c(probeColname, geneColname), with = FALSE]
-  mapping = mapping[apply(mapping, MARGIN = 1, function(x) all(!is.na(x) & x != '')), ]
+  mapping = mapping[apply(mapping, 1, function(x) all(!is.na(x) & x != '')), ]
   setnames(mapping, c(probeColname, geneColname), c('probe_set', 'gene_id'))
   return(mapping)}
 
@@ -215,9 +259,10 @@ getProbeGeneMapping = function(featureDt, platformDt, geneIdType) {
 
 getEmatGene = function(ematProbe, mapping) {
   .SD = NULL
-  dProbe = data.table(ematProbe, keep.rownames = 'probe_set')
+  idx = rowSums(is.na(ematProbe)) == 0
+  dProbe = data.table(ematProbe[idx, , drop = FALSE], keep.rownames = 'probe_set')
   dProbe = merge(mapping, dProbe, by = 'probe_set', sort = FALSE)
-  dGene = dProbe[, lapply(.SD, stats::median, na.rm = TRUE),
+  dGene = dProbe[, lapply(.SD, stats::median),
                  by = 'gene_id', .SDcols = !'probe_set']
   ematGene = as.matrix(dGene[, !'gene_id'])
   rownames(ematGene) = dGene$gene_id

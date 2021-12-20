@@ -46,7 +46,7 @@ A list. As the function runs, it updates a tab-delimited log file in
 \description{
 This function can download files using aspera ascp (recommended) or wget, by
 calling command-line interfaces using \code{\link[=system2]{system2()}}. To download files in
-parallel, register a parallel backend using \code{\link[doFuture:registerDoFuture]{doFuture::registerDoFuture()}} or
+parallel, register a parallel backend, e.g., using
 \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
 \seealso{

@@ -7,9 +7,9 @@
 getTx2gene(species = "mmusculus", version = NULL, outputDir = "data")
 }
 \arguments{
-\item{species}{String used to pass \code{paste0(species, '_gene_ensembl')} as the
+\item{species}{String used to pass \code{paste0(species, "_gene_ensembl")} as the
 \code{dataset} argument to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. To see available datasets,
-do \verb{mart = biomaRt::useEnsembl('genes'); biomaRt::listDatasets(mart)}.}
+do \verb{mart = biomaRt::useEnsembl("genes"); biomaRt::listDatasets(mart)}.}
 
 \item{version}{Passed to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. \code{NULL} indicates the latest
 version. To see available versions, do \code{biomaRt::listEnsemblArchives()}.}
