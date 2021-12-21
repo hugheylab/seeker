@@ -43,3 +43,6 @@ snapshot = function(xObs, path) {
     qs::qsave(xObs, path)
     xExp = xObs}
   return(xExp)}
+
+dataDir = 'data'
+if (!dir.exists(dataDir)) dir.create(dataDir)

@@ -1,7 +1,3 @@
-dataDir = 'data'
-if (!dir.exists(dataDir)) dir.create(dataDir)
-
-
 test_that('getPlatforms', {
   d = getPlatforms('cdf')
   expect_s3_class(d, 'data.table')
