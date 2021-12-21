@@ -101,9 +101,8 @@ test_that('Test checkSeekerArgs Errors', {
   # myself, but not when actually testing package.
   paramsErr$tximport$tx2gene$filename = NULL
   expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
-               regexp = NULL)
-               # regexp = paste0('.*checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\).*Must include the elements(\\n|.)*',
-               #                 'checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\).*Must be a identical to(\\n|.)*'))
+               regexp = paste0('.*checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\)(\\n|.)*',
+                               'checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\)(\\n|.)*'))
   paramsErr$tximport$tx2gene$filename = params$tximport$tx2gene$filename
   # tx2gene filename doesn't exist
   expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
