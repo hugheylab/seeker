@@ -15,7 +15,7 @@ test_that('Test fetchMetadata', {
   expect_equal(metadataObs, metadataControl)
   expect_true(grepl(';', metadataObs$fastq_aspera[1], fixed = TRUE))
 
-  params2 = yaml::read_yaml(file.path(testDir, 'GSE159135.yml'))
+  params2 = yaml::read_yaml(file.path(dataDir, 'GSE159135.yml'))
   paramsNow2 = params2[[step]]
   metadataObs2 = fetchMetadata(paramsNow2$bioproject)
   idx2 = metadataObs2[[paramsNow2$include$colname]] %in% paramsNow2$include$values
@@ -31,7 +31,7 @@ test_that('Test fetch', {
   if (!dir.exists(outputDir)) dir.create(outputDir)
   step = 'metadata'
 
-  paramsFetch = yaml::read_yaml(file.path(testDir, 'GSM5694054.yml'))
+  paramsFetch = yaml::read_yaml(file.path(dataDir, 'GSM5694054.yml'))
   paramsFetchNow = paramsFetch[[step]]
   metadataGSM = fetchMetadata(paramsFetchNow$bioproject, host = 'ena')
   idx = metadataGSM[[paramsFetchNow$include$colname]] %in% paramsFetchNow$include$values

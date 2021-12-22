@@ -1,7 +1,7 @@
 library('data.table')
 library('qs')
-testDir = 'test_data'
-params = yaml::read_yaml(file.path(testDir, 'GSE143524.yml'))
+dataDir = 'data'
+params = yaml::read_yaml(file.path(dataDir, 'GSE143524.yml'))
 # Do away with josh params and regular params, instead modify below if statement
 # to build the path using Sys.info()['user'] in addition to OS.
 # salmonPartialDir = '/genomes/alias/mm10/salmon_partial_sa_index/default'
@@ -13,13 +13,13 @@ if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
                                                                   params$salmon$indexDir)
 
 params$fetch$run = FALSE
-parentDir = file.path(testDir, 'staging')
+parentDir = file.path(dataDir, 'staging')
 dir.create(parentDir)
 withr::local_file(parentDir, .local_envir = teardown_env())
-file.copy(file.path(testDir, 'GSE143524'), parentDir, recursive = TRUE)
+file.copy(file.path(dataDir, 'GSE143524'), parentDir, recursive = TRUE)
 foreach::registerDoSEQ()
 
-metadata = fread(file.path(testDir, 'metadata.csv'))
+metadata = fread(file.path(dataDir, 'metadata.csv'))
 
 outputDir = file.path(parentDir, 'GSE143524')
 
@@ -43,6 +43,3 @@ snapshot = function(xObs, path) {
     qs::qsave(xObs, path)
     xExp = xObs}
   return(xExp)}
-
-dataDir = 'data'
-if (!dir.exists(dataDir)) dir.create(dataDir)

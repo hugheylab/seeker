@@ -10,7 +10,7 @@ test_that("Test getTx2gene", {
     list(outputDir = outputDir), paramsNow$tx2gene))
 
 
-  tx2geneControl = snapshot(tx2geneObs, file.path(testDir, 'tx2gene_output.qs'))
+  tx2geneControl = snapshot(tx2geneObs, file.path(dataDir, 'tx2gene_output.qs'))
 
   expect_equal(tx2geneObs, tx2geneControl, ignore_attr = TRUE)
 
@@ -23,9 +23,9 @@ test_that("Test tximport", {
 
   paramsNow$run = NULL
 
-  salmonControlDir = file.path(testDir, 'salmon_output_control')
+  salmonControlDir = file.path(dataDir, 'salmon_output_control')
 
-  tx2gene = qread(file.path(testDir, 'tx2gene_output.qs'))
+  tx2gene = qread(file.path(dataDir, 'tx2gene_output.qs'))
   params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
   paramsNow$tx2gene = NULL # for calling tximport
 
@@ -34,7 +34,7 @@ test_that("Test tximport", {
          samples = metadata[[sampleColname]], outputDir = outputDir),
     paramsNow))
 
-  tximportControl = snapshot(tximportObs, file.path(testDir, 'tximport_output.qs'))
+  tximportControl = snapshot(tximportObs, file.path(dataDir, 'tximport_output.qs'))
 
   expect_equal(tximportObs$abundance, tximportControl$abundance)
   expect_equal(tximportObs$counts, tximportControl$counts)
