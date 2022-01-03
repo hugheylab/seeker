@@ -43,23 +43,20 @@ test_that('Test fetch', {
   paramsFetchNow[c('run', 'keep')] = NULL
 
 
-  resultObs = do.call(fetch, c(
+  result = do.call(fetch, c(
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir),
     paramsFetchNow))
 
-  resultControl = snapshot(resultObs, file.path(dataDir, 'fetch_output.qs'))
 
-  expect_equal(resultObs, resultControl)
+  print(result)
+  file1 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][1])
+  file2 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][2])
+  print(file1)
+  print(file2)
 
-  # print(result)
-  # file1 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][1])
-  # file2 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][2])
-  # print(file1)
-  # print(file2)
-  #
-  #
-  # expect_true(file.exists(file1))
-  # expect_true(file.exists(file2))
+
+  expect_true(file.exists(file1))
+  expect_true(file.exists(file2))
 
 
 
