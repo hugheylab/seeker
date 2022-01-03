@@ -5,7 +5,8 @@ params = yaml::read_yaml(file.path(dataDir, 'GSE143524.yml'))
 # Do away with josh params and regular params, instead modify below if statement
 # to build the path using Sys.info()['user'] in addition to OS.
 # salmonPartialDir = '/genomes/alias/mm10/salmon_partial_sa_index/default'
-if (Sys.info()['sysname'] == "Darwin") params$salmon$indexDir = gsub('/home/',
+os = Sys.info()['sysname']
+if (os == "Darwin") params$salmon$indexDir = gsub('/home/',
                                                                     '/Users/',
                                                                     params$salmon$indexDir)
 if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
