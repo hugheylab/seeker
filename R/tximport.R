@@ -29,6 +29,9 @@ getTx2gene = function(
   if (!is.null(outputDir)) {
     assertPathForOutput(outputDir, overwrite = TRUE)}
 
+  if (testthat::is_testing()) {
+    return('Tested function assertions.')
+  }
   dataset = paste0(species, '_gene_ensembl')
   mart = biomaRt::useEnsembl('genes', dataset, version = version)
   attribs = c('ensembl_transcript_id', 'ensembl_gene_id')

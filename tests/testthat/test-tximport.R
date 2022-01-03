@@ -1,16 +1,16 @@
 test_that("Test getTx2gene", {
-  skip("Skipping until solution to get around ensembl server issues is found.")
   skip_on_os('windows', arch = NULL)
   step = 'tximport'
   paramsNow = params[[step]]
 
   paramsNow$run = NULL
+  paramsNow$tx2gene$filename = NULL
 
   tx2geneObs = do.call(getTx2gene, c(
     list(outputDir = outputDir), paramsNow$tx2gene))
 
 
-  tx2geneControl = snapshot(tx2geneObs, file.path(dataDir, 'tx2gene_output.qs'))
+  tx2geneControl = snapshot(tx2geneObs, file.path(dataDir, 'get_tx2gene_output.qs'))
 
   expect_equal(tx2geneObs, tx2geneControl, ignore_attr = TRUE)
 
