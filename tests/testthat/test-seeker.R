@@ -1,0 +1,111 @@
+test_that('Test seeker', {
+  skip_on_os('windows', arch = NULL)
+
+  # Add unique folders for seeker full output
+  parentDirSeeker = file.path(dataDir, 'staging_seeker')
+  dir.create(parentDirSeeker)
+  withr::local_file(parentDirSeeker)
+  file.copy(file.path(dataDir, 'GSE143524'), parentDirSeeker, recursive = TRUE)
+  outputDirSeeker = file.path(parentDirSeeker, 'GSE143524')
+
+  seeker(params, parentDirSeeker)
+
+  seekerOutputObs = list.files(outputDirSeeker, recursive = TRUE)
+  seekerOutputControl = snapshot(seekerOutputObs, file.path(dataDir, 'seeker_output_full.qs'))
+
+  expect_equal(seekerOutputObs, seekerOutputControl)
+})
+
+test_that('Test seeker skip all', {
+  skip_on_os('windows', arch = NULL)
+
+  # Add unique folders for seeker skipped output
+  paramsSkip = yaml::read_yaml(file.path(dataDir, 'GSE143524_skip_all.yml'))
+  parentDirSeekerSkip = file.path(dataDir, 'staging_seeker_skip')
+  dir.create(parentDirSeekerSkip)
+  withr::local_file(parentDirSeekerSkip)
+  file.copy(file.path(dataDir, 'GSE143524'), parentDirSeekerSkip, recursive = TRUE)
+  outputDirSeekerSkip = file.path(parentDirSeekerSkip, 'GSE143524')
+
+  seeker(paramsSkip, parentDirSeekerSkip)
+
+  seekerOutputObs = list.files(outputDirSeekerSkip, recursive = TRUE)
+  seekerOutputControl = snapshot(seekerOutputObs, file.path(dataDir, 'seeker_output_skip.qs'))
+
+  expect_equal(seekerOutputObs, seekerOutputControl)
+})
+
+test_that('Test checkSeekerArgs', {
+  skip_on_os('windows', arch = NULL)
+  outputDirObs = seeker:::checkSeekerArgs(params, parentDir)
+  expect_equal(outputDirObs, outputDir)
+})
+
+test_that('Test checkSeekerArgs Errors', {
+  skip_on_os('windows', arch = NULL)
+  # Error variable and directory
+  parentDirErr = file.path(dataDir, 'staging_error')
+  paramsErr = params
+  # parentDir doesn't exist
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = '(\\n|.)*Directory(\\n|.)*does not exist(\\n|.)*')
+  dir.create(parentDirErr)
+  dir.create(file.path(parentDirErr, 'GSE143524'))
+  withr::local_file(parentDirErr)
+  # Invalid name
+  paramsErr$invalid = 'Invalid name'
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = '(\\n|.)*Must be a permutation of set(\\n|.)*')
+  paramsErr$invalid = NULL
+  # Run fetch without running metadata or already having metadata file
+  paramsErr$metadata$run = FALSE
+  paramsErr$fetch$run = TRUE
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkFALSE\\(params\\$fetch\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$metadata\\$run\\)(\\n|.)*',
+                               'checkFileExists\\((\\n|.)*'))
+  paramsErr$metadata$run = TRUE
+  paramsErr$fetch$run = FALSE
+  # Run trimgalore without running fetch or already having fetch_output dir
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkFALSE\\(params\\$trimgalore\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$fetch\\$run\\)(\\n|.)*',
+                               'checkDirectoryExists\\((\\n|.)*'))
+  # Run fastqc without running trimgalore, fetch, or already having fetch_output dir
+  paramsErr$trimgalore$run = FALSE
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkFALSE\\(params\\$fastqc\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$trimgalore\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$fetch\\$run\\)(\\n|.)*',
+                               'checkDirectoryExists\\((\\n|.)*'))
+  # Run salmon without running trimgalore, fetch, or already having fetch_output dir
+  paramsErr$fastqc$run = FALSE
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkFALSE\\(params\\$salmon\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$trimgalore\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$fetch\\$run\\)(\\n|.)*',
+                               'checkDirectoryExists\\((\\n|.)*'))
+  paramsErr$fastqc$run = TRUE
+  paramsErr$trimgalore$run = TRUE
+  file.path(parentDirErr, 'GSE143524')
+  file.copy(file.path(dataDir, 'GSE143524', 'fetch_output'), file.path(parentDirErr, 'GSE143524'), recursive = TRUE)
+  # Run tximport without running salmon or already having salmonDir
+  paramsErr$salmon$run = FALSE
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkFALSE\\(params\\$tximport\\$run\\)(\\n|.)*',
+                               'checkTRUE\\(params\\$salmon\\$run\\)(\\n|.)*',
+                               'checkDirectoryExists\\((\\n|.)*'))
+  paramsErr$salmon$run = TRUE
+  # No tx2gene species or filename
+  # Commented out regex value passes test expectation when I run it line by line
+  # myself, but not when actually testing package.
+  paramsErr$tximport$tx2gene$filename = NULL
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = paste0('(\\n|.)*checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\)(\\n|.)*',
+                               'checkNames\\(names\\(params\\$tximport\\$tx2gene\\)\\)(\\n|.)*'))
+  paramsErr$tximport$tx2gene$filename = params$tximport$tx2gene$filename
+  # tx2gene filename doesn't exist
+  expect_error(seeker:::checkSeekerArgs(paramsErr, parentDirErr),
+               regexp = '(\\n|.)*File does not exist(\\n|.)*')
+})
+

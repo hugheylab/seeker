@@ -13,4 +13,4 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: hugheylab/actions/pkgdown@main
+      - uses: hugheylab/actions/pkgdown@seeker
