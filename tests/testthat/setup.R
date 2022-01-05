@@ -5,9 +5,10 @@ params = yaml::read_yaml(file.path(dataDir, 'GSE143524.yml'))
 os = Sys.info()['sysname']
 if (os == 'Darwin') params$salmon$indexDir = gsub('/home/', '/Users/',
                                                   params$salmon$indexDir)
-if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
-                                                                  paste0('/', Sys.info()['user'], '/'),
-                                                                  params$salmon$indexDir)
+if (Sys.info()['user'] != 'runner') {
+  params$salmon$indexDir = gsub('/runner/',
+                                paste0('/', Sys.info()['user'], '/'),
+                                params$salmon$indexDir)}
 
 params$fetch$run = FALSE
 parentDir = file.path(dataDir, 'staging')
