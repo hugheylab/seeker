@@ -10,9 +10,9 @@ test_that('Test fastqc', {
     paramsNow))
 
   fastqcFilesObs = list.files(fastqcDir, recursive = TRUE)
-  fastqcFilesControl = snapshot(fastqcFilesObs, file.path(dataDir, 'fastqc_output.qs'))
+  fastqcFilesExp = snapshot(fastqcFilesObs, file.path(dataDir, 'fastqc_output.qs'))
 
-  expect_equal(fastqcFilesObs, fastqcFilesControl)
+  expect_equal(fastqcFilesObs, fastqcFilesExp)
 
 })
 
@@ -28,10 +28,9 @@ test_that('Test trimgalore', {
     paramsNow))
 
   trimFilesObs = list.files(trimDir)
-  trimFilesControl = snapshot(trimFilesObs, file.path(dataDir, 'trimgalore_output.qs'))
+  trimFilesExp = snapshot(trimFilesObs, file.path(dataDir, 'trimgalore_output.qs'))
 
-  expect_equal(trimFilesObs, trimFilesControl)
-
+  expect_equal(trimFilesObs, trimFilesExp)
 })
 
 test_that('Test multiqc', {
@@ -45,7 +44,7 @@ test_that('Test multiqc', {
     list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))
 
   multiqcFilesObs = list.files(multiqcDir)
-  multiqcFilesControl = snapshot(multiqcFilesObs, file.path(dataDir, 'multiqc_output.qs'))
+  multiqcFilesExp = snapshot(multiqcFilesObs, file.path(dataDir, 'multiqc_output.qs'))
 
-  expect_equal(multiqcFilesObs, multiqcFilesControl)
+  expect_equal(multiqcFilesObs, multiqcFilesExp)
 })

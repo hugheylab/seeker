@@ -3,7 +3,7 @@ test_that('Test fetchMetadata', {
   originalColumns = c('study_accession', 'sample_accession', 'secondary_sample_accession',
                       'sample_alias', 'sample_title', 'experiment_accession',
                       'run_accession', 'fastq_md5', 'fastq_ftp', 'fastq_aspera')
-  metadataControl = metadata[, ..originalColumns]
+  metadataExp = metadata[, ..originalColumns]
   step = 'metadata'
   paramsNow = params[[step]]
   metadataObs = fetchMetadata(paramsNow$bioproject)
@@ -11,8 +11,7 @@ test_that('Test fetchMetadata', {
   idx = metadataObs[[paramsNow$include$colname]] %in% paramsNow$include$values
   metadataObs = metadataObs[idx]
 
-
-  expect_equal(metadataObs, metadataControl)
+  expect_equal(metadataObs, metadataExp)
   expect_true(grepl(';', metadataObs$fastq_aspera[1], fixed = TRUE))
 
   params2 = yaml::read_yaml(file.path(dataDir, 'GSE159135.yml'))
@@ -22,7 +21,6 @@ test_that('Test fetchMetadata', {
   metadataObs2 = metadataObs2[idx2]
 
   expect_false(grepl(';', metadataObs2$fastq_aspera[1], fixed = TRUE))
-
 })
 
 test_that('Test fetch', {
@@ -42,22 +40,12 @@ test_that('Test fetch', {
 
   paramsFetchNow[c('run', 'keep')] = NULL
 
-
   result = do.call(fetch, c(
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = fetchDir),
     paramsFetchNow))
 
-
-  print(result)
-  file1 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][1])
-  file2 = paste0("./", strsplit(result$localFilepaths, ';')[[1]][2])
-  print(file1)
-  print(file2)
-
-
-  expect_true(file.exists(file1))
-  expect_true(file.exists(file2))
-
-
-
+  for (file in strsplit(result$localFilepaths, ';')[[1]]) {
+    file = paste0('./', file)
+    expect_true(file.exists(file))
+  }
 })

@@ -2,13 +2,9 @@ library('data.table')
 library('qs')
 dataDir = 'data'
 params = yaml::read_yaml(file.path(dataDir, 'GSE143524.yml'))
-# Do away with josh params and regular params, instead modify below if statement
-# to build the path using Sys.info()['user'] in addition to OS.
-# salmonPartialDir = '/genomes/alias/mm10/salmon_partial_sa_index/default'
 os = Sys.info()['sysname']
-if (os == "Darwin") params$salmon$indexDir = gsub('/home/',
-                                                                    '/Users/',
-                                                                    params$salmon$indexDir)
+if (os == 'Darwin') params$salmon$indexDir = gsub('/home/', '/Users/',
+                                                  params$salmon$indexDir)
 if (Sys.info()['user'] != 'runner') params$salmon$indexDir = gsub('/runner/',
                                                                   paste0('/', Sys.info()['user'], '/'),
                                                                   params$salmon$indexDir)
@@ -23,7 +19,6 @@ foreach::registerDoSEQ()
 metadata = fread(file.path(dataDir, 'metadata.csv'))
 
 outputDir = file.path(parentDir, 'GSE143524')
-
 
 fetchDir = file.path(outputDir, 'fetch_output')
 remoteColname = 'fastq_aspera'
