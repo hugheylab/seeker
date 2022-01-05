@@ -12,7 +12,7 @@ test_that('Test salmon and getSalmonMetadata', {
     paramsNow))
   salmonOutputObs = list.files(salmonDir, recursive = TRUE)
   salmonOutputExp = snapshot(salmonOutputObs, file.path(dataDir, 'salmon_output.qs'))
-  expect_equal(sort(salmonOutputObs), sort(salmonOutputExp))
+  expect_equal(salmonOutputObs, salmonOutputExp)
 
   excludeColumns = c('frag_length_mean', 'frag_length_sd', 'start_time',
                      'end_time', 'eq_class_properties', 'length_classes',
