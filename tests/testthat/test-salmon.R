@@ -1,4 +1,4 @@
-test_that('Test salmon and getSalmonMetadata', {
+test_that('salmon and getSalmonMetadata', {
   skip_on_os('windows', arch = NULL)
   step = 'salmon'
   paramsNow = params[[step]]

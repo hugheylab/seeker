@@ -1,4 +1,4 @@
-test_that('Test getTx2gene', {
+test_that('getTx2gene', {
   skip_on_os('windows', arch = NULL)
   step = 'tximport'
   paramsNow = params[[step]]
@@ -14,7 +14,7 @@ test_that('Test getTx2gene', {
   expect_equal(tx2geneObs, tx2geneExp, ignore_attr = TRUE)
 })
 
-test_that('Test tximport', {
+test_that('tximport', {
   skip_on_os('windows', arch = NULL)
   step = 'tximport'
   paramsNow = params[[step]]

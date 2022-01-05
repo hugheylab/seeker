@@ -1,4 +1,4 @@
-test_that('Test fetchMetadata', {
+test_that('fetchMetadata', {
   skip_on_os('windows', arch = NULL)
   originalColumns = c('study_accession', 'sample_accession', 'secondary_sample_accession',
                       'sample_alias', 'sample_title', 'experiment_accession',
@@ -23,7 +23,7 @@ test_that('Test fetchMetadata', {
   expect_false(grepl(';', metadataObs2$fastq_aspera[1], fixed = TRUE))
 })
 
-test_that('Test fetch', {
+test_that('fetch', {
   skip_on_os('windows', arch = NULL)
   outputDir = file.path(parentDir, 'GSM5694054')
   if (!dir.exists(outputDir)) dir.create(outputDir)

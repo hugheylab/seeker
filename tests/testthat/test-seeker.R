@@ -1,4 +1,4 @@
-test_that('Test seeker', {
+test_that('seeker', {
   skip_on_os('windows', arch = NULL)
 
   parentDirSeeker = file.path(dataDir, 'staging_seeker')
@@ -15,7 +15,7 @@ test_that('Test seeker', {
   expect_equal(seekerOutputObs, seekerOutputExp)
 })
 
-test_that('Test seeker skip all', {
+test_that('seeker skip all', {
   skip_on_os('windows', arch = NULL)
 
   paramsSkip = yaml::read_yaml(file.path(dataDir, 'GSE143524_skip_all.yml'))
@@ -33,13 +33,13 @@ test_that('Test seeker skip all', {
   expect_equal(seekerOutputObs, seekerOutputExp)
 })
 
-test_that('Test checkSeekerArgs', {
+test_that('checkSeekerArgs', {
   skip_on_os('windows', arch = NULL)
   outputDirObs = checkSeekerArgs(params, parentDir)
   expect_equal(outputDirObs, outputDir)
 })
 
-test_that('Test checkSeekerArgs Errors', {
+test_that('checkSeekerArgs Errors', {
   skip_on_os('windows', arch = NULL)
 
   # Error variable and directory

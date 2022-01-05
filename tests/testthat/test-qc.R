@@ -1,4 +1,4 @@
-test_that('Test fastqc', {
+test_that('fastqc', {
   skip_on_os('windows', arch = NULL)
   step = 'fastqc'
   paramsNow = params[[step]]
@@ -16,7 +16,7 @@ test_that('Test fastqc', {
 
 })
 
-test_that('Test trimgalore', {
+test_that('trimgalore', {
   skip_on_os('windows', arch = NULL)
   step = 'trimgalore'
   paramsNow = params[[step]]
@@ -33,7 +33,7 @@ test_that('Test trimgalore', {
   expect_equal(trimFilesObs, trimFilesExp)
 })
 
-test_that('Test multiqc', {
+test_that('multiqc', {
   skip_on_os('windows', arch = NULL)
   step = 'multiqc'
 
