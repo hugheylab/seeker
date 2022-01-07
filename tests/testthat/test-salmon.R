@@ -2,8 +2,6 @@ test_that('salmon and getSalmonMetadata', {
   skip_on_os('windows', arch = NULL)
   step = 'salmon'
   paramsNow = params[[step]]
-  salmonDir = file.path(outputDir, paste0(step, '_output'))
-  sampleColname = 'sample_accession'
 
   paramsNow[c('run', 'keep')] = NULL
   result = do.call(salmon, c(

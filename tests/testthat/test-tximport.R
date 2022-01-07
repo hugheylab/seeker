@@ -24,17 +24,18 @@ test_that('tximport', {
   salmonExpDir = file.path(dataDir, 'salmon_output_exp')
 
   tx2gene = qread(file.path(dataDir, 'tx2gene_output.qs'))
-  params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml
+  paramsNow$tx2gene$version = attr(tx2gene, 'version') # for output yml
   paramsNow$tx2gene = NULL # for calling tximport
 
-  tximportObs = do.call(tximport, c(
-    list(inputDir = salmonExpDir, tx2gene = tx2gene,
-         samples = metadata[[sampleColname]], outputDir = outputDir),
-    paramsNow))
+  tximportObs = do.call(tximport,
+                        c(list(inputDir = salmonExpDir, tx2gene = tx2gene,
+                               samples = metadata[[sampleColname]],
+                               outputDir = outputDir),
+                        paramsNow))
 
   tximportExp = snapshot(tximportObs, file.path(dataDir, 'tximport_output.qs'))
 
-  for (name in c('abundance', 'counts', 'length', 'countsFromAbundance')) {
+  for (name in names(tximportExp)) {
     expect_equal(tximportObs[[name]], tximportExp[[name]])
   }
 })

@@ -3,7 +3,6 @@ test_that('fastqc', {
   step = 'fastqc'
   paramsNow = params[[step]]
 
-
   paramsNow[c('run', 'keep')] = NULL
   result = do.call(fastqc, c(
     list(filepaths = metadata[[fileColname]], outputDir = fastqcDir),
