@@ -40,11 +40,15 @@ test_that('fetch', {
 
   paramsFetchNow[c('run', 'keep')] = NULL
 
-  result = do.call(fetch, c(
+  resultObs = do.call(fetch, c(
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = outputDirFetchTest),
     paramsFetchNow))
 
-  for (file in strsplit(result$localFilepaths, ';')[[1]]) {
+  resultExp = snapshot(resultObs, file.path(dataDir, 'fetch_output_testing.qs'))
+
+  expect_equal(resultObs, resultExp)
+
+  for (file in strsplit(resultExp$localFilepaths, ';')[[1]]) {
     file = paste0('./', file)
     expect_true(file.exists(file))
   }
