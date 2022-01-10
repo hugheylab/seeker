@@ -111,9 +111,17 @@ fetch = function(
 
       if (startsWith(f, 'fasp')) {
         args = c(ascpArgs, sprintf('%s@%s', ascpPrefix, f), outputSafe)
-        r = system3(path.expand(ascpCmd), args)
+        r = system3(path.expand(ascpCmd), args, stdout = 'error_output.txt')
+        if (r != 0L) {
+          errorMsg = read.delim('error_output.txt')
+          stop(paste0("Error in fetch: ", errorMsg))
+        }
       } else {
-        r = system3(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
+        r = system3(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f), stdout = 'error_output.txt')
+        if (r != 0L) {
+          errorMsg = read.delim('error_output.txt')
+          stop(paste0("Error in fetch: ", errorMsg))
+        }}}
 
     writeLogFile(logPath, f, i, r)
     r}
