@@ -32,7 +32,7 @@ test_that('checkSeekerArrayArgs errors', {
   expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
 })
 
-test_that('seekerArray', {
+test_that('seekerArray GSE', {
   skip_on_os('windows', arch = NULL)
 
   seekerArray(paramsArray, parentDirSeekerArray)
@@ -41,5 +41,40 @@ test_that('seekerArray', {
   seekerArrayOutputExp = snapshot(seekerArrayOutputObs, file.path(dataDir, 'seeker_array_output_full.qs'))
 
   expect_equal(seekerArrayOutputObs, seekerArrayOutputExp)
+})
+
+test_that('seekerArray Ae', {
+  skip_on_os('windows', arch = NULL)
+
+  parentDirSeekerArrayAe = file.path(dataDir, 'staging_seeker_array_ae')
+  dir.create(parentDirSeekerArrayAe)
+  withr::local_file(parentDirSeekerArrayAe)
+  paramsArrayAe = paramsArray
+  paramsArrayAe$study = 'E-MTAB-8714'
+
+  seekerArray(paramsArrayAe, parentDirSeekerArrayAe)
+
+  seekerArrayAeOutputObs = list.files(parentDirSeekerArrayAe, recursive = TRUE)
+  seekerArrayAeOutputExp = snapshot(seekerArrayAeOutputObs, file.path(dataDir, 'seeker_array_ae_output_full.qs'))
+
+  expect_equal(seekerArrayAeOutputObs, seekerArrayAeOutputExp)
+})
+
+test_that('seekerArray LOCAL', {
+  skip('Need to finish LOCAL test with actual data.')
+  skip_on_os('windows', arch = NULL)
+
+  parentDirSeekerArrayLocal = file.path(dataDir, 'staging_seeker_array_local')
+  dir.create(parentDirSeekerArrayLocal)
+  withr::local_file(parentDirSeekerArrayLocal)
+  paramsArrayLocal = paramsArray
+  paramsArrayLocal$study = 'LOCAL'
+
+  seekerArray(paramsArrayLocal, parentDirSeekerArrayLocal)
+
+  seekerArrayLocalOutputObs = list.files(parentDirSeekerArrayLocal, recursive = TRUE)
+  seekerArrayLocalOutputExp = snapshot(seekerArrayLocalOutputObs, file.path(dataDir, 'seeker_array_local_output_full.qs'))
+
+  expect_equal(seekerArrayLocalOutputObs, seekerArrayLocalOutputExp)
 })
 
