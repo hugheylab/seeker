@@ -27,7 +27,7 @@ test_that('checkSeekerArrayArgs errors', {
   expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
 
   # raw with raw dir not existing
-  paramsArrayErr$study = 'local'
+  paramsArrayErr$study = 'LOCAL'
   paramsArrayErr$platform = 'GPL1'
   expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
 })
