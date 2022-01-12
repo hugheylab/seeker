@@ -13,6 +13,25 @@ test_that('checkSeekerArrayArgs', {
   expect_equal(checkSeekerArrayArgsObs, checkSeekerArrayArgsExp)
 })
 
+test_that('checkSeekerArrayArgs errors', {
+  skip_on_os('windows', arch = NULL)
+
+  paramsArrayErr = paramsArray
+
+  # GSE platform not null or GPL
+  paramsArrayErr$platform = 'abcd'
+  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
+
+  # E- with platform
+  paramsArrayErr$study = 'E-test'
+  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
+
+  # raw with raw dir not existing
+  paramsArrayErr$study = 'local'
+  paramsArrayErr$platform = 'GPL1'
+  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirSeekerArray))
+})
+
 test_that('seekerArray', {
   skip_on_os('windows', arch = NULL)
 
