@@ -26,7 +26,7 @@ checkSeekerArrayArgs = function(params, parentDir) {
     assertNames(
       names(params), permutation.of = c('study', 'geneIdType', 'platform'))
     assertString(params$platform, min.chars = 4)
-    assertTRUE(startsWith(params$platform), 'GPL')
+    assertTRUE(startsWith(params$platform, 'GPL'))
     assertDirectoryExists(rawDir)
     assertFileExists(metadataPath)
     d = fread(metadataPath, na.strings = '')

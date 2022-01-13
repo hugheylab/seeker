@@ -61,14 +61,14 @@ test_that('seekerArray Ae', {
 })
 
 test_that('seekerArray LOCAL', {
-  skip('Need to finish LOCAL test with actual data.')
   skip_on_os('windows', arch = NULL)
 
   parentDirSeekerArrayLocal = file.path(dataDir, 'staging_seeker_array_local')
   dir.create(parentDirSeekerArrayLocal)
   withr::local_file(parentDirSeekerArrayLocal)
-  paramsArrayLocal = paramsArray
-  paramsArrayLocal$study = 'LOCAL'
+  paramsArrayLocal = yaml::read_yaml(file.path(dataDir, 'GSE25585_local.yml'))
+  file.copy(file.path(dataDir, 'GSE1435'), parentDirSeekerArrayLocal, recursive = TRUE)
+  file.rename(file.path(parentDirSeekerArrayLocal, 'GSE1435'), file.path(parentDirSeekerArrayLocal, 'LOCAL01'))
 
   seekerArray(paramsArrayLocal, parentDirSeekerArrayLocal)
 
