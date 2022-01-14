@@ -66,9 +66,8 @@ test_that('seekerArray LOCAL', {
   parentDirSeekerArrayLocal = file.path(dataDir, 'staging_seeker_array_local')
   dir.create(parentDirSeekerArrayLocal)
   withr::local_file(parentDirSeekerArrayLocal)
-  paramsArrayLocal = yaml::read_yaml(file.path(dataDir, 'GSE25585_local.yml'))
-  file.copy(file.path(dataDir, 'GSE1435'), parentDirSeekerArrayLocal, recursive = TRUE)
-  file.rename(file.path(parentDirSeekerArrayLocal, 'GSE1435'), file.path(parentDirSeekerArrayLocal, 'LOCAL01'))
+  paramsArrayLocal = yaml::read_yaml(file.path(dataDir, 'LOCAL01.yml'))
+  file.copy(file.path(dataDir, 'LOCAL01'), parentDirSeekerArrayLocal, recursive = TRUE)
 
   seekerArray(paramsArrayLocal, parentDirSeekerArrayLocal)
 
