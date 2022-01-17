@@ -45,10 +45,6 @@ test_that('fetch', {
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = outputDirFetchTest),
     paramsFetchNow))
 
-  resultExp = snapshot(resultObs, file.path(dataDir, 'fetch_output_testing.qs'))
-
-  expect_equal(resultObs, resultExp)
-
   for (file in strsplit(resultExp$localFilepaths, ';')[[1]]) {
     file = paste0('./', file)
     expect_true(file.exists(file))
