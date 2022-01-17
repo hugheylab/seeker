@@ -24,7 +24,7 @@ test_that('fetchMetadata', {
 })
 
 test_that('fetch', {
-  skip("Skipping until aspera command error can be pinned down/solved")
+  # skip("Skipping until aspera command error can be pinned down/solved")
   skip_on_os('windows', arch = NULL)
   outputDirFetchTest = file.path(parentDir, 'GSM5694054')
   if (!dir.exists(outputDirFetchTest)) dir.create(outputDirFetchTest)
@@ -41,11 +41,11 @@ test_that('fetch', {
 
   paramsFetchNow[c('run', 'keep')] = NULL
 
-  resultObs = do.call(fetch, c(
+  result = do.call(fetch, c(
     list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = outputDirFetchTest),
     paramsFetchNow))
 
-  for (file in strsplit(resultExp$localFilepaths, ';')[[1]]) {
+  for (file in strsplit(result$localFilepaths, ';')[[1]]) {
     file = paste0('./', file)
     expect_true(file.exists(file))
   }
