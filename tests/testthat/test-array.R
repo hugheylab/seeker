@@ -7,7 +7,6 @@ test_that('checkSeekerArrayArgs', {
   skip_on_os('windows', arch = NULL)
 
   resultObs = checkSeekerArrayArgs(paramsArray, parentDirArr)
-
   resultExp = snapshot(resultObs, file.path(dataDir, 'seeker_array_args_output.qs'))
 
   expect_equal(resultObs, resultExp)
