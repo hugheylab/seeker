@@ -1,5 +1,5 @@
 test_that('fastqc', {
-  skip_if(!missingCommands[command == 'fastqc',]$exists, 'Missing fastqc command, skipping.')
+  skip_if(!commandsDt[command == 'fastqc',]$exists, 'Missing fastqc command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'fastqc'
   paramsNow = params[[step]]
@@ -17,7 +17,7 @@ test_that('fastqc', {
 })
 
 test_that('trimgalore', {
-  skip_if(!missingCommands[command == 'trim_galore',]$exists, 'Missing trim_galore command, skipping.')
+  skip_if(!commandsDt[command == 'trim_galore',]$exists, 'Missing trim_galore command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'trimgalore'
   paramsNow = params[[step]]
@@ -35,7 +35,7 @@ test_that('trimgalore', {
 })
 
 test_that('multiqc', {
-  skip_if(!missingCommands[command == 'multiqc',]$exists, 'Missing multiqc command, skipping.')
+  skip_if(!commandsDt[command == 'multiqc',]$exists, 'Missing multiqc command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'multiqc'
 

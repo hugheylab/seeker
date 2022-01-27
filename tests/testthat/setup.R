@@ -10,8 +10,8 @@ snapshot = function(xObs, path) {
     xExp = xObs}
   return(xExp)}
 
-commandsExists = function(params, cmds = seeker:::checkDefaultCommands()) {
-  exists = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
+getCommandsCheck = function(params, cmds = seeker:::checkDefaultCommands()) {
+  result = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
     cmdRow = cmds[i,]
     cmd = if (cmdRow$command == 'ascp') {
       params$fetch$ascpCmd
@@ -31,7 +31,7 @@ commandsExists = function(params, cmds = seeker:::checkDefaultCommands()) {
         cmdExists = FALSE}}
     cmdRow[, exists := cmdExists]
   }
-  return(exists)}
+  return(result)}
 
 registerDoSEQ()
 dataDir = 'data'
@@ -45,8 +45,8 @@ if (Sys.info()['user'] != 'runner') {
                                 paste0('/', Sys.info()['user'], '/'),
                                 params$salmon$indexDir)}
 
-missingCommands = rbind(commandsExists(params), data.table(command = 'samlmon_index', path = params$salmon$indexDir, exists = file.exists(params$salmon$indexDir)), fill = TRUE)
-anyMissing = any(!missingCommands[['exists']])
+commandsDt = rbind(getCommandsCheck(params), data.table(command = 'salmon_index', path = params$salmon$indexDir, exists = file.exists(params$salmon$indexDir)), fill = TRUE)
+anyMissing = any(!commandsDt[['exists']])
 
 
 params$fetch$run = FALSE
