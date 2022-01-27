@@ -10,9 +10,9 @@ snapshot = function(xObs, path) {
     xExp = xObs}
   return(xExp)}
 
-getCommandsCheck = function(params, cmds = seeker:::checkDefaultCommands()) {
+getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
   result = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
-    cmdRow = cmds[i,]
+    cmdRow = cmds[i]
     cmd = if (cmdRow$command == 'ascp') {
       params$fetch$ascpCmd
     } else if (cmdRow$command == 'trim_galore') {
@@ -21,16 +21,10 @@ getCommandsCheck = function(params, cmds = seeker:::checkDefaultCommands()) {
       params[[cmdRow$command]]$cmd
     } else {
       NULL}
-    cmdExists = TRUE
-    if (is.null(cmd)) {
-      if (is.na(cmdRow$path)) {
-        cmdExists = FALSE}
-    } else {
-      path = checkCommand(cmd)
-      if (is.na(path)) {
-        cmdExists = FALSE}}
-    cmdRow[, exists := cmdExists]
-  }
+
+    cmdExists = !((is.null(cmd) & is.na(cmdRow$path)) |
+                  (!is.null(cmd) & is.na(checkCommand(cmd))))
+    data.table(filename = cmdRow$command, exists = cmdExists)}
   return(result)}
 
 registerDoSEQ()
@@ -45,7 +39,9 @@ if (Sys.info()['user'] != 'runner') {
                                 paste0('/', Sys.info()['user'], '/'),
                                 params$salmon$indexDir)}
 
-commandsDt = rbind(getCommandsCheck(params), data.table(command = 'salmon_index', path = params$salmon$indexDir, exists = file.exists(params$salmon$indexDir)), fill = TRUE)
+commandsDt = rbind(getCommandsCheck(params),
+                   data.table(filename = 'salmon_index',
+                              exists = file.exists(params$salmon$indexDir)))
 anyMissing = any(!commandsDt[['exists']])
 
 
