@@ -10,6 +10,23 @@ snapshot = function(xObs, path) {
     xExp = xObs}
   return(xExp)}
 
+getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
+  result = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
+    cmdRow = cmds[i]
+    cmd = if (cmdRow$command == 'ascp') {
+      params$fetch$ascpCmd
+    } else if (cmdRow$command == 'trim_galore') {
+      params$trimgalore$cmd
+    } else if (cmdRow$command %in% names(params)) {
+      params[[cmdRow$command]]$cmd
+    } else {
+      NULL}
+
+    cmdExists = !((is.null(cmd) && is.na(cmdRow$path)) ||
+                  (!is.null(cmd) && is.na(checkCommand(cmd))))
+    data.table(filename = cmdRow$command, exists = cmdExists)}
+  return(result)}
+
 registerDoSEQ()
 dataDir = 'data'
 params = yaml::read_yaml(file.path(dataDir, 'GSE143524.yml'))
@@ -21,6 +38,12 @@ if (Sys.info()['user'] != 'runner') {
   params$salmon$indexDir = gsub('/runner/',
                                 paste0('/', Sys.info()['user'], '/'),
                                 params$salmon$indexDir)}
+
+commandsDt = rbind(
+  getCommandsCheck(params),
+  data.table(filename = 'salmon_index', exists = file.exists(params$salmon$indexDir)))
+anyMissing = any(!commandsDt[['exists']])
+
 
 params$fetch$run = FALSE
 parentDir = file.path(dataDir, 'staging')

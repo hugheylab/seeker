@@ -1,4 +1,5 @@
 test_that('seeker', {
+  skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
 
   parentDirSeeker = file.path(dataDir, 'staging_seeker')
@@ -34,6 +35,7 @@ test_that('seeker skip all', {
 })
 
 test_that('checkSeekerArgs', {
+  skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
   outputDirObs = checkSeekerArgs(params, parentDir)
   expect_equal(outputDirObs, outputDir)
