@@ -12,7 +12,7 @@ snapshot = function(xObs, path) {
 
 getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
   result = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
-    cmdRow = cmds[i]
+    cmdRow = cmds[i,]
     cmd = if (cmdRow$command == 'ascp') {
       params$fetch$ascpCmd
     } else if (cmdRow$command == 'trim_galore') {
@@ -39,9 +39,9 @@ if (Sys.info()['user'] != 'runner') {
                                 paste0('/', Sys.info()['user'], '/'),
                                 params$salmon$indexDir)}
 
-commandsDt = rbind(getCommandsCheck(params),
-                   data.table(filename = 'salmon_index',
-                              exists = file.exists(params$salmon$indexDir)))
+commandsDt = rbind(
+  getCommandsCheck(params),
+  data.table(filename = 'salmon_index', exists = file.exists(params$salmon$indexDir)))
 anyMissing = any(!commandsDt[['exists']])
 
 
