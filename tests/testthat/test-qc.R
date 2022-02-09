@@ -28,7 +28,7 @@ test_that('trimgalore', {
     list(filepaths = metadata[[fetchColname]], outputDir = trimDir),
     paramsNow))
 
-  trimFilesObs = list.files(trimDir)
+  trimFilesObs = list.files(trimDir, recursive = TRUE)
   trimFilesExp = snapshot(trimFilesObs, file.path(dataDir, 'trimgalore_output.qs'))
 
   expect_equal(trimFilesObs, trimFilesExp)
@@ -45,7 +45,7 @@ test_that('multiqc', {
   result = do.call(multiqc, c(
     list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))
 
-  multiqcFilesObs = list.files(multiqcDir)
+  multiqcFilesObs = list.files(multiqcDir, recursive = TRUE)
   multiqcFilesExp = snapshot(multiqcFilesObs, file.path(dataDir, 'multiqc_output.qs'))
 
   expect_equal(multiqcFilesObs, multiqcFilesExp)
