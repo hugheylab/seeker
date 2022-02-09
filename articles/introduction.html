@@ -75,13 +75,13 @@
 
       
 
-      </header><script src="introduction_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-01-28</h4>
+            <h4 data-toc-skip class="date">2022-02-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -156,15 +156,15 @@
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'params_template.yml'</span>, <span class="st">'run_seeker.R'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p>Then you can rename and edit the yaml file, edit the script as appropriate, run <code>install.packages('doParallel')</code> if necessary, and run the script using something like</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
 </h2>
 <p>To process microarray data, use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function. Currently <code><a href="../reference/seekerArray.html">seekerArray()</a></code> can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/" class="external-link">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/" class="external-link">ArrayExpress</a>. It can also process raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for <code><a href="../reference/seeker.html">seeker()</a></code>. A template yaml file for the parameters is shown below.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">study</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string indicating study accession]</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">geneIdType</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string 'ensembl' or 'entrez']</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="co"># platform: '' # [string indicating GEO-based platform accession for local data or for GEO-based data using multiple platforms]</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">study</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string indicating study accession]</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geneIdType</span><span class="kw">:</span><span class="at"> </span><span class="st">''</span><span class="co"> # [string 'ensembl' or 'entrez']</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># platform: '' # [string indicating GEO-based platform accession for local data or for GEO-based data using multiple platforms]</span></span></code></pre></div>
 <p>A convenient way to run <code><a href="../reference/seekerArray.html">seekerArray()</a></code> is then using a script such as the one below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html" class="external-link">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -177,7 +177,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="st">'run_seeker_array.R'</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span></code></pre></div>
 <p>Then you can create the yaml file for the dataset you want and run the script using something like</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">Rscript</span> run_seeker_array.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> run_seeker_array.R <span class="op">&lt;</span>study<span class="op">&gt;</span>.yml <span class="op">&lt;</span>path/to/parent/directory<span class="op">&gt;</span></span></code></pre></div>
 </div>
   </div>
 

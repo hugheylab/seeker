@@ -75,13 +75,13 @@
 
       
 
-      </header><script src="reproducibility_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Reproducibility with seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-01-28</h4>
+            <h4 data-toc-skip class="date">2022-02-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/reproducibility.Rmd" class="external-link"><code>vignettes/reproducibility.Rmd</code></a></small>
       <div class="hidden name"><code>reproducibility.Rmd</code></div>
@@ -91,7 +91,7 @@
     
     
 <p>Using <code>seeker</code> together with docker, it’s easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> image, which has seeker and its dependencies already installed.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
 <div class="section level2">
 <h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
 </h2>
@@ -100,53 +100,53 @@
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'run_seeker.R'</span>, <span class="st">'run_seeker.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p>PRJNA600892.yml:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>study<span class="op">:</span><span class="st"> 'PRJNA600892'</span> <span class="co"># [string]</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>metadata<span class="op">:</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>  bioproject<span class="op">:</span><span class="st"> 'PRJNA600892'</span> <span class="co"># [string]</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>  include<span class="op">:</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="st">    </span><span class="co"># [named list or NULL]</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="st">    </span>colname<span class="op">:</span><span class="st"> 'run_accession'</span> <span class="co"># [string]</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>    values<span class="op">:</span><span class="st"> </span>[<span class="st">'SRR10876945'</span>, <span class="st">'SRR10876946'</span>] <span class="co"># [vector]</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>  <span class="co"># exclude # [named list or NULL]</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a>    <span class="co"># colname # [string]</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a>    <span class="co"># values # [vector]</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a>fetch<span class="op">:</span></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-14"><a href="#cb3-14"></a>  <span class="co"># keep # [logical or NULL]</span></span>
-<span id="cb3-15"><a href="#cb3-15"></a>  <span class="co"># overwrite # [logical or NULL]</span></span>
-<span id="cb3-16"><a href="#cb3-16"></a>  <span class="co"># ascpCmd # [string or NULL]</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a>  <span class="co"># ascpArgs # [character vector or NULL]</span></span>
-<span id="cb3-18"><a href="#cb3-18"></a>  <span class="co"># ascpPrefix # [string or NULL]</span></span>
-<span id="cb3-19"><a href="#cb3-19"></a>trimgalore<span class="op">:</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-21"><a href="#cb3-21"></a>  <span class="co"># keep # [logical or NULL]</span></span>
-<span id="cb3-22"><a href="#cb3-22"></a>  <span class="co"># cmd # [string or NULL]</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a>  <span class="co"># args # [character vector or NULL]</span></span>
-<span id="cb3-24"><a href="#cb3-24"></a>fastqc<span class="op">:</span></span>
-<span id="cb3-25"><a href="#cb3-25"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-26"><a href="#cb3-26"></a>  <span class="co"># keep # [logical or NULL]</span></span>
-<span id="cb3-27"><a href="#cb3-27"></a>  <span class="co"># cmd # [string or NULL]</span></span>
-<span id="cb3-28"><a href="#cb3-28"></a>  <span class="co"># args # [character vector or NULL]</span></span>
-<span id="cb3-29"><a href="#cb3-29"></a>salmon<span class="op">:</span></span>
-<span id="cb3-30"><a href="#cb3-30"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-31"><a href="#cb3-31"></a>  indexDir<span class="op">:</span><span class="st"> '~/genomes/alias/mm10/salmon_partial_sa_index/default'</span> <span class="co"># [string]</span></span>
-<span id="cb3-32"><a href="#cb3-32"></a>  <span class="co"># keep # [logical or NULL]</span></span>
-<span id="cb3-33"><a href="#cb3-33"></a>  <span class="co"># cmd # [string or NULL]</span></span>
-<span id="cb3-34"><a href="#cb3-34"></a>  <span class="co"># args # [character vector or NULL]</span></span>
-<span id="cb3-35"><a href="#cb3-35"></a>multiqc<span class="op">:</span></span>
-<span id="cb3-36"><a href="#cb3-36"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-37"><a href="#cb3-37"></a>  <span class="co"># cmd # [string or NULL]</span></span>
-<span id="cb3-38"><a href="#cb3-38"></a>  <span class="co"># args # [character vector or NULL]</span></span>
-<span id="cb3-39"><a href="#cb3-39"></a>tximport<span class="op">:</span></span>
-<span id="cb3-40"><a href="#cb3-40"></a><span class="st">  </span>run<span class="op">:</span><span class="st"> </span><span class="ot">TRUE</span> <span class="co"># [logical]</span></span>
-<span id="cb3-41"><a href="#cb3-41"></a>  tx2gene<span class="op">:</span></span>
-<span id="cb3-42"><a href="#cb3-42"></a><span class="st">    </span><span class="co"># [named list or NULL]</span></span>
-<span id="cb3-43"><a href="#cb3-43"></a><span class="st">    </span>species<span class="op">:</span><span class="st"> 'mmusculus'</span> <span class="co"># [string]</span></span>
-<span id="cb3-44"><a href="#cb3-44"></a>    <span class="co"># version # [number or NULL]</span></span>
-<span id="cb3-45"><a href="#cb3-45"></a>    <span class="co"># filename # [string or NULL]</span></span>
-<span id="cb3-46"><a href="#cb3-46"></a>  countsFromAbundance<span class="op">:</span><span class="st"> 'lengthScaledTPM'</span> <span class="co"># [string]</span></span>
-<span id="cb3-47"><a href="#cb3-47"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>study<span class="sc">:</span> <span class="st">'PRJNA600892'</span> <span class="co"># [string]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  bioproject<span class="sc">:</span> <span class="st">'PRJNA600892'</span> <span class="co"># [string]</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  include<span class="sc">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># [named list or NULL]</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    colname<span class="sc">:</span> <span class="st">'run_accession'</span> <span class="co"># [string]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    values<span class="sc">:</span> [<span class="st">'SRR10876945'</span>, <span class="st">'SRR10876946'</span>] <span class="co"># [vector]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># exclude # [named list or NULL]</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># colname # [string]</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># values # [vector]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>fetch<span class="sc">:</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep # [logical or NULL]</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># overwrite # [logical or NULL]</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ascpCmd # [string or NULL]</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ascpArgs # [character vector or NULL]</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ascpPrefix # [string or NULL]</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>trimgalore<span class="sc">:</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep # [logical or NULL]</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cmd # [string or NULL]</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># args # [character vector or NULL]</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>fastqc<span class="sc">:</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep # [logical or NULL]</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cmd # [string or NULL]</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># args # [character vector or NULL]</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>salmon<span class="sc">:</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  indexDir<span class="sc">:</span> <span class="st">'~/genomes/alias/mm10/salmon_partial_sa_index/default'</span> <span class="co"># [string]</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># keep # [logical or NULL]</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cmd # [string or NULL]</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># args # [character vector or NULL]</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>multiqc<span class="sc">:</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cmd # [string or NULL]</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># args # [character vector or NULL]</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>tximport<span class="sc">:</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  tx2gene<span class="sc">:</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># [named list or NULL]</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    species<span class="sc">:</span> <span class="st">'mmusculus'</span> <span class="co"># [string]</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># version # [number or NULL]</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filename # [string or NULL]</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  countsFromAbundance<span class="sc">:</span> <span class="st">'lengthScaledTPM'</span> <span class="co"># [string]</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
 <p>run_seeker.R:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>
@@ -158,21 +158,21 @@
 <span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
 <span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seeker.html">seeker</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
 <p>run_seeker.sh:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a></span>
-<span id="cb5-3"><a href="#cb5-3"></a>docker run \</span>
-<span id="cb5-4"><a href="#cb5-4"></a>  <span class="op">--</span>mount type=bind,src=<span class="st">`</span><span class="dt">pwd</span><span class="st">`</span>,dst=<span class="er">/</span>home<span class="op">/</span>rstudio<span class="op">/</span>projects \</span>
-<span id="cb5-5"><a href="#cb5-5"></a>  <span class="op">-</span>w <span class="op">/</span>home<span class="op">/</span>rstudio<span class="op">/</span>projects \</span>
-<span id="cb5-6"><a href="#cb5-6"></a>  <span class="op">--</span>rm \</span>
-<span id="cb5-7"><a href="#cb5-7"></a>  ghcr.io<span class="op">/</span>hugheylab<span class="op">/</span>socker \</span>
-<span id="cb5-8"><a href="#cb5-8"></a>  bash <span class="op">-</span>c \</span>
-<span id="cb5-9"><a href="#cb5-9"></a>    <span class="st">"source /home/rstudio/miniconda3/etc/profile.d/conda.sh \</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="st">      &amp;&amp; conda activate \</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="st">      &amp;&amp; refgenie pull mm10/salmon_partial_sa_index \</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="st">      &amp;&amp; Rscript run_seeker.R PRJNA600892.yml ."</span> \</span>
-<span id="cb5-13"><a href="#cb5-13"></a>  <span class="op">&amp;</span><span class="er">&gt;</span><span class="st"> </span>PRJNA600892_progress.log</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>docker run \</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>mount type<span class="ot">=</span>bind,src<span class="ot">=</span><span class="st">`</span><span class="at">pwd</span><span class="st">`</span>,dst<span class="ot">=</span><span class="er">/</span>home<span class="sc">/</span>rstudio<span class="sc">/</span>projects \</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>w <span class="sc">/</span>home<span class="sc">/</span>rstudio<span class="sc">/</span>projects \</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>rm \</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ghcr.io<span class="sc">/</span>hugheylab<span class="sc">/</span>socker \</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  bash <span class="sc">-</span>c \</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"source /home/rstudio/miniconda3/etc/profile.d/conda.sh \</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; conda activate \</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; refgenie pull mm10/salmon_partial_sa_index \</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; Rscript run_seeker.R PRJNA600892.yml ."</span> \</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> PRJNA600892_progress.log</span></code></pre></div>
 <p>Now simply run the shell script:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">sh</span> run_seeker.sh</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> run_seeker.sh</span></code></pre></div>
 <p>The output will appear in your working directory. You can follow <code><a href="../reference/seeker.html">seeker()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Note: the example yaml file and shell script use salmon_partial_sa_index to minimize computational requirements; for actual use we recommend salmon_sa_index.</p>
 </div>
 <div class="section level2">
@@ -195,17 +195,17 @@
 <span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
 <span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
 <p>run_seeker_array.sh:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a>docker run \</span>
-<span id="cb10-4"><a href="#cb10-4"></a>  <span class="op">--</span>mount type=bind,src=<span class="st">`</span><span class="dt">pwd</span><span class="st">`</span>,dst=<span class="er">/</span>home<span class="op">/</span>rstudio<span class="op">/</span>projects \</span>
-<span id="cb10-5"><a href="#cb10-5"></a>  <span class="op">-</span>w <span class="op">/</span>home<span class="op">/</span>rstudio<span class="op">/</span>projects \</span>
-<span id="cb10-6"><a href="#cb10-6"></a>  <span class="op">--</span>rm \</span>
-<span id="cb10-7"><a href="#cb10-7"></a>  ghcr.io<span class="op">/</span>hugheylab<span class="op">/</span>socker \</span>
-<span id="cb10-8"><a href="#cb10-8"></a>  bash <span class="op">-</span>c <span class="st">"Rscript run_seeker_array.R GSE25585.yml ."</span> \</span>
-<span id="cb10-9"><a href="#cb10-9"></a>  <span class="op">&amp;</span><span class="er">&gt;</span><span class="st"> </span>GSE25585_progress.log</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>docker run \</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>mount type<span class="ot">=</span>bind,src<span class="ot">=</span><span class="st">`</span><span class="at">pwd</span><span class="st">`</span>,dst<span class="ot">=</span><span class="er">/</span>home<span class="sc">/</span>rstudio<span class="sc">/</span>projects \</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>w <span class="sc">/</span>home<span class="sc">/</span>rstudio<span class="sc">/</span>projects \</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>rm \</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  ghcr.io<span class="sc">/</span>hugheylab<span class="sc">/</span>socker \</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  bash <span class="sc">-</span>c <span class="st">"Rscript run_seeker_array.R GSE25585.yml ."</span> \</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> GSE25585_progress.log</span></code></pre></div>
 <p>Now simply run the shell script:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">sh</span> run_seeker_array.sh</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> run_seeker_array.sh</span></code></pre></div>
 <p>The output will appear in your working directory. You can follow <code><a href="../reference/seekerArray.html">seekerArray()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly.</p>
 </div>
   </div>
