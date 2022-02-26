@@ -156,7 +156,7 @@ of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.ym
 directory named according to \code{params$study}.}
 }
 \value{
-\code{NULL}, invisibly.
+Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
 }
 \description{
 This function selectively performs various steps to process RNA-seq data.

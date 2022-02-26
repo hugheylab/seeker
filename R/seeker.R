@@ -272,7 +272,7 @@ checkSeekerArgs = function(params, parentDir) {
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
 #'
-#' @return `NULL`, invisibly.
+#' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
 #' @seealso [fetchMetadata()], [fetch()], [trimgalore()], [fastqc()],
 #'   [salmon()], [multiqc()], [tximport()]
@@ -422,4 +422,4 @@ seeker = function(params, parentDir = '.') {
     unlink(file.path(salmonDir, unique(metadata[[sampleColname]]), 'quant.sf*'),
            recursive = TRUE)}
 
-  invisible()}
+  invisible(outputDir)}
