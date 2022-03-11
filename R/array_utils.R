@@ -257,6 +257,18 @@ getProbeGeneMapping = function(featureDt, platformDt, geneIdType) {
   return(mapping)}
 
 
+getLogTransformedEmat = function(emat) {
+  # adapted from GEO2R
+  qx = stats::quantile(emat, c(0, 0.25, 0.99, 1.0), na.rm = TRUE)
+  needsLog = (qx[3L] > 100) || (qx[4L] - qx[1L] > 50 && qx[2L] > 0)
+  if (needsLog) {
+    idx = emat > 0
+    minVal = min(emat[idx], na.rm = TRUE)
+    emat[!idx & !is.na(emat)] = minVal
+    emat = log2(emat)}
+  return(emat)}
+
+
 getEmatGene = function(ematProbe, mapping) {
   .SD = NULL
   idx = rowSums(is.na(ematProbe)) == 0

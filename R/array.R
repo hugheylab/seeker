@@ -52,6 +52,7 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #' * sample_metadata.csv: Table of sample metadata. Column `sample_id` matches
 #'   colnames of the gene expression matrix.
 #' * gene_expression_matrix.qs: Rows correspond to genes, columns to samples.
+#'   Expression values are log2-transformed.
 #' * custom_cdf_name.txt: Name of custom CDF package used by [affy::justRMA()]
 #'   to process and normalize raw Affymetrix data and map probes to genes.
 #' * feature_metadata.qs: `GPL` object, if gene expression matrix was generated
@@ -149,7 +150,9 @@ seekerArray = function(params, parentDir) {
 
     mapping = getProbeGeneMapping(featureDt, platformDt, params$geneIdType)
     fwrite(mapping, file.path(outputDir, 'probe_gene_mapping.csv.gz'))
-    emat = getEmatGene(eset@assayData$exprs, mapping)}
+
+    emat = getLogTransformedEmat(eset@assayData$exprs)
+    emat = getEmatGene(emat, mapping)}
 
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
