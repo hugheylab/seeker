@@ -19,7 +19,7 @@ maps probes to genes."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9053</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9055</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@ maps probes to genes."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -96,7 +96,7 @@ directory named according to <code>params$study</code>.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>NULL</code>, invisibly.</p>
+    <p>Path to the output directory <code>parentDir</code>/<code>params$study</code>, invisibly.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -105,7 +105,8 @@ directory named according to <code>params$study</code>.</p></dd>
 used if sample_metadata.csv and gene_expression_matrix.qs are available.</p></li>
 <li><p>sample_metadata.csv: Table of sample metadata. Column <code>sample_id</code> matches
 colnames of the gene expression matrix.</p></li>
-<li><p>gene_expression_matrix.qs: Rows correspond to genes, columns to samples.</p></li>
+<li><p>gene_expression_matrix.qs: Rows correspond to genes, columns to samples.
+Expression values are log2-transformed.</p></li>
 <li><p>custom_cdf_name.txt: Name of custom CDF package used by <code><a href="https://rdrr.io/pkg/affy/man/justrma.html" class="external-link">affy::justRMA()</a></code>
 to process and normalize raw Affymetrix data and map probes to genes.</p></li>
 <li><p>feature_metadata.qs: <code>GPL</code> object, if gene expression matrix was generated
