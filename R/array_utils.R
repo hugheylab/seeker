@@ -188,6 +188,10 @@ getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID'
   mapping = featureDt[, c(probeColname, geneColname), with = FALSE]
   mapping = mapping[apply(mapping, 1, function(x) all(!is.na(x) & x != '')), ]
   setnames(mapping, c(probeColname, geneColname), c('probe_set', 'gene_id'))
+
+  idx = attr(regexpr('^[0-9]+', mapping$gene_id), 'match.length')
+  mapping = mapping[idx > 0]
+  set(mapping, j = 'gene_id', value = substr(mapping$gene_id, 1, 1 + idx[idx > 0]))
   return(mapping)}
 
 

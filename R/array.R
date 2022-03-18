@@ -131,15 +131,21 @@ seekerArray = function(params, parentDir) {
       installCustomCdfPackages(cdfname)}
     fwrite(list(cdfname), file.path(outputDir, 'custom_cdf_name.txt'))
 
-    emat = seekerRma(rawDir, cdfname)
-    colnames(emat) = getNewEmatColnames(colnames(emat), repo)
-    emat = emat[, metadata[[sampColname]]]
+    emat = tryCatch({seekerRma(rawDir, cdfname)}, error = function(e) e)
+    if (inherits(emat, 'error')) {
+      rmaOk = FALSE
+      warning(paste(
+        'Attempting to use processed data, as RMA of raw Affymetrix data',
+        'failed due to the following error:', trimws(as.character(emat))))
+    } else {
+      colnames(emat) = getNewEmatColnames(colnames(emat), repo)
+      emat = emat[, metadata[[sampColname]]]}
 
     paths = dir(rawDir, '\\.cel$', full.names = TRUE, ignore.case = TRUE)
     for (path in paths) {
-      R.utils::gzip(path, overwrite = TRUE)}
+      R.utils::gzip(path, overwrite = TRUE)}}
 
-  } else {
+  if (!rmaOk) {
     # only GEO datasets
     featureMetadata = GEOquery::getGEO(eset@annotation)
     qs::qsave(featureMetadata, file.path(outputDir, 'feature_metadata.qs'))
