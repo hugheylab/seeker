@@ -191,7 +191,7 @@ getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID'
 
   idx = attr(regexpr('^[0-9]+', mapping$gene_id), 'match.length')
   mapping = mapping[idx > 0]
-  set(mapping, j = 'gene_id', value = substr(mapping$gene_id, 1, 1 + idx[idx > 0]))
+  set(mapping, j = 'gene_id', value = substr(mapping$gene_id, 1, idx[idx > 0]))
   return(mapping)}
 
 
