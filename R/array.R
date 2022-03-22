@@ -114,13 +114,13 @@ seekerArray = function(params, parentDir) {
   eset = result$eset
   rmaOk = result$rmaOk
 
-  if (repo != 'local') {
+  if (repo == 'local') {
+    metadata = fread(metadataPath, na.strings = '')
+  } else if (!is.na(eset)) {
     qs::qsave(eset, file.path(outputDir, 'naive_expression_set.qs'))
     metadata = data.table(eset@phenoData@data, keep.rownames = sampColname)
     set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))
-    fwrite(metadata, metadataPath)
-  } else {
-    metadata = fread(metadataPath, na.strings = '')}
+    fwrite(metadata, metadataPath)}
 
   if (is.character(rmaOk)) {
     warning(rmaOk)

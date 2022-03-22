@@ -132,6 +132,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     type = if (hasRaw && hasProc) 'full' else if (hasRaw) 'raw' else 'processed'
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
+    eset = NA
     rmaOk = glue('{study} does not have raw data from a supported ',
                  'Affymetrix platform. You take it from here.')}
 
