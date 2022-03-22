@@ -90,10 +90,9 @@ getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
 
   } else if (procOk) {
     rmaOk = FALSE
-
   } else {
-    return(glue('{study} uses platform {eset@annotation}, ',
-                'which is not supported with the available data.'))}
+    rmaOk = glue('{study} uses platform {eset@annotation}, ',
+                 'which is not supported with the available data.')}
 
   return(list(eset = eset, rmaOk = rmaOk))}
 
@@ -133,8 +132,8 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     type = if (hasRaw && hasProc) 'full' else if (hasRaw) 'raw' else 'processed'
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
-    return(glue('{study} does not have raw data from a supported ',
-                'Affymetrix platform. You take it from here.'))}
+    rmaOk = glue('{study} does not have raw data from a supported ',
+                 'Affymetrix platform. You take it from here.')}
 
   if (!is.null(mage$rawArchive)) {
     unlink(file.path(outputDir, mage$rawArchive))}
@@ -157,8 +156,9 @@ getNaiveEsetLocal = function(study, platform) {
   if (rmaOk) {
     eset = methods::new('Eset', annotation = platform)
   } else {
-    return(glue('{study} uses platform {platform}, which is not supported ',
-                'for local data.'))}
+    eset = NA
+    rmaOk = glue('{study} uses platform {platform}, ',
+                 'which is not supported for local data.')}
   return(list(eset = eset, rmaOk = rmaOk))}
 
 

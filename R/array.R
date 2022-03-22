@@ -111,9 +111,6 @@ seekerArray = function(params, parentDir) {
   } else {
     getNaiveEsetLocal(params$study, params$platform)}
 
-  if (is.character(result)) {
-    warning(result)
-    return(invisible())}
   eset = result$eset
   rmaOk = result$rmaOk
 
@@ -124,6 +121,10 @@ seekerArray = function(params, parentDir) {
     fwrite(metadata, metadataPath)
   } else {
     metadata = fread(metadataPath, na.strings = '')}
+
+  if (is.character(rmaOk)) {
+    warning(rmaOk)
+    return(invisible())}
 
   if (rmaOk) {
     cdfname = getCdfname(eset@annotation, params$geneIdType)
