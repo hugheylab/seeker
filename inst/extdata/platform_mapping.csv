@@ -1,4 +1,5 @@
 platform,mappingFunction,dbName,interName,geneColname,splitColumn,species
+GPL81,Direct,,,ENTREZ_GENE_ID,,Mm
 GPL180,Anno,org.Hs.egSYMBOL2EG,GENE_SYM,,,Hs
 GPL341,Direct,,,ENTREZ_GENE_ID,,Rn
 GPL571,Direct,,,ENTREZ_GENE_ID,,Hs
@@ -34,6 +35,7 @@ GPL10332,Anno,org.Hs.egREFSEQ2EG,GB_ACC,,,Hs
 GPL10379,Direct,,,EntrezGeneID,,Hs
 GPL10558,Direct,,,Entrez_Gene_ID,,Hs
 GPL10687,Direct,,,EntrezGeneID,,Hs
+GPL11202,Direct,,,GENE,,Mm
 GPL13607,Anno,org.Hs.egREFSEQ2EG,GB_ACC,,,Hs
 GPL13730,Direct,,,ENTREZ_GENE_ID,,Mm
 GPL15331,Anno,org.Hs.egREFSEQ2EG,GB_ACC,,,Hs

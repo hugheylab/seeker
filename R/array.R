@@ -52,6 +52,7 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #' * sample_metadata.csv: Table of sample metadata. Column `sample_id` matches
 #'   colnames of the gene expression matrix.
 #' * gene_expression_matrix.qs: Rows correspond to genes, columns to samples.
+#'   Expression values are log2-transformed.
 #' * custom_cdf_name.txt: Name of custom CDF package used by [affy::justRMA()]
 #'   to process and normalize raw Affymetrix data and map probes to genes.
 #' * feature_metadata.qs: `GPL` object, if gene expression matrix was generated
@@ -110,19 +111,20 @@ seekerArray = function(params, parentDir) {
   } else {
     getNaiveEsetLocal(params$study, params$platform)}
 
-  if (is.character(result)) {
-    warning(result)
-    return(invisible())}
   eset = result$eset
   rmaOk = result$rmaOk
 
-  if (repo != 'local') {
+  if (repo == 'local') {
+    metadata = fread(metadataPath, na.strings = '')
+  } else if (!is.na(eset)) {
     qs::qsave(eset, file.path(outputDir, 'naive_expression_set.qs'))
     metadata = data.table(eset@phenoData@data, keep.rownames = sampColname)
     set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))
-    fwrite(metadata, metadataPath)
-  } else {
-    metadata = fread(metadataPath, na.strings = '')}
+    fwrite(metadata, metadataPath)}
+
+  if (is.character(rmaOk)) {
+    warning(rmaOk)
+    return(invisible())}
 
   if (rmaOk) {
     cdfname = getCdfname(eset@annotation, params$geneIdType)
@@ -130,15 +132,21 @@ seekerArray = function(params, parentDir) {
       installCustomCdfPackages(cdfname)}
     fwrite(list(cdfname), file.path(outputDir, 'custom_cdf_name.txt'))
 
-    emat = seekerRma(rawDir, cdfname)
-    colnames(emat) = getNewEmatColnames(colnames(emat), repo)
-    emat = emat[, metadata[[sampColname]]]
+    emat = tryCatch({seekerRma(rawDir, cdfname)}, error = function(e) e)
+    if (inherits(emat, 'error')) {
+      rmaOk = FALSE
+      warning(paste(
+        'Attempting to use processed data, as RMA of raw Affymetrix data',
+        'failed due to the following error:', trimws(as.character(emat))))
+    } else {
+      colnames(emat) = getNewEmatColnames(colnames(emat), repo)
+      emat = emat[, metadata[[sampColname]]]}
 
     paths = dir(rawDir, '\\.cel$', full.names = TRUE, ignore.case = TRUE)
     for (path in paths) {
-      R.utils::gzip(path, overwrite = TRUE)}
+      R.utils::gzip(path, overwrite = TRUE)}}
 
-  } else {
+  if (!rmaOk) {
     # only GEO datasets
     featureMetadata = GEOquery::getGEO(eset@annotation)
     qs::qsave(featureMetadata, file.path(outputDir, 'feature_metadata.qs'))
@@ -149,7 +157,9 @@ seekerArray = function(params, parentDir) {
 
     mapping = getProbeGeneMapping(featureDt, platformDt, params$geneIdType)
     fwrite(mapping, file.path(outputDir, 'probe_gene_mapping.csv.gz'))
-    emat = getEmatGene(eset@assayData$exprs, mapping)}
+
+    emat = getLogTransformedEmat(eset@assayData$exprs)
+    emat = getEmatGene(emat, mapping)}
 
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))

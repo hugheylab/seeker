@@ -90,10 +90,9 @@ getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
 
   } else if (procOk) {
     rmaOk = FALSE
-
   } else {
-    return(glue('{study} uses platform {eset@annotation}, ',
-                'which is not supported with the available data.'))}
+    rmaOk = glue('{study} uses platform {eset@annotation}, ',
+                 'which is not supported with the available data.')}
 
   return(list(eset = eset, rmaOk = rmaOk))}
 
@@ -133,8 +132,9 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     type = if (hasRaw && hasProc) 'full' else if (hasRaw) 'raw' else 'processed'
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
-    return(glue('{study} does not have raw data from a supported ',
-                'Affymetrix platform. You take it from here.'))}
+    eset = NA
+    rmaOk = glue('{study} does not have raw data from a supported ',
+                 'Affymetrix platform. You take it from here.')}
 
   if (!is.null(mage$rawArchive)) {
     unlink(file.path(outputDir, mage$rawArchive))}
@@ -157,8 +157,9 @@ getNaiveEsetLocal = function(study, platform) {
   if (rmaOk) {
     eset = methods::new('Eset', annotation = platform)
   } else {
-    return(glue('{study} uses platform {platform}, which is not supported ',
-                'for local data.'))}
+    eset = NA
+    rmaOk = glue('{study} uses platform {platform}, ',
+                 'which is not supported for local data.')}
   return(list(eset = eset, rmaOk = rmaOk))}
 
 
@@ -188,6 +189,10 @@ getProbeGeneMappingDirect = function(featureDt, geneColname, probeColname = 'ID'
   mapping = featureDt[, c(probeColname, geneColname), with = FALSE]
   mapping = mapping[apply(mapping, 1, function(x) all(!is.na(x) & x != '')), ]
   setnames(mapping, c(probeColname, geneColname), c('probe_set', 'gene_id'))
+
+  idx = attr(regexpr('^[0-9]+', mapping$gene_id), 'match.length')
+  mapping = mapping[idx > 0]
+  set(mapping, j = 'gene_id', value = substr(mapping$gene_id, 1, idx[idx > 0]))
   return(mapping)}
 
 
@@ -255,6 +260,18 @@ getProbeGeneMapping = function(featureDt, platformDt, geneIdType) {
     data.table::setorderv(mapping, 'gene_id')}
 
   return(mapping)}
+
+
+getLogTransformedEmat = function(emat) {
+  # adapted from GEO2R
+  qx = stats::quantile(emat, c(0, 0.25, 0.99, 1.0), na.rm = TRUE)
+  needsLog = (qx[3L] > 100) || (qx[4L] - qx[1L] > 50 && qx[2L] > 0)
+  if (needsLog) {
+    idx = emat > 0
+    minVal = min(emat[idx], na.rm = TRUE)
+    emat[!idx & !is.na(emat)] = minVal
+    emat = log2(emat)}
+  return(emat)}
 
 
 getEmatGene = function(ematProbe, mapping) {

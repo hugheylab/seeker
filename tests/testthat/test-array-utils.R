@@ -29,10 +29,10 @@ test_that('installCustomCdfPackages', {
 })
 
 
-test_that('getNaiveEsetGeo supported', {
-  studyNames = c('GSE147674', 'GSE167458')
+test_that('getNaiveEsetGeo', {
+  studies = c('GSE147674', 'GSE167458', 'GSE50143')
 
-  for (study in studyNames) {
+  for (study in studies) {
     outputDir = tempfile()
     withr::local_file(outputDir)
     dir.create(outputDir)
@@ -53,45 +53,26 @@ test_that('getNaiveEsetGeo supported', {
 })
 
 
-test_that('getNaiveEsetGeo unsupported', {
-  study = 'GSE50143'
+test_that('getNaiveEsetAe supported', {
+  study = 'E-MTAB-8714'
 
   outputDir = tempfile()
   withr::local_file(outputDir)
   dir.create(outputDir)
 
-  resObs = getNaiveEsetGeo(study, outputDir, file.path(outputDir, 'raw'))
+  resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
   filesObs = dir(outputDir, recursive = TRUE)
 
   path = file.path(dataDir, paste0(study, '_eset.qs'))
   resExp = snapshot(resObs, path)
   filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
 
-  expect_equal(resObs, resExp)
+  expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
+  expect_equal(resObs$rmaOk, resExp$rmaOk)
+  expect_equal(resObs$eset@annotation, resExp$eset@annotation)
+  expect_equal(resObs$eset@phenoData@data, resExp$eset@phenoData@data)
+  expect_equal(resObs$eset@assayData$exprs, resExp$eset@assayData$exprs)
   expect_equal(filesObs, filesExp)
-})
-
-
-test_that('getNaiveEsetAe supported', {
-  study = 'E-MTAB-8714'
-
-    outputDir = tempfile()
-    withr::local_file(outputDir)
-    dir.create(outputDir)
-
-    resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
-    filesObs = dir(outputDir, recursive = TRUE)
-
-    path = file.path(dataDir, paste0(study, '_eset.qs'))
-    resExp = snapshot(resObs, path)
-    filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
-
-    expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
-    expect_equal(resObs$rmaOk, resExp$rmaOk)
-    expect_equal(resObs$eset@annotation, resExp$eset@annotation)
-    expect_equal(resObs$eset@phenoData@data, resExp$eset@phenoData@data)
-    expect_equal(resObs$eset@assayData$exprs, resExp$eset@assayData$exprs)
-    expect_equal(filesObs, filesExp)
 })
 
 
@@ -119,7 +100,11 @@ test_that('getNaiveEsetLocal', {
   expect_names(names(result), permutation.of = c('eset', 'rmaOk'))
   expect_s4_class(result$eset, 'Eset')
   expect_true(result$rmaOk)
-  expect_character(getNaiveEsetLocal('LOCAL01', 'GPL0'))
+
+  result = getNaiveEsetLocal('LOCAL01', 'GPL0')
+  expect_names(names(result), permutation.of = c('eset', 'rmaOk'))
+  expect_true(is.na(result$eset))
+  expect_character(result$rmaOk)
 })
 
 

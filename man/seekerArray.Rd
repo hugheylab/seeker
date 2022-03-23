@@ -49,6 +49,7 @@ used if sample_metadata.csv and gene_expression_matrix.qs are available.
 \item sample_metadata.csv: Table of sample metadata. Column \code{sample_id} matches
 colnames of the gene expression matrix.
 \item gene_expression_matrix.qs: Rows correspond to genes, columns to samples.
+Expression values are log2-transformed.
 \item custom_cdf_name.txt: Name of custom CDF package used by \code{\link[affy:justrma]{affy::justRMA()}}
 to process and normalize raw Affymetrix data and map probes to genes.
 \item feature_metadata.qs: \code{GPL} object, if gene expression matrix was generated
