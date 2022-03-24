@@ -48,7 +48,7 @@ salmon = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(samplesUnique))
 
-  feo = foreach(i = 1:length(samplesUnique), .combine = c,
+  feo = foreach(i = seq_len(length(samplesUnique)), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %do% {

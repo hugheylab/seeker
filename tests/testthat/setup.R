@@ -11,7 +11,7 @@ snapshot = function(xObs, path) {
   return(xExp)}
 
 getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
-  result = foreach(i = 1:nrow(cmds), .combine = rbind) %do% {
+  result = foreach(i = seq_len(nrow(cmds)), .combine = rbind) %do% {
     cmdRow = cmds[i]
     cmd = if (cmdRow$command == 'ascp') {
       params$fetch$ascpCmd

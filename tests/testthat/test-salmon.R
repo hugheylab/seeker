@@ -1,5 +1,7 @@
 test_that('salmon and getSalmonMetadata', {
-  skip_if((!commandsDt[filename == 'salmon']$exists || !commandsDt[filename == 'salmon_index']$exists), 'Missing salmon command and/or index, skipping.')
+  skip_if(
+    (!commandsDt[filename == 'salmon']$exists || !commandsDt[filename == 'salmon_index']$exists),
+    'Missing salmon command and/or index, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'salmon'
   paramsNow = params[[step]]

@@ -34,7 +34,7 @@ fastqc = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(fs))
 
-  feo = foreach(f = fs, i = 1:length(fs), .combine = c,
+  feo = foreach(f = fs, i = seq_len(length(fs)), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {
@@ -85,7 +85,7 @@ fastqscreen = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(fs))
 
-  result = foreach(f = fs, i = 1:length(fs), .combine = c) %do% {
+  result = foreach(f = fs, i = seq_len(length(fs)), .combine = c) %do% {
     argsNow = c(args, '--outdir', safe(outputDir), safe(f))
     r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
@@ -138,7 +138,7 @@ trimgalore = function(
   if (grepl('(-j|--cores|--basename|--dont_gzip|-o|--paired)', args)) {
     stop('args contains unallowed arguments.')}
 
-  feo = foreach(f = filepaths, i = 1:length(filepaths), .combine = rbind,
+  feo = foreach(f = filepaths, i = seq_len(length(filepaths)), .combine = rbind,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {

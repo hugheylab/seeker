@@ -75,4 +75,3 @@ test_that('seekerArray LOCAL', {
 
   expect_equal(resultObs, resultExp)
 })
-
