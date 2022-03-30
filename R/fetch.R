@@ -100,7 +100,7 @@ fetch = function(
 
   outputSafe = safe(outputDir)
 
-  feo = foreach(f = fs, fl = fls, i = 1:length(fs), .combine = c,
+  feo = foreach(f = fs, fl = fls, i = seq_len(length(fs)), .combine = c,
                 .options.future = list(scheduling = Inf))
 
   result = feo %dopar% {

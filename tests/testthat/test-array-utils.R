@@ -122,7 +122,7 @@ test_that('getAeMetadata', {
 test_that('stripFileExt', {
   x = c('S1.cel', 'S2.cel.gz', 'S3', 'S4.CEL')
   y = stripFileExt(x)
-  expect_identical(y, paste0('S', 1:length(x)))
+  expect_identical(y, paste0('S', seq_len(length(x))))
 })
 
 

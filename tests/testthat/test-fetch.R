@@ -24,7 +24,7 @@ test_that('fetchMetadata', {
 })
 
 test_that('fetch', {
-  skip("Skipping (again) until ENA browser issues are resolved.")
+  # skip('Skipping (again) until ENA browser issues are resolved.')
   skip_if(!commandsDt[filename == 'ascp']$exists, 'Missing ascp command, skipping.')
   skip_on_os('windows', arch = NULL)
   outputDirFetchTest = file.path(parentDir, 'GSM5694054')

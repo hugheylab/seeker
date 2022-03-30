@@ -96,4 +96,3 @@ test_that('checkSeekerArgs Errors', {
   # tx2gene filename doesn't exist
   expect_error(checkSeekerArgs(paramsErr, parentDirErr))
 })
-

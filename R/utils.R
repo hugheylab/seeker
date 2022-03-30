@@ -84,7 +84,7 @@ getTrimmedFilenames = function(x) {
   # https://github.com/FelixKrueger/TrimGalore/blob/master/trim_galore#L1744
 
   y = x
-  for (i in 1:length(y)) {
+  for (i in seq_len(length(y))) {
     pat = if (grepl('\\.fastq$', x[i])) {
       '\\.fastq$'
     } else if (grepl('\\.fastq\\.gz$', x[i])) {
@@ -174,7 +174,7 @@ checkDefaultCommands = function() {
     idx = c(2, 1, 1, 1, 4, 1, 1, 1))
 
   i = NULL
-  r = foreach(i = 1:nrow(d), .combine = rbind) %do% {
+  r = foreach(i = seq_len(nrow(d)), .combine = rbind) %do% {
     cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
     path = checkCommand(cmd)
     version = if (is.na(path)) NA_character_ else
