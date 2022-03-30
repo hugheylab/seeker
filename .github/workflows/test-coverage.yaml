@@ -5,10 +5,10 @@ on: push
 name: test-coverage
 
 jobs:
-
   test-coverage:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: hugheylab/actions/test-coverage@seeker
+    timeout-minutes: 30

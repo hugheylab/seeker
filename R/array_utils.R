@@ -64,13 +64,14 @@ getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
   idx = if (length(gq) == 1L) {
     1L
   } else if (is.null(platform)) {
-    return(glue('{study} uses multiple platforms, but params does not ',
-                'specify which one to use for processing.'))
+    return(list(rmaOk = glue('{study} uses multiple platforms, but params does ',
+                             'not specify which one to use for processing.')))
   } else {
     which(sapply(gq, function(x) x@annotation) == platform)}
 
   if (length(idx) == 0) {
-    return(glue('{study} uses multiple platforms, none of which is {platform}.'))}
+    return(list(rmaOk = glue('{study} uses multiple platforms, ',
+                             'none of which is {platform}.')))}
   eset = gq[[idx]]
 
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
@@ -114,10 +115,13 @@ getAeMetadata = function(study, type = c('experiments', 'files')) {
 getNaiveEsetAe = function(study, outputDir, rawDir) {
   expers = getAeMetadata(study, 'experiments')
   if (nrow(expers) != 1L) {
-    return(glue("'{study}' does not match exactly one study, cannot proceed."))}
+    return(list(rmaOk = glue("'{study}' does not match exactly one study, ',
+                             'cannot proceed.")))}
+
   arrays = expers[1L]$arraydesign
   if (length(arrays) != 1L) {
-    return(glue('{study} does not use exactly one platform, cannot proceed.'))}
+    return(list(rmaOk = glue('{study} does not use exactly one platform, ',
+                             'cannot proceed.')))}
   platform = arrays[[1L]]$accession
 
   files = getAeMetadata(study, 'files') # for one study, should be a data.frame
@@ -132,7 +136,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
     type = if (hasRaw && hasProc) 'full' else if (hasRaw) 'raw' else 'processed'
     mage = ArrayExpress::getAE(
       study, path = outputDir, type = type, extract = FALSE)
-    eset = NA
+    eset = NULL
     rmaOk = glue('{study} does not have raw data from a supported ',
                  'Affymetrix platform. You take it from here.')}
 
@@ -157,7 +161,7 @@ getNaiveEsetLocal = function(study, platform) {
   if (rmaOk) {
     eset = methods::new('Eset', annotation = platform)
   } else {
-    eset = NA
+    eset = NULL
     rmaOk = glue('{study} uses platform {platform}, ',
                  'which is not supported for local data.')}
   return(list(eset = eset, rmaOk = rmaOk))}

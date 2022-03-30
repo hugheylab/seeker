@@ -116,7 +116,7 @@ seekerArray = function(params, parentDir) {
 
   if (repo == 'local') {
     metadata = fread(metadataPath, na.strings = '')
-  } else if (!is.na(eset)) {
+  } else if (!is.null(eset)) {
     qs::qsave(eset, file.path(outputDir, 'naive_expression_set.qs'))
     metadata = data.table(eset@phenoData@data, keep.rownames = sampColname)
     set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))

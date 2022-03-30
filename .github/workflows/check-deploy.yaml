@@ -21,6 +21,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
     steps:
       - uses: hugheylab/actions/R-CMD-check@seeker
+    timeout-minutes: 30
 
 
   drat-deployment:
@@ -33,3 +34,4 @@ jobs:
       - uses: hugheylab/actions/drat-deployment@seeker
         with:
           personal-token: ${{ secrets.JAKEJH_PAT }}
+    timeout-minutes: 30

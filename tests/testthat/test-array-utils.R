@@ -103,7 +103,7 @@ test_that('getNaiveEsetLocal', {
 
   result = getNaiveEsetLocal('LOCAL01', 'GPL0')
   expect_names(names(result), permutation.of = c('eset', 'rmaOk'))
-  expect_true(is.na(result$eset))
+  expect_null(result$eset)
   expect_character(result$rmaOk)
 })
 
