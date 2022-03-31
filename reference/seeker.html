@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9062</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9063</span>
       </span>
     </div>
 
@@ -87,24 +87,31 @@ exclude from further processing (superseding <code>include</code>), with compone
 <li><p><code>values</code>: Vector indicating values within <code>colname</code></p></li>
 </ul></li>
 </ul></li>
-<li><p><code>fetch</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch fastq(.gz) files using ascp.
-See <code><a href="fetch.html">fetch()</a></code>. If <code>TRUE</code>, expects metadata to have a column
-'fastq_aspera' containing remote paths, and saves files to
-<code>parentDir</code>/<code>study</code>/fetch_output. If <code>FALSE</code>, expects metadata to have a
-column 'fastq_aspera' containing names (or complete paths, local or
-remote) of fastq files. Whether <code>TRUE</code> or <code>FALSE</code>, updates metadata with
-column 'fastq_fetched' containing paths to files that should be in
+<li><p><code>fetch</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch files from SRA. See <code><a href="fetch.html">fetch()</a></code>.
+If <code>TRUE</code>, saves files to <code>parentDir</code>/<code>study</code>/fetch_output. Whether
+<code>TRUE</code> or <code>FALSE</code>, expects metadata to have a column 'run_accession', and
+updates metadata with column 'fastq_fetched' containing paths to files in
 <code>parentDir</code>/<code>study</code>/fetch_output. Following components are only checked
 if <code>run</code> is <code>TRUE</code>.</p></li>
-<li><p><code>keep</code>: Logical indicating whether to keep fetched fastq files when all
+<li><p><code>keep</code>: Logical indicating whether to keep fastq.gz files when all
 processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>overwrite</code>: Logical indicating whether to overwrite files that already
 exist. <code>NULL</code> indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
-<li><p><code>ascpCmd</code>: String indicating path to ascp. <code>NULL</code> indicates to use the
-default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
-<li><p><code>ascpArgs</code>: Character vector of arguments to pass to ascp. <code>NULL</code>
+<li><p><code>keepSra</code>: Logical indicating whether to keep the ".sra" files. <code>NULL</code>
 indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
-<li><p><code>ascpPrefix</code>: String indicating prefix for fetching files. <code>NULL</code>
+<li><p><code>prefetchCmd</code>: String indicating command for prefetch, which downloads
+".sra" files. <code>NULL</code> indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
+<li><p><code>prefetchArgs</code>: Character vector indicating arguments to pass to
+prefetch. <code>NULL</code> indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
+<li><p><code>fasterqdumpCmd</code>: String indicating command for fasterq-dump, which
+uses ".sra" files to create ".fastq" files. <code>NULL</code> indicates to use the
+default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
+<li><p><code>prefetchArgs</code>: Character vector indicating arguments to pass to
+fasterq-dump. <code>NULL</code> indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
+<li><p><code>pigzCmd</code>: String indicating command for pigz, which converts ".fastq"
+files to ".fastq.gz" files. <code>NULL</code> indicates to use the default in
+<code><a href="fetch.html">fetch()</a></code>.</p></li>
+<li><p><code>pigzArgs</code>: Character vector indicating arguments to pass to pigz. <code>NULL</code>
 indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</p></li>
 </ul></li>
 <li><p><code>trimgalore</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to perform quality/adapter trimming of
@@ -120,6 +127,9 @@ processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.<
 use the default in <code><a href="trimgalore.html">trimgalore()</a></code>.</p></li>
 <li><p><code>args</code>: Additional arguments to pass to the command-line interface.
 <code>NULL</code> indicates to use the default in <code><a href="trimgalore.html">trimgalore()</a></code>.</p></li>
+<li><p><code>pigzCmd</code>: String indicating command for pigz, which converts ".fastq"
+files to ".fastq.gz" files. <code>NULL</code> indicates to use the default in
+<code><a href="trimgalore.html">trimgalore()</a></code>.</p></li>
 </ul></li>
 <li><p><code>fastqc</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to perform QC on reads. See <code><a href="fastqc.html">fastqc()</a></code>.
 If <code>TRUE</code> and <code>trimgalore$run</code> is <code>TRUE</code>, expects metadata to have a

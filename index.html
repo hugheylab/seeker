@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9062</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9063</span>
       </span>
     </div>
 
@@ -126,50 +126,70 @@
 </h3>
 <p>The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you’re using Windows, you’re doing it wrong.</p>
 <ol style="list-style-type: decimal">
-<li><p>Download and install <a href="https://www.ibm.com/aspera/connect/" class="external-link">Aspera Connect</a>. On Linux, you will likely have to download a tar.gz file (using <code>wget</code> or <code>curl</code>), untar it (using <code>tar -zxvf</code>), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.</p></li>
+<li>Download and install the <a href="https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit" class="external-link">NCBI SRA Toolkit</a>.</li>
+</ol>
+<p>On Ubuntu:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">sh</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">curl -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">tar -zxvf sratoolkit.3.0.0-ubuntu64.tar.gz</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">```</span></span></code></pre></div>
+<p>On macOS:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">sh</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">curl -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-mac64.tar.gz</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">tar -zxvf sratoolkit.3.0.0-mac64.tar.gz</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">```</span></span></code></pre></div>
+<p>On macOS, the first time you try to run each command, you may need to go into Security &amp; Privacy settings to allow the command to run.</p>
+<ol style="list-style-type: decimal">
+<li>Add the following line to ~/.Rprofile (modifying “&lt;&lt; … &gt;&gt;” as appropriate), which ensures the SRA Toolkit is accessible to R.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>
+  PATH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">'PATH'</span><span class="op">)</span>,
+  <span class="st">'&lt;&lt; path to sratoolkit directory &gt;&gt;/bin'</span>, sep <span class="op">=</span> <span class="st">':'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ol style="list-style-type: decimal">
 <li>
 <p>Install <a href="https://conda.io/en/latest/miniconda.html" class="external-link">Miniconda</a>. Use the default install location (~/miniconda3).</p>
 <p>On Linux:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> Miniconda3-latest-Linux-x86_64.sh</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> Miniconda3-latest-Linux-x86_64.sh</span></code></pre></div>
 <p>On macOS:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> Miniconda3-latest-MacOSX-x86_64.sh</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-O</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> Miniconda3-latest-MacOSX-x86_64.sh</span></code></pre></div>
 </li>
 <li>
 <p>Set up conda channels, including <a href="https://bioconda.github.io/user/install.html" class="external-link">bioconda</a>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels defaults</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels bioconda</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels conda-forge</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels defaults</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels bioconda</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels conda-forge</span></code></pre></div>
 </li>
 <li>
 <p>Install the <a href="https://github.com/mamba-org/mamba" class="external-link">mamba package manager</a>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install mamba <span class="at">-c</span> conda-forge</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install mamba <span class="at">-c</span> conda-forge</span></code></pre></div>
 </li>
 <li>
 <p>Install the other command-line tools. The code below will install the packages into the base conda environment. If you use an environment other than base, please see the last step of this readme.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install refgenie trim-galore fastqc fastq-screen salmon multiqc</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install fastq-screen fastqc multiqc pigz refgenie salmon trim-galore</span></code></pre></div>
 </li>
 <li>
 <p>Optionally, configure <a href="http://refgenie.databio.org/en/latest/install" class="external-link">refgenie</a>. For example:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${HOME}</span>/genomes</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> init <span class="at">-c</span> <span class="va">${HOME}</span>/genomes/genome_config.yaml</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${HOME}</span>/genomes</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> init <span class="at">-c</span> <span class="va">${HOME}</span>/genomes/genome_config.yaml</span></code></pre></div>
 <p>Then you can add the following line to ~/.bashrc, ~/.bash_profile, or ~/.zshrc, depending on your OS and shell.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">REFGENIE</span><span class="op">=</span><span class="st">"</span><span class="va">${HOME}</span><span class="st">/genomes/genome_config.yaml"</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">REFGENIE</span><span class="op">=</span><span class="st">"</span><span class="va">${HOME}</span><span class="st">/genomes/genome_config.yaml"</span></span></code></pre></div>
 <p>Then <code>source</code> the file.</p>
 </li>
 <li>
 <p>Optionally, use refgenie to fetch the salmon index files for the human and/or mouse transcriptomes.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> pull hg38/salmon_sa_index</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> pull mm10/salmon_sa_index</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> pull hg38/salmon_sa_index</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">refgenie</span> pull mm10/salmon_sa_index</span></code></pre></div>
 </li>
 <li>
 <p>Optionally, fetch the genomes for fastq-screen. This takes a long time, so don’t bother unless you actually plan to run fastq-screen.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fastq_screen</span> <span class="at">--get_genomes</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fastq_screen</span> <span class="at">--get_genomes</span></span></code></pre></div>
 </li>
 <li>
 <p>If you install Miniconda at a non-default location or install the system dependencies to a conda environment other than base, you will need to set a global option in each R session so <code>seeker</code> knows where to look. For example, if the dependencies are in an environment called “seeker” that <code>conda env list</code> says is located at ~/miniconda3/envs/seeker, then you should do the following:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>seeker.miniconda <span class="op">=</span> <span class="st">'~/miniconda3/envs/seeker'</span><span class="op">)</span></code></pre></div>
 </li>
 </ol>

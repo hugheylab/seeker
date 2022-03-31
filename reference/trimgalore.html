@@ -21,7 +21,7 @@ doParallel::registerDoParallel()."><!-- mathjax --><script src="https://cdnjs.cl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9062</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9063</span>
       </span>
     </div>
 
@@ -78,7 +78,8 @@ trimming. To run in parallel, register a parallel backend, e.g., using
   <span class="va">filepaths</span>,
   outputDir <span class="op">=</span> <span class="st">"trimgalore_output"</span>,
   cmd <span class="op">=</span> <span class="st">"trim_galore"</span>,
-  args <span class="op">=</span> <span class="cn">NULL</span>
+  args <span class="op">=</span> <span class="cn">NULL</span>,
+  pigzCmd <span class="op">=</span> <span class="st">"pigz"</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -95,9 +96,11 @@ doesn't exist.</p></dd>
 <dd><p>Name or path of the command-line interface.</p></dd>
 <dt>args</dt>
 <dd><p>Additional arguments to pass to the command-line interface.
-Output files will always be compressed. Arguments "dont_gzip", "--cores",
+Output files will always be compressed. Arguments "--gzip", "--cores",
 "-j", and "--basename" are not allowed. Arguments "-o" and "--paired"
 should not be specified here.</p></dd>
+<dt>pigzCmd</dt>
+<dd><p>String for pigz command, which will gzip the output files.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
