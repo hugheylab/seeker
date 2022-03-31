@@ -5,22 +5,20 @@
 \title{Fetch files}
 \usage{
 fetch(
-  remoteFilepaths,
-  outputDir = "fetch_output",
+  accessions,
+  outputDir,
   overwrite = FALSE,
-  wgetCmd = "wget",
-  wgetArgs = "-q",
-  ascpCmd = getAscpCmd(),
-  ascpArgs = getAscpArgs(),
-  ascpPrefix = "era-fasp"
+  keepSra = FALSE,
+  prefetchCmd = "prefetch",
+  prefetchArgs = NULL,
+  fasterqdumpCmd = "fasterq-dump",
+  fasterqdumpArgs = NULL,
+  pigzCmd = "pigz",
+  pigzArgs = NULL
 )
 }
 \arguments{
-\item{remoteFilepaths}{Character vector of remote filepaths. For single-end
-reads, each element of the vector should be a single filepath. For
-paired-end reads, each element should be two filepaths separated by ";". If
-a remote filepath starts with "fasp", the file will be downloaded using
-ascp, otherwise the file will be downloaded using wget.}
+\item{accessions}{Character vector of SRA run accessions.}
 
 \item{outputDir}{String indicating the local directory in which to save the
 files. Will be created if it doesn't exist.}
@@ -28,27 +26,34 @@ files. Will be created if it doesn't exist.}
 \item{overwrite}{Logical indicating whether to overwrite files that already
 exist in \code{outputDir}.}
 
-\item{wgetCmd}{String indicating command for fetching files using wget.}
+\item{keepSra}{Logical indicating whether to keep the ".sra" files.}
 
-\item{wgetArgs}{Character vector indicating arguments to pass to wget.}
+\item{prefetchCmd}{String indicating command for prefetch, which downloads
+".sra" files.}
 
-\item{ascpCmd}{String indicating path to the ascp program.}
+\item{prefetchArgs}{Character vector indicating arguments to pass to
+prefetch.}
 
-\item{ascpArgs}{Character vector indicating arguments to pass to ascp.}
+\item{fasterqdumpCmd}{String indicating command for fasterq-dump, which
+uses ".sra" files to create ".fastq" files.}
 
-\item{ascpPrefix}{String indicating prefix for downloading files by ascp,
-i.e., \code{ascpPrefix@remoteFilepath}.}
+\item{fasterqdumpArgs}{Character vector indicating arguments to pass to
+fasterq-dump.}
+
+\item{pigzCmd}{String indicating command for pigz, which converts ".fastq"
+files to ".fastq.gz" files.}
+
+\item{pigzArgs}{Character vector indicating arguments to pass to pigz.}
 }
 \value{
 A list. As the function runs, it updates a tab-delimited log file in
 \code{outputDir} called "progress.tsv".
 }
 \description{
-This function can download files using aspera ascp (recommended) or wget, by
-calling command-line interfaces using \code{\link[=system2]{system2()}}. To download files in
-parallel, register a parallel backend, e.g., using
-\code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
+This function uses the NCBI SRA Toolkit via \code{\link[=system2]{system2()}} to download files
+from SRA and convert them to fastq.gz. To process files in parallel, register
+a parallel backend, e.g., using \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
 \seealso{
-\code{\link[=fetchMetadata]{fetchMetadata()}}, \code{\link[=getAscpCmd]{getAscpCmd()}}, \code{\link[=getAscpArgs]{getAscpArgs()}}
+\code{\link[=fetchMetadata]{fetchMetadata()}}
 }

@@ -110,15 +110,17 @@ fastqscreen = function(
 #'   doesn't exist.
 #' @param cmd Name or path of the command-line interface.
 #' @param args Additional arguments to pass to the command-line interface.
-#'   Output files will always be compressed. Arguments "dont_gzip", "--cores",
+#'   Output files will always be compressed. Arguments "--gzip", "--cores",
 #'   "-j", and "--basename" are not allowed. Arguments "-o" and "--paired"
 #'   should not be specified here.
+#' @param pigzCmd String for pigz command, which will gzip the output files.
 #'
 #' @return A vector of exit codes, invisibly.
 #'
 #' @export
 trimgalore = function(
-  filepaths, outputDir = 'trimgalore_output', cmd = 'trim_galore', args = NULL) {
+  filepaths, outputDir = 'trimgalore_output', cmd = 'trim_galore', args = NULL,
+  pigzCmd = 'pigz') {
 
   f = i = NULL
   assertCharacter(filepaths, any.missing = FALSE)
@@ -134,8 +136,10 @@ trimgalore = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(filepaths))
 
-  args = paste(c(args, '--gzip'), collapse = ' ')
-  if (grepl('(-j|--cores|--basename|--dont_gzip|-o|--paired)', args)) {
+  # trim_galore stopped being able to gzip files if the paths contain spaces
+  # so now have to pigz afterwards
+  args = paste(c(args, '--dont_gzip'), collapse = ' ')
+  if (grepl('(-j|--cores|--basename|--gzip|-o|--paired)', args)) {
     stop('args contains unallowed arguments.')}
 
   feo = foreach(f = filepaths, i = seq_len(length(filepaths)), .combine = rbind,
@@ -147,9 +151,12 @@ trimgalore = function(
     r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, paste(f, collapse = ';'), i, r)
 
-    fastqTrimmed = paste(
-      file.path(outputDir, basename(getTrimmedFilenames(f))), collapse = ';')
-    data.table(fastq_trimmed = fastqTrimmed, status = r)}
+    paths = file.path(outputDir, basename(getTrimmedFilenames(f)))
+    . = system3(path.expand(pigzCmd), c('-p', 1, '-f', safe(paths)))
+    # fastqTrimmed = paste(
+    #   file.path(outputDir, basename(getTrimmedFilenames(f))), collapse = ';')
+    data.table(
+      fastq_trimmed = paste(paste0(paths, '.gz'), collapse = ';'), status = r)}
 
   writeLogFile(logPath, n = -length(filepaths))
   invisible(result)}

@@ -8,7 +8,8 @@ trimgalore(
   filepaths,
   outputDir = "trimgalore_output",
   cmd = "trim_galore",
-  args = NULL
+  args = NULL,
+  pigzCmd = "pigz"
 )
 }
 \arguments{
@@ -22,9 +23,11 @@ doesn't exist.}
 \item{cmd}{Name or path of the command-line interface.}
 
 \item{args}{Additional arguments to pass to the command-line interface.
-Output files will always be compressed. Arguments "dont_gzip", "--cores",
+Output files will always be compressed. Arguments "--gzip", "--cores",
 "-j", and "--basename" are not allowed. Arguments "-o" and "--paired"
 should not be specified here.}
+
+\item{pigzCmd}{String for pigz command, which will gzip the output files.}
 }
 \value{
 A vector of exit codes, invisibly.

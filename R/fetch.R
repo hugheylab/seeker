@@ -41,83 +41,177 @@ fetchMetadata = function(
   return(metadata)}
 
 
+# #' Fetch files
+# #'
+# #' This function can download files using aspera ascp (recommended) or wget, by
+# #' calling command-line interfaces using [system2()]. To download files in
+# #' parallel, register a parallel backend, e.g., using
+# #' [doParallel::registerDoParallel()].
+# #'
+# #' @param remoteFilepaths Character vector of remote filepaths. For single-end
+# #'   reads, each element of the vector should be a single filepath. For
+# #'   paired-end reads, each element should be two filepaths separated by ";". If
+# #'   a remote filepath starts with "fasp", the file will be downloaded using
+# #'   ascp, otherwise the file will be downloaded using wget.
+# #' @param outputDir String indicating the local directory in which to save the
+# #'   files. Will be created if it doesn't exist.
+# #' @param overwrite Logical indicating whether to overwrite files that already
+# #'   exist in `outputDir`.
+# #' @param wgetCmd String indicating command for fetching files using wget.
+# #' @param wgetArgs Character vector indicating arguments to pass to wget.
+# #' @param ascpCmd String indicating path to the ascp program.
+# #' @param ascpArgs Character vector indicating arguments to pass to ascp.
+# #' @param ascpPrefix String indicating prefix for downloading files by ascp,
+# #'   i.e., `ascpPrefix@remoteFilepath`.
+# #'
+# #' @return A list. As the function runs, it updates a tab-delimited log file in
+# #'   `outputDir` called "progress.tsv".
+# #'
+# #' @seealso [fetchMetadata()], [getAscpCmd()], [getAscpArgs()]
+# #'
+# #' @export
+# fetchOld = function(
+#   remoteFilepaths, outputDir = 'fetch_output', overwrite = FALSE,
+#   wgetCmd = 'wget', wgetArgs = '-q', ascpCmd = getAscpCmd(),
+#   ascpArgs = getAscpArgs(), ascpPrefix = 'era-fasp') {
+#
+#   assertCharacter(remoteFilepaths, any.missing = FALSE)
+#   assertString(outputDir)
+#   assertPathForOutput(outputDir, overwrite = TRUE)
+#   assertFlag(overwrite)
+#   assertString(wgetCmd)
+#   assertCharacter(wgetArgs, any.missing = FALSE)
+#   assertString(ascpCmd)
+#   assertCharacter(ascpArgs, any.missing = FALSE)
+#   assertString(ascpPrefix)
+#
+#   f = fl = i = NULL
+#   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
+#
+#   remoteFilepaths = getFileList(remoteFilepaths)
+#   localFilepaths = lapply(
+#     remoteFilepaths, function(f) file.path(outputDir, basename(f)))
+#
+#   fs = unlist(remoteFilepaths)
+#   fls = unlist(localFilepaths)
+#
+#   logPath = getLogPath(outputDir)
+#   writeLogFile(logPath, n = length(fs))
+#
+#   outputSafe = safe(outputDir)
+#
+#   feo = foreach(f = fs, fl = fls, i = seq_len(length(fs)), .combine = c,
+#                 .options.future = list(scheduling = Inf))
+#
+#   result = feo %dopar% {
+#     if (file.exists(fl) && isFALSE(overwrite)) {
+#       r = 0
+#     } else {
+#       Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
+#
+#       if (startsWith(f, 'fasp')) {
+#         args = c(ascpArgs, sprintf('%s@%s', ascpPrefix, f), outputSafe)
+#         r = system3(path.expand(ascpCmd), args)
+#       } else {
+#         r = system3(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
+#
+#     writeLogFile(logPath, f, i, r)
+#     r}
+#
+#   writeLogFile(logPath, n = -length(fs))
+#   d = list(localFilepaths = getFileVec(localFilepaths), statuses = result)
+#   return(d)}
+
+
 #' Fetch files
 #'
-#' This function can download files using aspera ascp (recommended) or wget, by
-#' calling command-line interfaces using [system2()]. To download files in
-#' parallel, register a parallel backend, e.g., using
-#' [doParallel::registerDoParallel()].
+#' This function uses the NCBI SRA Toolkit via [system2()] to download files
+#' from SRA and convert them to fastq.gz. To process files in parallel, register
+#' a parallel backend, e.g., using [doParallel::registerDoParallel()].
 #'
-#' @param remoteFilepaths Character vector of remote filepaths. For single-end
-#'   reads, each element of the vector should be a single filepath. For
-#'   paired-end reads, each element should be two filepaths separated by ";". If
-#'   a remote filepath starts with "fasp", the file will be downloaded using
-#'   ascp, otherwise the file will be downloaded using wget.
+#' @param accessions Character vector of SRA run accessions.
 #' @param outputDir String indicating the local directory in which to save the
 #'   files. Will be created if it doesn't exist.
 #' @param overwrite Logical indicating whether to overwrite files that already
 #'   exist in `outputDir`.
-#' @param wgetCmd String indicating command for fetching files using wget.
-#' @param wgetArgs Character vector indicating arguments to pass to wget.
-#' @param ascpCmd String indicating path to the ascp program.
-#' @param ascpArgs Character vector indicating arguments to pass to ascp.
-#' @param ascpPrefix String indicating prefix for downloading files by ascp,
-#'   i.e., `ascpPrefix@remoteFilepath`.
+#' @param keepSra Logical indicating whether to keep the ".sra" files.
+#' @param prefetchCmd String indicating command for prefetch, which downloads
+#'   ".sra" files.
+#' @param prefetchArgs Character vector indicating arguments to pass to
+#'   prefetch.
+#' @param fasterqdumpCmd String indicating command for fasterq-dump, which
+#'   uses ".sra" files to create ".fastq" files.
+#' @param fasterqdumpArgs Character vector indicating arguments to pass to
+#'   fasterq-dump.
+#' @param pigzCmd String indicating command for pigz, which converts ".fastq"
+#'   files to ".fastq.gz" files.
+#' @param pigzArgs Character vector indicating arguments to pass to pigz.
 #'
 #' @return A list. As the function runs, it updates a tab-delimited log file in
 #'   `outputDir` called "progress.tsv".
 #'
-#' @seealso [fetchMetadata()], [getAscpCmd()], [getAscpArgs()]
+#' @seealso [fetchMetadata()]
 #'
 #' @export
 fetch = function(
-  remoteFilepaths, outputDir = 'fetch_output', overwrite = FALSE,
-  wgetCmd = 'wget', wgetArgs = '-q', ascpCmd = getAscpCmd(),
-  ascpArgs = getAscpArgs(), ascpPrefix = 'era-fasp') {
+  accessions, outputDir, overwrite = FALSE, keepSra = FALSE,
+  prefetchCmd = 'prefetch', prefetchArgs = NULL,
+  fasterqdumpCmd = 'fasterq-dump', fasterqdumpArgs = NULL,
+  pigzCmd = 'pigz', pigzArgs = NULL) {
 
-  assertCharacter(remoteFilepaths, any.missing = FALSE)
+  acc = i = NULL
+  assertCharacter(accessions, any.missing = FALSE)
   assertString(outputDir)
   assertPathForOutput(outputDir, overwrite = TRUE)
   assertFlag(overwrite)
-  assertString(wgetCmd)
-  assertCharacter(wgetArgs, any.missing = FALSE)
-  assertString(ascpCmd)
-  assertCharacter(ascpArgs, any.missing = FALSE)
-  assertString(ascpPrefix)
+  assertFlag(keepSra)
+  assertString(prefetchCmd)
+  assertCharacter(prefetchArgs, any.missing = FALSE, null.ok = TRUE)
+  assertString(fasterqdumpCmd)
+  assertCharacter(fasterqdumpArgs, any.missing = FALSE, null.ok = TRUE)
+  assertString(pigzCmd)
+  assertCharacter(pigzArgs, any.missing = FALSE, null.ok = TRUE)
 
-  f = fl = i = NULL
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
 
-  remoteFilepaths = getFileList(remoteFilepaths)
-  localFilepaths = lapply(
-    remoteFilepaths, function(f) file.path(outputDir, basename(f)))
-
-  fs = unlist(remoteFilepaths)
-  fls = unlist(localFilepaths)
-
   logPath = getLogPath(outputDir)
-  writeLogFile(logPath, n = length(fs))
+  writeLogFile(logPath, n = length(accessions))
 
-  outputSafe = safe(outputDir)
+  feo = foreach(
+    acc = accessions, i = seq_len(length(accessions)),
+    .options.future = list(scheduling = Inf))
 
-  feo = foreach(f = fs, fl = fls, i = seq_len(length(fs)), .combine = c,
-                .options.future = list(scheduling = Inf))
+  # TODO: possibly use dopar loop and single-thread fasterqdump and pigz
+  result = feo %do% {
+    pat = '^{acc}(_1|_2|)\\.fastq'
+    paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)
 
-  result = feo %dopar% {
-    if (file.exists(fl) && isFALSE(overwrite)) {
+    if (length(paths) > 0 && isFALSE(overwrite)) {
       r = 0
     } else {
-      Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
+      # Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
 
-      if (startsWith(f, 'fasp')) {
-        args = c(ascpArgs, sprintf('%s@%s', ascpPrefix, f), outputSafe)
-        r = system3(path.expand(ascpCmd), args)
-      } else {
-        r = system3(path.expand(wgetCmd), c(wgetArgs, '-P', outputSafe, f))}}
+      args = c(prefetchArgs, '-O', safe(outputDir), acc)
+      r = system3(path.expand(prefetchCmd), args)
 
-    writeLogFile(logPath, f, i, r)
-    r}
+      args = c(
+        fasterqdumpArgs, '-e', foreach::getDoParWorkers(), #1,
+        '-O', safe(outputDir), '-f', acc)
+      r = system3(path.expand(fasterqdumpCmd), args)
 
-  writeLogFile(logPath, n = -length(fs))
-  d = list(localFilepaths = getFileVec(localFilepaths), statuses = result)
+      args = c(
+        pigzArgs, '-p', foreach::getDoParWorkers(), #1,
+        '-f', safe(dir(outputDir, glue(pat, '$'), full.names = TRUE)))
+      r = system3(path.expand(pigzCmd), args)
+      paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)
+
+      if (isFALSE(keepSra)) {
+        unlink(file.path(outputDir, acc), recursive = TRUE)}}
+
+    writeLogFile(logPath, acc, i, r)
+    list(paths, r)}
+
+  writeLogFile(logPath, n = -length(accessions))
+  d = list(localFilepaths = getFileVec(lapply(result, `[[`, 1L)),
+           statuses = sapply(result, `[[`, 2L))
   return(d)}

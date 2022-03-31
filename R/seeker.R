@@ -7,8 +7,8 @@ NULL
 
 
 checkSeekerArgs = function(params, parentDir) {
-  steps = c('metadata', 'fetch', 'trimgalore', 'fastqc', 'salmon', 'multiqc',
-            'tximport')
+  steps = c(
+    'metadata', 'fetch', 'trimgalore', 'fastqc', 'salmon', 'multiqc', 'tximport')
 
   command = NULL
   defaultCommands = checkDefaultCommands()
@@ -50,14 +50,27 @@ checkSeekerArgs = function(params, parentDir) {
   if (params$fetch$run) {
     assertNames(
       names(params$fetch),
-      subset.of = c('run', 'keep', 'overwrite', 'ascpCmd', 'ascpArgs', 'ascpPrefix'))
+      subset.of = c(
+        'run', 'keep', 'overwrite', 'keepSra', 'prefetchCmd', 'prefetchArgs',
+        'fasterqdumpCmd', 'fasterqdumpArgs', 'pigzCmd', 'pigzArgs'))
     assertFlag(params$fetch$keep, null.ok = TRUE)
     assertFlag(params$fetch$overwrite, null.ok = TRUE)
-    assertString(params$fetch$ascpCmd, min.chars = 1L, null.ok = TRUE)
-    assertCommand(params$fetch$ascpCmd, 'ascp',
-                  defaultCommands[command == 'ascp']$path)
-    assertCharacter(params$fetch$ascpArgs, any.missing = FALSE, null.ok = TRUE)
-    assertString(params$fetch$ascpPrefix, min.chars = 1L, null.ok = TRUE)}
+    assertFlag(params$fetch$keepSra, null.ok = TRUE)
+
+    assertString(params$fetch$prefetchCmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$fetch$prefetchCmd, 'prefetch',
+                  defaultCommands[command == 'prefetch']$path)
+    assertCharacter(params$fetch$prefetchArgs, any.missing = FALSE, null.ok = TRUE)
+
+    assertString(params$fetch$fasterqdumpCmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$fetch$fasterqdumpCmd, 'fasterq-dump',
+                  defaultCommands[command == 'fasterq-dump']$path)
+    assertCharacter(params$fetch$fasterqdumpArgs, any.missing = FALSE, null.ok = TRUE)
+
+    assertString(params$fetch$pigzCmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$fetch$pigzCmd, 'pigz',
+                  defaultCommands[command == 'pigz']$path)
+    assertCharacter(params$fetch$pigzArgs, any.missing = FALSE, null.ok = TRUE)}
 
   assert(checkFALSE(params$trimgalore$run),
          checkTRUE(params$fetch$run),
@@ -66,12 +79,15 @@ checkSeekerArgs = function(params, parentDir) {
 
   if (params$trimgalore$run) {
     assertNames(names(params$trimgalore),
-                subset.of = c('run', 'keep', 'cmd', 'args'))
+                subset.of = c('run', 'keep', 'cmd', 'args', 'pigzCmd'))
     assertFlag(params$trimgalore$keep, null.ok = TRUE)
     assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$trimgalore$cmd, 'trim_galore',
                   defaultCommands[command == 'trim_galore']$path)
-    assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)}
+    assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)
+    assertString(params$trimgalore$pigzCmd, min.chars = 1L, null.ok = TRUE)
+    assertCommand(params$trimgalore$pigzCmd, 'pigz',
+                  defaultCommands[command == 'pigz']$path)}
 
   assert(checkFALSE(params$fastqc$run),
          checkTRUE(params$trimgalore$run),
@@ -164,24 +180,31 @@ checkSeekerArgs = function(params, parentDir) {
 #'     * `colname`: String indicating column in metadata
 #'     * `values`: Vector indicating values within `colname`
 #' * `fetch`: Named list with components:
-#'   * `run`: Logical indicating whether to fetch fastq(.gz) files using ascp.
-#'     See [fetch()]. If `TRUE`, expects metadata to have a column
-#'     'fastq_aspera' containing remote paths, and saves files to
-#'     `parentDir`/`study`/fetch_output. If `FALSE`, expects metadata to have a
-#'     column 'fastq_aspera' containing names (or complete paths, local or
-#'     remote) of fastq files. Whether `TRUE` or `FALSE`, updates metadata with
-#'     column 'fastq_fetched' containing paths to files that should be in
+#'   * `run`: Logical indicating whether to fetch files from SRA. See [fetch()].
+#'     If `TRUE`, saves files to `parentDir`/`study`/fetch_output. Whether
+#'     `TRUE` or `FALSE`, expects metadata to have a column 'run_accession', and
+#'     updates metadata with column 'fastq_fetched' containing paths to files in
 #'     `parentDir`/`study`/fetch_output. Following components are only checked
 #'     if `run` is `TRUE`.
-#'   * `keep`: Logical indicating whether to keep fetched fastq files when all
+#'   * `keep`: Logical indicating whether to keep fastq.gz files when all
 #'     processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `overwrite`: Logical indicating whether to overwrite files that already
 #'     exist. `NULL` indicates to use the default in [fetch()].
-#'   * `ascpCmd`: String indicating path to ascp. `NULL` indicates to use the
-#'     default in [fetch()].
-#'   * `ascpArgs`: Character vector of arguments to pass to ascp. `NULL`
+#'   * `keepSra`: Logical indicating whether to keep the ".sra" files. `NULL`
 #'     indicates to use the default in [fetch()].
-#'   * `ascpPrefix`: String indicating prefix for fetching files. `NULL`
+#'   * `prefetchCmd`: String indicating command for prefetch, which downloads
+#'     ".sra" files. `NULL` indicates to use the default in [fetch()].
+#'   * `prefetchArgs`: Character vector indicating arguments to pass to
+#'     prefetch. `NULL` indicates to use the default in [fetch()].
+#'   * `fasterqdumpCmd`: String indicating command for fasterq-dump, which
+#'     uses ".sra" files to create ".fastq" files. `NULL` indicates to use the
+#'     default in [fetch()].
+#'   * `prefetchArgs`: Character vector indicating arguments to pass to
+#'     fasterq-dump. `NULL` indicates to use the default in [fetch()].
+#'   * `pigzCmd`: String indicating command for pigz, which converts ".fastq"
+#'     files to ".fastq.gz" files. `NULL` indicates to use the default in
+#'     [fetch()].
+#'   * `pigzArgs`: Character vector indicating arguments to pass to pigz. `NULL`
 #'     indicates to use the default in [fetch()].
 #' * `trimgalore`: Named list with components:
 #'   * `run`: Logical indicating whether to perform quality/adapter trimming of
@@ -197,6 +220,9 @@ checkSeekerArgs = function(params, parentDir) {
 #'     use the default in [trimgalore()].
 #'   * `args`: Additional arguments to pass to the command-line interface.
 #'     `NULL` indicates to use the default in [trimgalore()].
+#'   * `pigzCmd`: String indicating command for pigz, which converts ".fastq"
+#'     files to ".fastq.gz" files. `NULL` indicates to use the default in
+#'     [trimgalore()].
 #' * `fastqc`: Named list with components:
 #'   * `run`: Logical indicating whether to perform QC on reads. See [fastqc()].
 #'     If `TRUE` and `trimgalore$run` is `TRUE`, expects metadata to have a
@@ -308,20 +334,28 @@ seeker = function(params, parentDir = '.') {
   step = 'fetch'
   paramsNow = params[[step]]
   fetchDir = file.path(outputDir, paste0(step, '_output'))
-  remoteColname = 'fastq_aspera'
+  # remoteColname = 'fastq_aspera'
+  remoteColname = 'run_accession'
   fetchColname = 'fastq_fetched'
 
   if (paramsNow$run) {
     paramsNow[c('run', 'keep')] = NULL
+    # result = do.call(fetch, c(
+    #   list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
+    #   paramsNow))
     result = do.call(fetch, c(
-      list(remoteFilepaths = metadata[[remoteColname]], outputDir = fetchDir),
+      list(accessions = metadata[[remoteColname]], outputDir = fetchDir),
       paramsNow))
     set(metadata, j = fetchColname, value = result$localFilepaths)
 
   } else {
-    localFilepaths = getFileVec(
-      lapply(getFileList(metadata[[remoteColname]]),
-             function(f) file.path(fetchDir, basename(f))))
+    # localFilepaths = getFileVec(
+    #   lapply(getFileList(metadata[[remoteColname]]),
+    #          function(f) file.path(fetchDir, basename(f))))
+    localFilepaths = sapply(metadata[[remoteColname]], function(acc) {
+      paste0(
+        dir(fetchDir, glue('^{acc}(_1|_2|)\\.fastq\\.gz$'), full.names = TRUE),
+        collapse = ';')})
     set(metadata, j = fetchColname, value = localFilepaths)}
 
   fwrite(metadata, metadataPath) # could be overwritten
