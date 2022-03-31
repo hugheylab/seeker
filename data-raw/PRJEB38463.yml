@@ -12,13 +12,18 @@ metadata:
 fetch:
   run: TRUE # [logical]
   # overwrite # [logical or NULL]
-  # ascpCmd # [string or NULL]
-  # ascpArgs # [character vector or NULL]
-  # ascpPrefix # [string or NULL]
+  # keepSra # [logical or NULL]
+  # prefetchCmd # [string or NULL]
+  # prefetchArgs # [character vector or NULL]
+  # fasterqdumpCmd # [string or NULL]
+  # fasterqdumpArgs # [character vector or NULL]
+  # pigzCmd # [string or NULL]
+  # pigzArgs # [character vector or NULL]
 trimgalore:
   run: TRUE # [logical]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
+  # pigzCmd # [string or NULL]
 fastqc:
   run: TRUE # [logical]
   # cmd # [string or NULL]

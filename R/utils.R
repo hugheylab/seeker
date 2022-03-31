@@ -14,7 +14,6 @@ writeLogFile = function(path, task, idx, status, n = NULL) {
     } else {
       x = 'finished'}
     d = data.table(d, task = glue('{x} {abs(n)} tasks'), idx = 0, status = 0)}
-    # d = data.table(d, task = sprintf('%s %d tasks', x, abs(n)), idx = 0, status = 0)}
   fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
   invisible(d)}
 
@@ -28,53 +27,53 @@ getFileVec = function(fileList) {
   return(sapply(fileList, function(f) paste0(f, collapse = ';')))}
 
 
-#' Get ascp command
-#'
-#' This function returns the default path to the aspera ascp command-line
-#' interface, based on the operating system. Windows is not supported.
-#'
-#' @return A string.
-#'
-#' @seealso [getAscpArgs()], [fetch()]
-#'
-#' @export
-getAscpCmd = function() {
-  os = Sys.info()[['sysname']]
-  cmd = if (os == 'Linux') {
-    '~/.aspera/connect/bin/ascp'
-  } else if (os == 'Darwin') {
-    appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
-    if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
-    file.path(appDir, 'ascp')
-  } else {
-    NULL}
-  return(cmd)}
+# #' Get ascp command
+# #'
+# #' This function returns the default path to the aspera ascp command-line
+# #' interface, based on the operating system. Windows is not supported.
+# #'
+# #' @return A string.
+# #'
+# #' @seealso [getAscpArgs()], [fetch()]
+# #'
+# #' @export
+# getAscpCmd = function() {
+#   os = Sys.info()[['sysname']]
+#   cmd = if (os == 'Linux') {
+#     '~/.aspera/connect/bin/ascp'
+#   } else if (os == 'Darwin') {
+#     appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
+#     if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
+#     file.path(appDir, 'ascp')
+#   } else {
+#     NULL}
+#   return(cmd)}
 
 
-#' Get ascp arguments
-#'
-#' This function returns the default arguments to pass to the aspera ascp
-#' command-line interface, based on the operating system. Windows is not
-#' supported.
-#'
-#' @return A character vector.
-#'
-#' @seealso [getAscpCmd()], [fetch()]
-#'
-#' @export
-getAscpArgs = function() {
-  a = c('-QT -l 300m -P33001 -i')
-  f = 'asperaweb_id_dsa.openssh'
-  os = Sys.info()[['sysname']]
-  rgs = if (os == 'Linux') {
-    c(a, safe(file.path('~/.aspera/connect/etc', f)))
-  } else if (os == 'Darwin') {
-    appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
-    if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
-    c(a, safe(file.path(appDir, f)))
-  } else {
-    NULL}
-  return(rgs)}
+# #' Get ascp arguments
+# #'
+# #' This function returns the default arguments to pass to the aspera ascp
+# #' command-line interface, based on the operating system. Windows is not
+# #' supported.
+# #'
+# #' @return A character vector.
+# #'
+# #' @seealso [getAscpCmd()], [fetch()]
+# #'
+# #' @export
+# getAscpArgs = function() {
+#   a = c('-QT -l 300m -P33001 -i')
+#   f = 'asperaweb_id_dsa.openssh'
+#   os = Sys.info()[['sysname']]
+#   rgs = if (os == 'Linux') {
+#     c(a, safe(file.path('~/.aspera/connect/etc', f)))
+#   } else if (os == 'Darwin') {
+#     appDir = '~/Applications/Aspera Connect.app/Contents/Resources'
+#     if (!dir.exists(appDir)) appDir = gsub('~', '', appDir)
+#     c(a, safe(file.path(appDir, f)))
+#   } else {
+#     NULL}
+#   return(rgs)}
 
 
 getTrimmedFilenames = function(x) {
@@ -95,11 +94,13 @@ getTrimmedFilenames = function(x) {
       '\\.fq\\.gz$'
     } else {
       '$'}
-    y[i] = gsub(pat, '_trimmed.fq.gz', x[i])
+    # trim_galore stopped being able to gzip files if the paths contain spaces
+    # y[i] = gsub(pat, '_trimmed.fq.gz', x[i])
+    y[i] = gsub(pat, '_trimmed.fq', x[i])
 
     if (length(y) > 1) {
-      y[i] = gsub('trimmed\\.fq\\.gz', glue('val_{i}.fq.gz'), y[i])}}
-      # y[i] = gsub('trimmed\\.fq\\.gz', sprintf('val_%d.fq.gz', i), y[i])}}
+      y[i] = gsub('trimmed\\.fq', glue('val_{i}.fq'), y[i])}}
+      # y[i] = gsub('trimmed\\.fq\\.gz', glue('val_{i}.fq.gz'), y[i])}}
 
   return(y)}
 
@@ -142,7 +143,6 @@ system3 = function(...) {
 
 
 safe = function(x) {
-  # y = sapply(x, function(a) sprintf("'%s'", path.expand(a)), USE.NAMES = FALSE)
   y = glue("'{path.expand(x)}'")
   return(y)}
 
@@ -169,13 +169,17 @@ checkCommand = function(cmd) {
 #' @export
 checkDefaultCommands = function() {
   d = data.table(
-    cmd = c('ascp', 'wget', 'fastqc', 'fastq_screen', 'trim_galore', 'cutadapt',
-            'multiqc', 'salmon'),
-    idx = c(2, 1, 1, 1, 4, 1, 1, 1))
+    # cmd = c('ascp', 'wget', 'fastqc', 'fastq_screen', 'trim_galore', 'cutadapt',
+    #         'multiqc', 'salmon'),
+    # idx = c(2, 1, 1, 1, 4, 1, 1, 1))
+    cmd = c('prefetch', 'fasterq-dump', 'pigz', 'fastqc', 'fastq_screen',
+            'trim_galore', 'cutadapt', 'multiqc', 'salmon'),
+    idx = c(2, 2, 1, 1, 1, 4, 1, 1, 1))
 
   i = NULL
   r = foreach(i = seq_len(nrow(d)), .combine = rbind) %do% {
-    cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
+    # cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
+    cmd = d$cmd[i]
     path = checkCommand(cmd)
     version = if (is.na(path)) NA_character_ else
       system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
@@ -188,10 +192,8 @@ assertCommand = function(cmd, cmdName, defaultPath) {
   if (is.null(cmd)) {
     if (is.na(defaultPath)) {
       stop(glue('{cmdName} is not available at the default location.'))}
-      # stop(sprintf('%s is not available at the default location.', cmdName))}
   } else {
     path = checkCommand(cmd)
     if (is.na(path)) {
       stop(glue("'{cmd}' is not a valid command."))}}
-      # stop(sprintf("'%s' is not a valid command.", cmd))}}
   invisible()}

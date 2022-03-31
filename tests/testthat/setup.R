@@ -13,9 +13,10 @@ snapshot = function(xObs, path) {
 getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
   result = foreach(i = seq_len(nrow(cmds)), .combine = rbind) %do% {
     cmdRow = cmds[i]
-    cmd = if (cmdRow$command == 'ascp') {
-      params$fetch$ascpCmd
-    } else if (cmdRow$command == 'trim_galore') {
+    # cmd = if (cmdRow$command == 'ascp') {
+    #   params$fetch$ascpCmd
+    # } else if (cmdRow$command == 'trim_galore') {
+    cmd = if (cmdRow$command == 'trim_galore') {
       params$trimgalore$cmd
     } else if (cmdRow$command %in% names(params)) {
       params[[cmdRow$command]]$cmd
@@ -35,9 +36,8 @@ os = Sys.info()['sysname']
 if (os == 'Darwin') {
   params$salmon$indexDir = gsub('/home/', '/Users/', params$salmon$indexDir)}
 if (Sys.info()['user'] != 'runner') {
-  params$salmon$indexDir = gsub('/runner/',
-                                paste0('/', Sys.info()['user'], '/'),
-                                params$salmon$indexDir)}
+  params$salmon$indexDir = gsub(
+    '/runner/', paste0('/', Sys.info()['user'], '/'), params$salmon$indexDir)}
 
 commandsDt = rbind(
   getCommandsCheck(params),
@@ -55,7 +55,8 @@ metadata = qread(file.path(dataDir, 'metadata.qs'))
 
 outputDir = file.path(parentDir, 'GSE143524')
 fetchDir = file.path(outputDir, 'fetch_output')
-remoteColname = 'fastq_aspera'
+# remoteColname = 'fastq_aspera'
+remoteColname = 'run_accession'
 fetchColname = 'fastq_fetched'
 trimDir = file.path(outputDir, 'trimgalore_output')
 trimColname = 'fastq_trimmed'

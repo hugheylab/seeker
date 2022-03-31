@@ -24,8 +24,9 @@ test_that('fetchMetadata', {
 })
 
 test_that('fetch', {
-  skip('Skipping (again) until ENA browser issues are resolved.')
-  skip_if(!commandsDt[filename == 'ascp']$exists, 'Missing ascp command, skipping.')
+  # skip('Skipping (again) until ENA browser issues are resolved.')
+  # skip_if(!commandsDt[filename == 'ascp']$exists, 'Missing ascp command, skipping.')
+  skip_if(!commandsDt[filename == 'prefetch']$exists, 'Missing prefetch command, skipping.')
   skip_on_os('windows', arch = NULL)
   outputDirFetchTest = file.path(parentDir, 'GSM5694054')
   if (!dir.exists(outputDirFetchTest)) dir.create(outputDirFetchTest)
@@ -43,10 +44,10 @@ test_that('fetch', {
   paramsFetchNow[c('run', 'keep')] = NULL
 
   resultObs = do.call(fetch, c(
-    list(remoteFilepaths = metadataGSM[[remoteColname]], outputDir = outputDirFetchTest),
+    list(accessions = metadataGSM[[remoteColname]], outputDir = outputDirFetchTest),
     paramsFetchNow))
 
-  resultExp = snapshot(resultObs, file.path(dataDir, 'fetch_output_testing.qs'))
+  resultExp = snapshot(resultObs, file.path(dataDir, 'fetch_output.qs'))
 
   expect_equal(resultObs, resultExp)
 

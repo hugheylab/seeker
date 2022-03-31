@@ -32,24 +32,31 @@ exclude from further processing (superseding \code{include}), with components:
 }
 \item \code{fetch}: Named list with components:
 \itemize{
-\item \code{run}: Logical indicating whether to fetch fastq(.gz) files using ascp.
-See \code{\link[=fetch]{fetch()}}. If \code{TRUE}, expects metadata to have a column
-'fastq_aspera' containing remote paths, and saves files to
-\code{parentDir}/\code{study}/fetch_output. If \code{FALSE}, expects metadata to have a
-column 'fastq_aspera' containing names (or complete paths, local or
-remote) of fastq files. Whether \code{TRUE} or \code{FALSE}, updates metadata with
-column 'fastq_fetched' containing paths to files that should be in
+\item \code{run}: Logical indicating whether to fetch files from SRA. See \code{\link[=fetch]{fetch()}}.
+If \code{TRUE}, saves files to \code{parentDir}/\code{study}/fetch_output. Whether
+\code{TRUE} or \code{FALSE}, expects metadata to have a column 'run_accession', and
+updates metadata with column 'fastq_fetched' containing paths to files in
 \code{parentDir}/\code{study}/fetch_output. Following components are only checked
 if \code{run} is \code{TRUE}.
-\item \code{keep}: Logical indicating whether to keep fetched fastq files when all
+\item \code{keep}: Logical indicating whether to keep fastq.gz files when all
 processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{overwrite}: Logical indicating whether to overwrite files that already
 exist. \code{NULL} indicates to use the default in \code{\link[=fetch]{fetch()}}.
-\item \code{ascpCmd}: String indicating path to ascp. \code{NULL} indicates to use the
-default in \code{\link[=fetch]{fetch()}}.
-\item \code{ascpArgs}: Character vector of arguments to pass to ascp. \code{NULL}
+\item \code{keepSra}: Logical indicating whether to keep the ".sra" files. \code{NULL}
 indicates to use the default in \code{\link[=fetch]{fetch()}}.
-\item \code{ascpPrefix}: String indicating prefix for fetching files. \code{NULL}
+\item \code{prefetchCmd}: String indicating command for prefetch, which downloads
+".sra" files. \code{NULL} indicates to use the default in \code{\link[=fetch]{fetch()}}.
+\item \code{prefetchArgs}: Character vector indicating arguments to pass to
+prefetch. \code{NULL} indicates to use the default in \code{\link[=fetch]{fetch()}}.
+\item \code{fasterqdumpCmd}: String indicating command for fasterq-dump, which
+uses ".sra" files to create ".fastq" files. \code{NULL} indicates to use the
+default in \code{\link[=fetch]{fetch()}}.
+\item \code{prefetchArgs}: Character vector indicating arguments to pass to
+fasterq-dump. \code{NULL} indicates to use the default in \code{\link[=fetch]{fetch()}}.
+\item \code{pigzCmd}: String indicating command for pigz, which converts ".fastq"
+files to ".fastq.gz" files. \code{NULL} indicates to use the default in
+\code{\link[=fetch]{fetch()}}.
+\item \code{pigzArgs}: Character vector indicating arguments to pass to pigz. \code{NULL}
 indicates to use the default in \code{\link[=fetch]{fetch()}}.
 }
 \item \code{trimgalore}: Named list with components:
@@ -67,6 +74,9 @@ processing steps have completed. \code{NULL} indicates \code{TRUE}.
 use the default in \code{\link[=trimgalore]{trimgalore()}}.
 \item \code{args}: Additional arguments to pass to the command-line interface.
 \code{NULL} indicates to use the default in \code{\link[=trimgalore]{trimgalore()}}.
+\item \code{pigzCmd}: String indicating command for pigz, which converts ".fastq"
+files to ".fastq.gz" files. \code{NULL} indicates to use the default in
+\code{\link[=trimgalore]{trimgalore()}}.
 }
 \item \code{fastqc}: Named list with components:
 \itemize{

@@ -48,7 +48,31 @@ If you don't want to use Docker, you can follow the instructions below.
 
 The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
 
-1. Download and install [Aspera Connect](https://www.ibm.com/aspera/connect/). On Linux, you will likely have to download a tar.gz file (using `wget` or `curl`), untar it (using `tar -zxvf`), then run the resulting shell script. On macOS, you may have to install a browser extension first, then install Connect from a dmg file.
+1. Download and install the [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit).
+
+  On Ubuntu:
+  
+    ```sh
+    curl -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-ubuntu64.tar.gz
+    tar -zxvf sratoolkit.3.0.0-ubuntu64.tar.gz
+    ```
+    
+  On macOS:
+  
+    ```sh
+    curl -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-mac64.tar.gz
+    tar -zxvf sratoolkit.3.0.0-mac64.tar.gz
+    ```
+  
+  On macOS, the first time you try to run each command, you may need to go into Security & Privacy settings to allow the command to run.
+
+1. Add the following line to ~/.Rprofile (modifying "<< ... >>" as appropriate), which ensures the SRA Toolkit is accessible to R.
+
+  ```r
+  Sys.setenv(
+    PATH = paste(Sys.getenv('PATH'),
+    '<< path to sratoolkit directory >>/bin', sep = ':'))
+  ```
 
 1. Install [Miniconda](https://conda.io/en/latest/miniconda.html). Use the default install location (~/miniconda3).
     
@@ -83,7 +107,7 @@ The system dependencies are required for processing sequencing data. These instr
 1. Install the other command-line tools. The code below will install the packages into the base conda environment. If you use an environment other than base, please see the last step of this readme.
 
     ```sh
-    mamba install refgenie trim-galore fastqc fastq-screen salmon multiqc
+    mamba install fastq-screen fastqc multiqc pigz refgenie salmon trim-galore
     ```
 
 1. Optionally, configure [refgenie](http://refgenie.databio.org/en/latest/install). For example:
