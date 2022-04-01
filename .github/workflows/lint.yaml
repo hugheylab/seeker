@@ -33,7 +33,7 @@ jobs:
 
           if (!file.exists(lintFile)) {
             download.file(
-              'https://raw.githubusercontent.com/hugheylab/actions/seeker/workflows/custom-lint.R',
+              'https://raw.githubusercontent.com/hugheylab/actions/main/workflows/custom-lint.R',
               lintFile)}
 
           source(lintFile)
