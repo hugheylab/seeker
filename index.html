@@ -126,7 +126,7 @@
 </h3>
 <p>The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you’re using Windows, you’re doing it wrong.</p>
 <ol style="list-style-type: decimal">
-<li>Download and install the <a href="https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit" class="external-link">NCBI SRA Toolkit</a>.</li>
+<li>Download and install the <a href="https://github.com/ncbi/sra-tools/wiki" class="external-link">NCBI SRA Toolkit</a>.</li>
 </ol>
 <p>On Ubuntu:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">sh</span></span>
@@ -138,7 +138,7 @@
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">curl -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.0/sratoolkit.3.0.0-mac64.tar.gz</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">tar -zxvf sratoolkit.3.0.0-mac64.tar.gz</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">```</span></span></code></pre></div>
-<p>On macOS, the first time you try to run each command, you may need to go into Security &amp; Privacy settings to allow the command to run.</p>
+<p>Then run <code>vdb-config -i</code> to set up the configuration. On macOS, the first time you try to run each command (including <code>prefetch</code> and <code>fasterq-dump</code>), you may need to go into Security &amp; Privacy settings to allow the command to run.</p>
 <ol style="list-style-type: decimal">
 <li>Add the following line to ~/.Rprofile (modifying “&lt;&lt; … &gt;&gt;” as appropriate), which ensures the SRA Toolkit is accessible to R.</li>
 </ol>
