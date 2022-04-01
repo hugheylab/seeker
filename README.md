@@ -48,7 +48,7 @@ If you don't want to use Docker, you can follow the instructions below.
 
 The system dependencies are required for processing sequencing data. These instructions are for Unix-based systems, primarily Linux and macOS. If you're using Windows, you're doing it wrong.
 
-1. Download and install the [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit).
+1. Download and install the [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools/wiki).
 
   On Ubuntu:
   
@@ -64,7 +64,7 @@ The system dependencies are required for processing sequencing data. These instr
     tar -zxvf sratoolkit.3.0.0-mac64.tar.gz
     ```
   
-  On macOS, the first time you try to run each command, you may need to go into Security & Privacy settings to allow the command to run.
+  Then run `vdb-config -i` to set up the configuration. On macOS, the first time you try to run each command (including `prefetch` and `fasterq-dump`), you may need to go into Security & Privacy settings to allow the command to run.
 
 1. Add the following line to ~/.Rprofile (modifying "<< ... >>" as appropriate), which ensures the SRA Toolkit is accessible to R.
 
