@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   introduction: introduction.html
   reproducibility: reproducibility.html
-last_built: 2022-04-04T20:26Z
+last_built: 2022-04-04T21:37Z
 urls:
   reference: https://seeker.hugheylab.org/reference
   article: https://seeker.hugheylab.org/articles
