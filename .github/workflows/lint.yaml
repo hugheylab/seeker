@@ -29,7 +29,14 @@ jobs:
           repository = '${{ github.event.repository.name }}'
           branch = system("echo ${BRANCH_NAME}", intern = TRUE)
 
-          source('https://raw.githubusercontent.com/hugheylab/actions/main/workflows/custom-lint.R')
+          lintFile = file.path('.github', 'workflows', 'custom-lint-script.R')
+
+          if (!file.exists(lintFile)) {
+            download.file(
+              'https://raw.githubusercontent.com/hugheylab/actions/main/workflows/custom-lint.R',
+              lintFile)}
+
+          source(lintFile)
 
           lfDt = getLintDt(lintsFound, repository, branch)
           issueStr = getFormattedIssueStr(lfDt)
