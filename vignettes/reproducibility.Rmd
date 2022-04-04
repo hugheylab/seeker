@@ -15,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 Using `seeker` together with docker, it's easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the [socker](https://github.com/hugheylab/socker) image, which has seeker and its dependencies already installed.
 
-```sh
+```{sh}
 docker pull ghcr.io/hugheylab/socker
 ```
 
@@ -45,7 +45,7 @@ run_seeker.sh:
 
 Now simply run the shell script:
 
-```sh
+```{sh}
 sh run_seeker.sh
 ```
 
@@ -76,7 +76,7 @@ run_seeker_array.sh:
 ```
 
 Now simply run the shell script:
-```sh
+```{sh}
 sh run_seeker_array.sh
 ```
 

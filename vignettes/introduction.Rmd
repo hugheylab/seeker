@@ -36,7 +36,7 @@ for (filename in c('params_template.yml', 'run_seeker.R')) {
 
 Then you can rename and edit the yaml file, edit the script as appropriate, run `install.packages('doParallel')` if necessary, and run the script using something like
 
-```sh
+```{sh}
 Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 ```
 
@@ -44,7 +44,7 @@ Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 
 To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also process raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
 
-```yaml
+```{yaml}
 study: '' # [string indicating study accession]
 geneIdType: '' # [string 'ensembl' or 'entrez']
 # platform: '' # [string indicating GEO-based platform accession for local data or for GEO-based data using multiple platforms]
@@ -63,6 +63,6 @@ file.copy(system.file('extdata', 'run_seeker_array.R', package = 'seeker'), '.')
 
 Then you can create the yaml file for the dataset you want and run the script using something like
 
-```sh
+```{sh}
 Rscript run_seeker_array.R <study>.yml <path/to/parent/directory>
 ```
