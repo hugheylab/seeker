@@ -24,7 +24,7 @@ jobs:
 
       - id: run_lintr
         run: |
-          install.packages(c('data.table', 'gh', 'glue', 'lintr'))
+          install.packages(c('data.table', 'gh', 'lintr'))
 
           repository = '${{ github.event.repository.name }}'
           branch = system("echo ${BRANCH_NAME}", intern = TRUE)
@@ -43,7 +43,6 @@ jobs:
             issuesPatch = gh(
               paste0('PATCH /repos/hugheylab/', repository, '/issues/', issuesGet[[1]]$number),
               state = 'closed')}
-
 
           if (nrow(lfDt) > 0) {
             issuesPost = gh(
