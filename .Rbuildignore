@@ -8,4 +8,4 @@
 ^_pkgdown\.yml$
 ^IBMAspera
 ^sratoolkit
-^lint_exclude\.csv$
+^lint_ignore\.csv$
