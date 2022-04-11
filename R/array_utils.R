@@ -70,8 +70,8 @@ getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
     which(sapply(gq, function(x) x@annotation) == platform)}
 
   if (length(idx) == 0) {
-    return(list(rmaOk = glue('{study} uses multiple platforms, ',
-                             'none of which is {platform}.')))}
+    return(list(rmaOk = glue(
+      '{study} uses multiple platforms, none of which is {platform}.')))}
   eset = gq[[idx]]
 
   rmaOk = eset@annotation %in% getPlatforms('cdf')$platform
@@ -115,13 +115,13 @@ getAeMetadata = function(study, type = c('experiments', 'files')) {
 getNaiveEsetAe = function(study, outputDir, rawDir) {
   expers = getAeMetadata(study, 'experiments')
   if (nrow(expers) != 1L) {
-    return(list(rmaOk = glue("'{study}' does not match exactly one study, ',
-                             'cannot proceed.")))}
+    return(list(rmaOk = glue(
+    "'{study}' does not match exactly one study, cannot proceed.")))}
 
   arrays = expers[1L]$arraydesign
   if (length(arrays) != 1L) {
-    return(list(rmaOk = glue('{study} does not use exactly one platform, ',
-                             'cannot proceed.')))}
+    return(list(rmaOk = glue(
+      '{study} does not use exactly one platform, cannot proceed.')))}
   platform = arrays[[1L]]$accession
 
   files = getAeMetadata(study, 'files') # for one study, should be a data.frame
@@ -162,8 +162,8 @@ getNaiveEsetLocal = function(study, platform) {
     eset = methods::new('Eset', annotation = platform)
   } else {
     eset = NULL
-    rmaOk = glue('{study} uses platform {platform}, ',
-                 'which is not supported for local data.')}
+    rmaOk = glue(
+      '{study} uses platform {platform}, which is not supported for local data.')}
   return(list(eset = eset, rmaOk = rmaOk))}
 
 

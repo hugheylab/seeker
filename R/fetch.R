@@ -127,7 +127,9 @@ fetchMetadata = function(
 #'
 #' This function uses the NCBI SRA Toolkit via [system2()] to download files
 #' from SRA and convert them to fastq.gz. To process files in parallel, register
-#' a parallel backend, e.g., using [doParallel::registerDoParallel()].
+#' a parallel backend, e.g., using [doParallel::registerDoParallel()]. Beware
+#' that intermediate files created by fasterq-dump are uncompressed and could
+#' require hundreds of gigabytes if files are processed in parallel.
 #'
 #' @param accessions Character vector of SRA run accessions.
 #' @param outputDir String indicating the local directory in which to save the
@@ -182,25 +184,29 @@ fetch = function(
     .options.future = list(scheduling = Inf))
 
   # TODO: possibly use dopar loop and single-thread fasterqdump and pigz
-  result = feo %do% {
+  result = feo %dopar% {
+  # result = feo %do% {
     pat = '^{acc}(_1|_2|)\\.fastq'
     paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)
 
     if (length(paths) > 0 && isFALSE(overwrite)) {
       r = 0
     } else {
-      # Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
+      Sys.sleep(stats::runif(1L, 0, foreach::getDoParWorkers() / 4))
+      # above line to avoid possible rate limiting if dopar
 
       args = c(prefetchArgs, '-O', safe(outputDir), acc)
       r = system3(path.expand(prefetchCmd), args)
 
       args = c(
-        fasterqdumpArgs, '-e', foreach::getDoParWorkers(), #1,
+        fasterqdumpArgs, '-e', 1,
+        # fasterqdumpArgs, '-e', foreach::getDoParWorkers(),
         '-O', safe(outputDir), '-f', acc)
       r = system3(path.expand(fasterqdumpCmd), args)
 
       args = c(
-        pigzArgs, '-p', foreach::getDoParWorkers(), #1,
+        pigzArgs, '-p', 1,
+        # pigzArgs, '-p', foreach::getDoParWorkers(),
         '-f', safe(dir(outputDir, glue(pat, '$'), full.names = TRUE)))
       r = system3(path.expand(pigzCmd), args)
       paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)

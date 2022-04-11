@@ -52,7 +52,9 @@ A list. As the function runs, it updates a tab-delimited log file in
 \description{
 This function uses the NCBI SRA Toolkit via \code{\link[=system2]{system2()}} to download files
 from SRA and convert them to fastq.gz. To process files in parallel, register
-a parallel backend, e.g., using \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
+a parallel backend, e.g., using \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}. Beware
+that intermediate files created by fasterq-dump are uncompressed and could
+require hundreds of gigabytes if files are processed in parallel.
 }
 \seealso{
 \code{\link[=fetchMetadata]{fetchMetadata()}}
