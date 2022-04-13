@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seeker</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9064</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9065</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
     <h2>Arguments</h2>
     <dl><dt>params</dt>
 <dd><p>Named list of parameters with components:</p><ul><li><p><code>study</code>: String used to name the output directory within <code>parentDir</code>.</p></li>
-<li><p><code>metadata</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch metadata from ENA. See
+<li><p><code>metadata</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch metadata. See
 <code><a href="fetchMetadata.html">fetchMetadata()</a></code>. If <code>TRUE</code>, saves a file
 <code>parentDir</code>/<code>study</code>/metadata.csv. If <code>FALSE</code>, expects that file to
 already exist. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
@@ -89,8 +89,8 @@ exclude from further processing (superseding <code>include</code>), with compone
 </ul></li>
 <li><p><code>fetch</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch files from SRA. See <code><a href="fetch.html">fetch()</a></code>.
 If <code>TRUE</code>, saves files to <code>parentDir</code>/<code>study</code>/fetch_output. Whether
-<code>TRUE</code> or <code>FALSE</code>, expects metadata to have a column 'run_accession', and
-updates metadata with column 'fastq_fetched' containing paths to files in
+<code>TRUE</code> or <code>FALSE</code>, expects metadata to have a column "run_accession", and
+updates metadata with column "fastq_fetched" containing paths to files in
 <code>parentDir</code>/<code>study</code>/fetch_output. Following components are only checked
 if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>keep</code>: Logical indicating whether to keep fastq.gz files when all
@@ -116,10 +116,10 @@ indicates to use the default in <code><a href="fetch.html">fetch()</a></code>.</
 </ul></li>
 <li><p><code>trimgalore</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to perform quality/adapter trimming of
 reads. See <code><a href="trimgalore.html">trimgalore()</a></code>. If <code>TRUE</code>, expects metadata to have a column
-'fastq_fetched' containing paths to fastq files in
+"fastq_fetched" containing paths to fastq files in
 <code>parentDir</code>/<code>study</code>/fetch_output, saves trimmed files to
 <code>parentDir</code>/<code>study</code>/trimgalore_output, and updates metadata with column
-'fastq_trimmed'. If <code>FALSE</code>, expects and does nothing. Following
+"fastq_trimmed". If <code>FALSE</code>, expects and does nothing. Following
 components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>keep</code>: Logical indicating whether to keep trimmed fastq files when all
 processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
@@ -133,9 +133,9 @@ files to ".fastq.gz" files. <code>NULL</code> indicates to use the default in
 </ul></li>
 <li><p><code>fastqc</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to perform QC on reads. See <code><a href="fastqc.html">fastqc()</a></code>.
 If <code>TRUE</code> and <code>trimgalore$run</code> is <code>TRUE</code>, expects metadata to have a
-column 'fastq_trimmed' containing paths to fastq files in
+column "fastq_trimmed" containing paths to fastq files in
 <code>parentDir</code>/<code>study</code>/trimgalore_output. If <code>TRUE</code> and <code>trimgalore$run</code> is
-<code>FALSE</code>, expects metadata to have a column 'fastq_fetched' containing
+<code>FALSE</code>, expects metadata to have a column "fastq_fetched" containing
 paths to fastq files in <code>parentDir</code>/<code>study</code>/fetch_output. If <code>TRUE</code>,
 saves results to <code>parentDir</code>/<code>study</code>/fastqc_output. If <code>FALSE</code>, expects
 and does nothing. Following components are only checked if <code>run</code> is
@@ -149,15 +149,17 @@ use the default in <code><a href="fastqc.html">fastqc()</a></code>.</p></li>
 </ul></li>
 <li><p><code>salmon</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to quantify transcript abundances. See
 <code><a href="salmon.html">salmon()</a></code>. If <code>TRUE</code> and <code>trimgalore$run</code> is <code>TRUE</code>, expects metadata to
-have a column 'fastq_trimmed' containing paths to fastq files in
+have a column "fastq_trimmed" containing paths to fastq files in
 <code>parentDir</code>/<code>study</code>/trimgalore_output. If <code>TRUE</code> and <code>trimgalore$run</code> is
-<code>FALSE</code>, expects metadata to have a column 'fastq_fetched' containing
-paths to fastq files in <code>parentDir</code>/<code>study</code>/fetch_output. If <code>TRUE</code>, also
-expects metadata to have a column 'sample_accession' containing sample
-ids, and saves results to <code>parentDir</code>/<code>study</code>/salmon_output and
+<code>FALSE</code>, expects metadata to have a column "fastq_fetched" containing
+paths to fastq files in <code>parentDir</code>/<code>study</code>/fetch_output. If <code>TRUE</code>,
+saves results to <code>parentDir</code>/<code>study</code>/salmon_output and
 <code>parentDir</code>/<code>study</code>/salmon_meta_info.csv. If <code>FALSE</code>, expects and does
 nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>indexDir</code>: Directory that contains salmon index.</p></li>
+<li><p><code>sampleColname</code>: String indicating column in metadata containing sample
+ids. <code>NULL</code> indicates "sample_accession", which should work for data
+from SRA and ENA.</p></li>
 <li><p><code>keep</code>: Logical indicating whether to keep quantification results when
 all processing steps have completed. <code>NULL</code> indicates <code>TRUE</code>.</p></li>
 <li><p><code>cmd</code>: Name or path of the command-line interface. <code>NULL</code> indicates to
@@ -176,7 +178,7 @@ use the default in <code><a href="multiqc.html">multiqc()</a></code>.</p></li>
 </ul></li>
 <li><p><code>tximport</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to summarize transcript- or gene-level
 estimates for downstream analysis. See <code><a href="tximport.html">tximport()</a></code>. If <code>TRUE</code>, expects
-metadata to have a column 'sample_accession' of sample ids, and expects a
+metadata to have a column <code>sampleColname</code> of sample ids, and expects a
 directory <code>parentDir</code>/<code>study</code>/salmon_output containing directories of
 quantification results, and saves results to
 <code>parentDir</code>/<code>study</code>/tximport_output.qs. If <code>FALSE</code>, expects and does
