@@ -24,8 +24,9 @@ checkSeekerArgs = function(params, parentDir) {
     assertFlag(params[[step]]$run, .var.name = glue('params${step}$run'))}
 
   if (params$metadata$run) {
-    assertNames(names(params$metadata),
-                subset.of = c('run', 'bioproject', 'include', 'exclude'))
+    assertNames(
+      names(params$metadata),
+      subset.of = c('run', 'bioproject', 'include', 'exclude'))
     assertString(params$metadata$bioproject, min.chars = 1L)
 
     assertList(params$metadata$include, any.missing = FALSE, null.ok = TRUE)
@@ -110,10 +111,12 @@ checkSeekerArgs = function(params, parentDir) {
          combine = 'or')
 
   if (params$salmon$run) {
-    assertNames(names(params$salmon),
-                subset.of = c('run', 'indexDir', 'keep', 'cmd', 'args'))
+    assertNames(
+      names(params$salmon),
+      subset.of = c('run', 'indexDir', 'sampleColname', 'keep', 'cmd', 'args'))
     assertString(params$salmon$indexDir, min.chars = 1L)
     assertDirectoryExists(params$salmon$indexDir)
+    assertString(params$salmon$sampleColname, null.ok = TRUE)
     assertFlag(params$salmon$keep, null.ok = TRUE)
     assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE)
     assertCommand(params$salmon$cmd, 'salmon',
@@ -166,7 +169,7 @@ checkSeekerArgs = function(params, parentDir) {
 #' @param params Named list of parameters with components:
 #' * `study`: String used to name the output directory within `parentDir`.
 #' * `metadata`: Named list with components:
-#'   * `run`: Logical indicating whether to fetch metadata from ENA. See
+#'   * `run`: Logical indicating whether to fetch metadata. See
 #'     [fetchMetadata()]. If `TRUE`, saves a file
 #'     `parentDir`/`study`/metadata.csv. If `FALSE`, expects that file to
 #'     already exist. Following components are only checked if `run` is `TRUE`.
@@ -182,8 +185,8 @@ checkSeekerArgs = function(params, parentDir) {
 #' * `fetch`: Named list with components:
 #'   * `run`: Logical indicating whether to fetch files from SRA. See [fetch()].
 #'     If `TRUE`, saves files to `parentDir`/`study`/fetch_output. Whether
-#'     `TRUE` or `FALSE`, expects metadata to have a column 'run_accession', and
-#'     updates metadata with column 'fastq_fetched' containing paths to files in
+#'     `TRUE` or `FALSE`, expects metadata to have a column "run_accession", and
+#'     updates metadata with column "fastq_fetched" containing paths to files in
 #'     `parentDir`/`study`/fetch_output. Following components are only checked
 #'     if `run` is `TRUE`.
 #'   * `keep`: Logical indicating whether to keep fastq.gz files when all
@@ -209,10 +212,10 @@ checkSeekerArgs = function(params, parentDir) {
 #' * `trimgalore`: Named list with components:
 #'   * `run`: Logical indicating whether to perform quality/adapter trimming of
 #'     reads. See [trimgalore()]. If `TRUE`, expects metadata to have a column
-#'     'fastq_fetched' containing paths to fastq files in
+#'     "fastq_fetched" containing paths to fastq files in
 #'     `parentDir`/`study`/fetch_output, saves trimmed files to
 #'     `parentDir`/`study`/trimgalore_output, and updates metadata with column
-#'     'fastq_trimmed'. If `FALSE`, expects and does nothing. Following
+#'     "fastq_trimmed". If `FALSE`, expects and does nothing. Following
 #'     components are only checked if `run` is `TRUE`.
 #'   * `keep`: Logical indicating whether to keep trimmed fastq files when all
 #'     processing steps have completed. `NULL` indicates `TRUE`.
@@ -226,9 +229,9 @@ checkSeekerArgs = function(params, parentDir) {
 #' * `fastqc`: Named list with components:
 #'   * `run`: Logical indicating whether to perform QC on reads. See [fastqc()].
 #'     If `TRUE` and `trimgalore$run` is `TRUE`, expects metadata to have a
-#'     column 'fastq_trimmed' containing paths to fastq files in
+#'     column "fastq_trimmed" containing paths to fastq files in
 #'     `parentDir`/`study`/trimgalore_output. If `TRUE` and `trimgalore$run` is
-#'     `FALSE`, expects metadata to have a column 'fastq_fetched' containing
+#'     `FALSE`, expects metadata to have a column "fastq_fetched" containing
 #'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`,
 #'     saves results to `parentDir`/`study`/fastqc_output. If `FALSE`, expects
 #'     and does nothing. Following components are only checked if `run` is
@@ -242,15 +245,17 @@ checkSeekerArgs = function(params, parentDir) {
 #' * `salmon`: Named list with components:
 #'   * `run`: Logical indicating whether to quantify transcript abundances. See
 #'     [salmon()]. If `TRUE` and `trimgalore$run` is `TRUE`, expects metadata to
-#'     have a column 'fastq_trimmed' containing paths to fastq files in
+#'     have a column "fastq_trimmed" containing paths to fastq files in
 #'     `parentDir`/`study`/trimgalore_output. If `TRUE` and `trimgalore$run` is
-#'     `FALSE`, expects metadata to have a column 'fastq_fetched' containing
-#'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`, also
-#'     expects metadata to have a column 'sample_accession' containing sample
-#'     ids, and saves results to `parentDir`/`study`/salmon_output and
+#'     `FALSE`, expects metadata to have a column "fastq_fetched" containing
+#'     paths to fastq files in `parentDir`/`study`/fetch_output. If `TRUE`,
+#'     saves results to `parentDir`/`study`/salmon_output and
 #'     `parentDir`/`study`/salmon_meta_info.csv. If `FALSE`, expects and does
 #'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `indexDir`: Directory that contains salmon index.
+#'   * `sampleColname`: String indicating column in metadata containing sample
+#'     ids. `NULL` indicates "sample_accession", which should work for data
+#'     from SRA and ENA.
 #'   * `keep`: Logical indicating whether to keep quantification results when
 #'     all processing steps have completed. `NULL` indicates `TRUE`.
 #'   * `cmd`: Name or path of the command-line interface. `NULL` indicates to
@@ -269,7 +274,7 @@ checkSeekerArgs = function(params, parentDir) {
 #' * `tximport`: Named list with components:
 #'   * `run`: Logical indicating whether to summarize transcript- or gene-level
 #'     estimates for downstream analysis. See [tximport()]. If `TRUE`, expects
-#'     metadata to have a column 'sample_accession' of sample ids, and expects a
+#'     metadata to have a column `sampleColname` of sample ids, and expects a
 #'     directory `parentDir`/`study`/salmon_output containing directories of
 #'     quantification results, and saves results to
 #'     `parentDir`/`study`/tximport_output.qs. If `FALSE`, expects and does
@@ -331,6 +336,15 @@ seeker = function(params, parentDir = '.') {
     metadata = metadata[!idx]}
 
   ####################
+  # check salmon stuff before going further
+  if (params$salmon$run) {
+    sampleColname = params$salmon$sampleColname
+    if (is.null(sampleColname)) sampleColname = 'sample_accession'
+    assertChoice(sampleColname, colnames(metadata))
+    # don't use 'strict', since the same sample could have multiple runs
+    assertNames(metadata[[sampleColname]], type = 'ids')}
+
+  ####################
   step = 'fetch'
   paramsNow = params[[step]]
   fetchDir = file.path(outputDir, paste0(step, '_output'))
@@ -390,12 +404,12 @@ seeker = function(params, parentDir = '.') {
   step = 'salmon'
   paramsNow = params[[step]]
   salmonDir = file.path(outputDir, paste0(step, '_output'))
-  sampleColname = 'sample_accession'
+  # sampleColname = 'sample_accession'
   # 'sample_accession', unlike 'sample_alias', should be a valid name without
   # colons or spaces regardless of whether dataset originated from SRA or ENA
 
   if (paramsNow$run) {
-    paramsNow[c('run', 'keep')] = NULL
+    paramsNow[c('run', 'keep', 'sampleColname')] = NULL
     result = do.call(salmon, c(
       list(filepaths = metadata[[fileColname]],
            samples = metadata[[sampleColname]], outputDir = salmonDir),

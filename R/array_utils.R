@@ -30,7 +30,7 @@ getCdfname = function(anno, geneIdType) {
 #' Install Brainarray custom CDFs for processing raw Affymetrix data. See
 #' <http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp>.
 #'
-#' @param pkgs Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.
+#' @param pkgs Character vector of package names, e.g., "hgu133ahsentrezgcdf".
 #' @param ver Integer version number (25 as of 5 Jan 2021).
 #' @param dryRun Logical indicating whether to actually install the packages.
 #'

@@ -12,7 +12,7 @@ seeker(params, parentDir = ".")
 \item \code{study}: String used to name the output directory within \code{parentDir}.
 \item \code{metadata}: Named list with components:
 \itemize{
-\item \code{run}: Logical indicating whether to fetch metadata from ENA. See
+\item \code{run}: Logical indicating whether to fetch metadata. See
 \code{\link[=fetchMetadata]{fetchMetadata()}}. If \code{TRUE}, saves a file
 \code{parentDir}/\code{study}/metadata.csv. If \code{FALSE}, expects that file to
 already exist. Following components are only checked if \code{run} is \code{TRUE}.
@@ -34,8 +34,8 @@ exclude from further processing (superseding \code{include}), with components:
 \itemize{
 \item \code{run}: Logical indicating whether to fetch files from SRA. See \code{\link[=fetch]{fetch()}}.
 If \code{TRUE}, saves files to \code{parentDir}/\code{study}/fetch_output. Whether
-\code{TRUE} or \code{FALSE}, expects metadata to have a column 'run_accession', and
-updates metadata with column 'fastq_fetched' containing paths to files in
+\code{TRUE} or \code{FALSE}, expects metadata to have a column "run_accession", and
+updates metadata with column "fastq_fetched" containing paths to files in
 \code{parentDir}/\code{study}/fetch_output. Following components are only checked
 if \code{run} is \code{TRUE}.
 \item \code{keep}: Logical indicating whether to keep fastq.gz files when all
@@ -63,10 +63,10 @@ indicates to use the default in \code{\link[=fetch]{fetch()}}.
 \itemize{
 \item \code{run}: Logical indicating whether to perform quality/adapter trimming of
 reads. See \code{\link[=trimgalore]{trimgalore()}}. If \code{TRUE}, expects metadata to have a column
-'fastq_fetched' containing paths to fastq files in
+"fastq_fetched" containing paths to fastq files in
 \code{parentDir}/\code{study}/fetch_output, saves trimmed files to
 \code{parentDir}/\code{study}/trimgalore_output, and updates metadata with column
-'fastq_trimmed'. If \code{FALSE}, expects and does nothing. Following
+"fastq_trimmed". If \code{FALSE}, expects and does nothing. Following
 components are only checked if \code{run} is \code{TRUE}.
 \item \code{keep}: Logical indicating whether to keep trimmed fastq files when all
 processing steps have completed. \code{NULL} indicates \code{TRUE}.
@@ -82,9 +82,9 @@ files to ".fastq.gz" files. \code{NULL} indicates to use the default in
 \itemize{
 \item \code{run}: Logical indicating whether to perform QC on reads. See \code{\link[=fastqc]{fastqc()}}.
 If \code{TRUE} and \code{trimgalore$run} is \code{TRUE}, expects metadata to have a
-column 'fastq_trimmed' containing paths to fastq files in
+column "fastq_trimmed" containing paths to fastq files in
 \code{parentDir}/\code{study}/trimgalore_output. If \code{TRUE} and \code{trimgalore$run} is
-\code{FALSE}, expects metadata to have a column 'fastq_fetched' containing
+\code{FALSE}, expects metadata to have a column "fastq_fetched" containing
 paths to fastq files in \code{parentDir}/\code{study}/fetch_output. If \code{TRUE},
 saves results to \code{parentDir}/\code{study}/fastqc_output. If \code{FALSE}, expects
 and does nothing. Following components are only checked if \code{run} is
@@ -100,15 +100,17 @@ use the default in \code{\link[=fastqc]{fastqc()}}.
 \itemize{
 \item \code{run}: Logical indicating whether to quantify transcript abundances. See
 \code{\link[=salmon]{salmon()}}. If \code{TRUE} and \code{trimgalore$run} is \code{TRUE}, expects metadata to
-have a column 'fastq_trimmed' containing paths to fastq files in
+have a column "fastq_trimmed" containing paths to fastq files in
 \code{parentDir}/\code{study}/trimgalore_output. If \code{TRUE} and \code{trimgalore$run} is
-\code{FALSE}, expects metadata to have a column 'fastq_fetched' containing
-paths to fastq files in \code{parentDir}/\code{study}/fetch_output. If \code{TRUE}, also
-expects metadata to have a column 'sample_accession' containing sample
-ids, and saves results to \code{parentDir}/\code{study}/salmon_output and
+\code{FALSE}, expects metadata to have a column "fastq_fetched" containing
+paths to fastq files in \code{parentDir}/\code{study}/fetch_output. If \code{TRUE},
+saves results to \code{parentDir}/\code{study}/salmon_output and
 \code{parentDir}/\code{study}/salmon_meta_info.csv. If \code{FALSE}, expects and does
 nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{indexDir}: Directory that contains salmon index.
+\item \code{sampleColname}: String indicating column in metadata containing sample
+ids. \code{NULL} indicates "sample_accession", which should work for data
+from SRA and ENA.
 \item \code{keep}: Logical indicating whether to keep quantification results when
 all processing steps have completed. \code{NULL} indicates \code{TRUE}.
 \item \code{cmd}: Name or path of the command-line interface. \code{NULL} indicates to
@@ -131,7 +133,7 @@ use the default in \code{\link[=multiqc]{multiqc()}}.
 \itemize{
 \item \code{run}: Logical indicating whether to summarize transcript- or gene-level
 estimates for downstream analysis. See \code{\link[=tximport]{tximport()}}. If \code{TRUE}, expects
-metadata to have a column 'sample_accession' of sample ids, and expects a
+metadata to have a column \code{sampleColname} of sample ids, and expects a
 directory \code{parentDir}/\code{study}/salmon_output containing directories of
 quantification results, and saves results to
 \code{parentDir}/\code{study}/tximport_output.qs. If \code{FALSE}, expects and does

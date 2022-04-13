@@ -34,6 +34,7 @@ fastqc:
 salmon:
   run: TRUE # [logical]
   indexDir: '~/genomes/alias/hg38/salmon_partial_sa_index/default' # [string]
+  # sampleColname # [string or NULL]
   # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]

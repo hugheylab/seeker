@@ -12,7 +12,7 @@
 #'   "tx2gene.csv.gz". If `NULL`, no file is saved.
 #'
 #' @return A data.table based on the result from [biomaRt::getBM()], with an
-#'   attribute 'version'.
+#'   attribute "version".
 #'
 #' @export
 getTx2gene = function(

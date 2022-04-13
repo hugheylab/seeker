@@ -19,7 +19,7 @@ version. To see available versions, do \code{biomaRt::listEnsemblArchives()}.}
 }
 \value{
 A data.table based on the result from \code{\link[biomaRt:getBM]{biomaRt::getBM()}}, with an
-attribute 'version'.
+attribute "version".
 }
 \description{
 This function uses the

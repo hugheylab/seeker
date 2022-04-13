@@ -7,7 +7,7 @@
 installCustomCdfPackages(pkgs, ver = 25, dryRun = FALSE)
 }
 \arguments{
-\item{pkgs}{Character vector of package names, e.g., 'hgu133ahsentrezgcdf'.}
+\item{pkgs}{Character vector of package names, e.g., "hgu133ahsentrezgcdf".}
 
 \item{ver}{Integer version number (25 as of 5 Jan 2021).}
 

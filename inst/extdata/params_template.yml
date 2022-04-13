@@ -33,6 +33,7 @@ fastqc:
 salmon:
   run: TRUE # [logical]
   indexDir: '' # [string]
+  # sampleColname # [string or NULL]
   # keep # [logical or NULL]
   # cmd # [string or NULL]
   # args # [character vector or NULL]
