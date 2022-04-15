@@ -207,7 +207,12 @@ addToProfile = function(line) {
   }
 }
 
+trimSlashes = function(dirToTrim) {
+  if (endsWith(dirToTrim, '/')) dirToTrim = substring(dirToTrim, 1, nchar(dirToTrim) - 1)
+  return(dirToTrim)}
+
 installSRAToolkit = function(sraVersion = '3.0.0', installDir = '.', addToPath = TRUE, os = Sys.info()[['sysname']]) {
+  installDir = trimSlashes(installDir)
   prevWd = getwd()
   setwd(installDir)
   sraOsTar = if (os == 'Darwin') 'mac64' else 'ubuntu64'
@@ -227,7 +232,8 @@ installSRAToolkit = function(sraVersion = '3.0.0', installDir = '.', addToPath =
                    path.expand(sraPath), sep = ':'))}
 }
 
-installMiniconda = function(installDir = '~/', setSeekerOption = TRUE, os = Sys.info()[['sysname']]) {
+installMiniconda = function(installDir = '~', setSeekerOption = TRUE, os = Sys.info()[['sysname']]) {
+  installDir = trimSlashes(installDir)
   miniOsSh = if (os == 'Darwin') 'MacOSX' else 'Linux'
   miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
   system2(
@@ -259,7 +265,9 @@ installTools = function(steps = 'all',
                                 'bioconda',
                                 'mamba',
                                 'Install mamba packages',
-                                'refgenie')
+                                'refgenie',
+                                'salmon index',
+                                'fastq_screen get genomes')
   if ('SRA Toolkit' %in% steps) {
     installSRAToolkit(sraVersion, sraDir, os)}
 
@@ -283,7 +291,20 @@ installTools = function(steps = 'all',
 
   if ('refgenie' %in% steps) {
     if(!dir.exists(refgenieDir)) dir.create(refgenieDir)
-    system3('refgenie', c('init', '-c', refgenieDir))
+    system3('refgenie', c('init', '-c', file.path(refgenieDir, 'genome_config.yaml')))
+    addToProfile(paste0('export REFGENIE="', file.path(refgenieDir, 'genome_config.yaml'), '"'))
+  }
+
+  if ('salmon index' %in% steps) {
+    if (is.null(salmonIndexes) || length(salmonIndexes) == 0) {
+      stop('If pulling salmon indexes, must provide at least one index to pull.')}
+    for (salmonIndex in salmonIndexes) {
+      system3('refgenie', c('pull', '-c', salmonIndex))
+    }
+  }
+
+  if ('fastq_screen get genomes' %in% steps) {
+    system3('fastq_screen', c('--get_genomes'))
   }
 
 }
