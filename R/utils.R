@@ -200,7 +200,10 @@ assertCommand = function(cmd, cmdName, defaultPath) {
 
 addToProfile = function(line, type = 'OS') {
   if (type == 'OS') {
-    profilePath = if (Sys.info()[['sysname']] == 'Darwin') '~/.zshrc' else '~/.bashrc'
+    profilePath = '~/.bashrc'
+    if (Sys.info()[['sysname']] == 'Darwin' && file.exists(file.path('~', '.zshrc'))) {
+      profilePath = '~/.zshrc'
+    }
     profileFile = readLines(profilePath)
     if (!(line %in% profileFile)) {
       profileFile = c(profileFile, line)
