@@ -269,7 +269,7 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
     system(
       "printf '/LIBS/IMAGE_GUID = \"%s\"\\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
     system(
-      "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
+      "printf '/libs/cloud/report_instance_identity = \"true\"\\n' >> ~/.ncbi/user-settings.mkfg")
   }
   if (addToPath) {
     # Add to OS path and .Rprofile path.
