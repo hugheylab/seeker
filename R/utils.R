@@ -198,12 +198,22 @@ assertCommand = function(cmd, cmdName, defaultPath) {
       stop(glue("'{cmd}' is not a valid command."))}}
   invisible()}
 
-addToProfile = function(line) {
-  profilePath = if (Sys.info()[['sysname']] == 'Darwin') '~/.zshrc' else '~/.bashrc'
-  profileFile = readLines(profilePath)
-  if (!(line %in% profileFile)) {
-    profileFile = c(profileFile, line)
-    writeLines(profileFile, profilePath)
+addToProfile = function(line, type = 'OS') {
+  if (type == 'OS') {
+    profilePath = if (Sys.info()[['sysname']] == 'Darwin') '~/.zshrc' else '~/.bashrc'
+    profileFile = readLines(profilePath)
+    if (!(line %in% profileFile)) {
+      profileFile = c(profileFile, line)
+      writeLines(profileFile, profilePath)
+    }
+  } else {
+    rProfilePath = path.expand(file.path('~', '.Rprofile'))
+    rProfileFile = c()
+    if (file.exists(rProfilePath)) rProfileFile = readLines(rProfilePath)
+    if (!(line %in% rProfileFile)) {
+      rProfileFile = c(rProfileFile, line)
+      writeLines(rProfileFile, rProfilePath)
+    }
   }
 }
 
@@ -211,100 +221,174 @@ trimSlashes = function(dirToTrim) {
   if (endsWith(dirToTrim, '/')) dirToTrim = substring(dirToTrim, 1, nchar(dirToTrim) - 1)
   return(dirToTrim)}
 
-installSRAToolkit = function(sraVersion = '3.0.0', installDir = '.', addToPath = TRUE, os = Sys.info()[['sysname']]) {
+installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
+  # Ensure no trailing slashes in installDir and
+  os = Sys.info()[['sysname']]
   installDir = trimSlashes(installDir)
-  prevWd = getwd()
-  setwd(installDir)
-  sraOsTar = if (os == 'Darwin') 'mac64' else 'ubuntu64'
-  sraTar = glue('sratoolkit.{sraVersion}-{sraOsTar}.tar.gz')
-  sraPath = file.path(installDir, sub('.tar.gz', '', sraTar, fixed = TRUE), 'bin')
-  system2(
-    'curl',
-    c('-O',
-      glue('https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/{sraVersion}/{sraTar}')))
-  system2('tar', c('-zxvf', glue('{sraTar}')))
-  system2('rm', c('sratoolkit*.tar.gz'))
-  setwd(prevWd)
+  sraPath = file.path(installDir, 'sratoolkit', 'bin')
+
+  # Check if sratoolkit already exists at location.
+  if (dir.exists(file.path(installDir, 'sratoolkit', 'bin'))) {
+    print('SRA Toolkit already found at location, skipping...')
+  } else {
+    # Change directory and store current dir
+    prevWd = getwd()
+    setwd(installDir)
+
+    # Determine latest available SRA Toolkit version
+    url = 'https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/'
+    raw = RCurl::getURL(url)
+    x = strsplit(raw, '\\n')[[1L]]
+    pattern = '[0-9]\\.[0-9]\\.[0-9]'
+    m = regexpr(glue('{pattern}'), x)
+    sraVersion = max(regmatches(x, m))
+
+    # Based on operating system, download correct version to correct path.
+    sraOsTar = if (os == 'Darwin') 'mac64' else 'ubuntu64'
+    sraTar = glue('sratoolkit.{sraVersion}-{sraOsTar}.tar.gz')
+    # Download based on version and OS, unzip, then rename directory to `sratoolkit`
+    system2(
+      'curl',
+      c('-O',
+        glue('{url}{sraVersion}/{sraTar}')))
+    system2('tar', c('-zxvf', sraTar))
+    system2(
+      'mv',
+      c(sub('.tar.gz', '', sraTar, fixed = TRUE), 'sratoolkit'))
+    system2('rm', c('sratoolkit*.tar.gz'))
+    setwd(prevWd)
+  }
+  ncbiDir = file.path(path.expand('~'), '.ncbi')
+  if (!dir.exists(ncbiDir)) {
+    system2(
+      'mkdir',
+      c('-p', ncbiDir))
+    system(
+      "printf '/LIBS/IMAGE_GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
+    system(
+      "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
+  }
   if (addToPath) {
+    # Add to OS path and .Rprofile path.
     addToProfile(paste0('export PATH="$PATH:', path.expand(sraPath), '"'))
+    addToProfile(
+      paste0('Sys.setenv(PATH = paste(Sys.getenv("PATH"), "',
+             path.expand(sraPath),
+             '", sep = ":"))'),
+      type = 'R')
     Sys.setenv(
       PATH = paste(Sys.getenv('PATH'),
                    path.expand(sraPath), sep = ':'))}
 }
 
-installMiniconda = function(installDir = '~', setSeekerOption = TRUE, os = Sys.info()[['sysname']]) {
+installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeekerOption = TRUE) {
+  # Determine paths for miniconda
   installDir = trimSlashes(installDir)
-  miniOsSh = if (os == 'Darwin') 'MacOSX' else 'Linux'
-  miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
-  system2(
-    'curl',
-    c('-O',
-      glue('https://repo.anaconda.com/miniconda/{miniSh}')))
-  system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
-  system2('rm', c('Miniconda3*.sh'))
-  system(paste0(file.path(installDir, 'miniconda3'), '/bin/conda init bash'))
-  if (setSeekerOption) {
-    options(seeker.miniconda = file.path(installDir, 'miniconda3'))}
-}
-
-installTools = function(steps = 'all',
-                        sraVersion = '3.0.0', sraDir = '.', sraAddToPath = TRUE,
-                        minicondaDir = '~', setSeekerOption = TRUE,
-                        mambaPkgs = c('fastq-screen',
-                                      'fastqc',
-                                      'multiqc',
-                                      'pigz',
-                                      'refgenie',
-                                      'salmon',
-                                      'trim-galore'),
-                        refgenieDir = '~/genomes',
-                        salmonIndexes = NULL, fetchGenomes = FALSE) {
-  os = Sys.info()[['sysname']]
-  if (steps == 'all') steps = c('SRA Toolkit',
-                                'Miniconda',
-                                'bioconda',
-                                'mamba',
-                                'Install mamba packages',
-                                'refgenie',
-                                'salmon index',
-                                'fastq_screen get genomes')
-  if ('SRA Toolkit' %in% steps) {
-    installSRAToolkit(sraVersion, sraDir, os)}
-
-  if ('Miniconda' %in% steps) {
-    installMiniconda(minicondaDir, setSeekerOption, os)
+  minicondaPath = file.path(installDir, 'miniconda3')
+  minicondaEnvPath = minicondaPath
+  if (minicondaEnv != 'base') {
+    minicondaEnvPath = file.path(minicondaEnvPath, 'envs', minicondaEnv)
   }
 
-  if ('bioconda' %in% steps) {
+  if (dir.exists(file.path(minicondaPath))) {
+    print('miniconda3 already installed, skipping install...')
+  } else {
+    os = Sys.info()[['sysname']]
+    miniOsSh = if (os == 'Darwin') 'MacOSX' else 'Linux'
+    miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
+    system2(
+      'curl',
+      c('-O',
+        glue('https://repo.anaconda.com/miniconda/{miniSh}')))
+    system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
+    system2('rm', c('Miniconda3*.sh'))
+    system(paste0(minicondaPath, '/bin/conda init bash'))
+  }
+
+  # Create new environment if it doesnt exist.
+  if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
+    system(paste0(
+      minicondaPath,
+      '/bin/conda create --yes --name ',
+      minicondaEnv))
+  }
+
+  options(seeker.miniconda = minicondaEnvPath)
+  Sys.setenv(
+    PATH = paste(Sys.getenv('PATH'),
+                 path.expand(file.path(minicondaPath, 'bin')), sep = ':'))
+  # Set the option.
+  if (setSeekerOption) {
+    addToProfile(
+      paste0("options(seeker.miniconda = '", minicondaEnvPath, "')"),
+      type = 'R')
+  }
+}
+
+# minicondaPath - checks path and then installs
+# install as environment called seeker or have as argument.
+# minicondaEnv = "seeker" - installs and uses seeker environment by default,
+# if "base" doesn't create new environment and uses base env.
+# If specified, installs all mamba packages by default
+# Add option setting to ~/.Rprofile so it sets every time.
+# refgenieDir - directory to initialize refgenie to. Checks first then runs init.
+# salmonIndexes - indexes to pull using refgenie, requires regenieDir to be set.
+# fastqDir - Dir to pass to -outdir
+installTools = function(sraToolkitPath = '.', sraAddToPath = TRUE,
+                        minicondaPath = '~', minicondaEnv = 'seeker',
+                        setSeekerOption = TRUE,
+                        refgenieDir = '~/genomes',
+                        salmonIndexes = NULL,
+                        fastqDir = NULL) {
+  if (!is.null(sraToolkitPath)) {
+    if (dir.exists(file.path(trimSlashes(sraToolkitPath), 'sratoolkit', 'bin'))) {
+      print('SRA Toolkit already found at location, skipping...')
+    } else {
+      installSRAToolkit(sraToolkitPath, sraAddToPath)}}
+
+  if (!is.null(minicondaPath)) {
+    # Install miniconda
+    installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
+
+    # Set channels
     system3('conda', c('config', '--add', 'channels', 'defaults'))
     system3('conda', c('config', '--add', 'channels', 'bioconda'))
     system3('conda', c('config', '--add', 'channels', 'conda-forge'))
-  }
 
-  if ('mamba' %in% steps) {
+    # Install mamba and mamba packages.
+    mambaPkgs = c('fastq-screen',
+                  'fastqc',
+                  'multiqc',
+                  'pigz',
+                  'refgenie',
+                  'salmon',
+                  'trim-galore')
     system3('conda', c('install', '--yes', 'mamba', '-c', 'conda-forge'))
-  }
-
-  if ('Install mamba packages' %in% steps && length(mambaPkgs) > 0) {
     system3('mamba', c('install', '--yes', mambaPkgs))
   }
 
-  if ('refgenie' %in% steps) {
-    if(!dir.exists(refgenieDir)) dir.create(refgenieDir)
-    system3('refgenie', c('init', '-c', file.path(refgenieDir, 'genome_config.yaml')))
-    addToProfile(paste0('export REFGENIE="', file.path(refgenieDir, 'genome_config.yaml'), '"'))
+  if (is.null(refgenieDir)) {
+    if (dir.exists(refgenieDir)) {
+      print('Refgenie already exists at specified location, skipping...')
+    } else {
+      dir.create(refgenieDir)
+      system3('refgenie', c('init', '-c', file.path(refgenieDir, 'genome_config.yaml')))
+      addToProfile(paste0('export REFGENIE="', file.path(refgenieDir, 'genome_config.yaml'), '"'))
+      Sys.setenv(
+        REFGENIE = file.path(refgenieDir, 'genome_config.yaml'))
+    }
   }
 
-  if ('salmon index' %in% steps) {
-    if (is.null(salmonIndexes) || length(salmonIndexes) == 0) {
+  if (!is.null(salmonIndexes)) {
+    if (length(salmonIndexes) == 0) {
       stop('If pulling salmon indexes, must provide at least one index to pull.')}
     for (salmonIndex in salmonIndexes) {
       system3('refgenie', c('pull', '-c', salmonIndex))
     }
   }
 
-  if ('fastq_screen get genomes' %in% steps) {
-    system3('fastq_screen', c('--get_genomes'))
+  if (!is.null(fastqDir)) {
+    system3('fastq_screen', c('--get_genomes', '--outdir', fastqDir))
   }
 
 }
