@@ -334,7 +334,7 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
 # refgenieDir - directory to initialize refgenie to. Checks first then runs init.
 # salmonIndexes - indexes to pull using refgenie, requires regenieDir to be set.
 # fastqDir - Dir to pass to -outdir
-installTools = function(sraToolkitPath = '.', sraAddToPath = TRUE,
+installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
                         minicondaPath = '~', minicondaEnv = 'seeker',
                         setSeekerOption = TRUE,
                         refgenieDir = '~/genomes',
