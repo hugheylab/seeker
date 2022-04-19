@@ -351,6 +351,8 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
 
+    system3('conda', c('activate', minicondaEnv))
+
     # Set channels
     system3('conda', c('config', '--add', 'channels', 'defaults'))
     system3('conda', c('config', '--add', 'channels', 'bioconda'))
