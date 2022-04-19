@@ -258,16 +258,16 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
     system2('rm', c('sratoolkit*.tar.gz'))
     setwd(prevWd)
   }
-  ncbiDir = file.path(path.expand('~'), '.ncbi')
-  if (!dir.exists(ncbiDir)) {
-    system2(
-      'mkdir',
-      c('-p', ncbiDir))
-    system(
-      "printf '/LIBS/IMAGE_GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
-    system(
-      "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
-  }
+  # ncbiDir = file.path(path.expand('~'), '.ncbi')
+  # if (!dir.exists(ncbiDir)) {
+  #   system2(
+  #     'mkdir',
+  #     c('-p', ncbiDir))
+  #   system(
+  #     "printf '/LIBS/IMAGE_GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
+  #   system(
+  #     "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
+  # }
   if (addToPath) {
     # Add to OS path and .Rprofile path.
     addToProfile(paste0('export PATH="$PATH:', path.expand(sraPath), '"'))
