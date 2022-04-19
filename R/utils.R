@@ -325,6 +325,7 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
   }
 }
 
+# sraToolkitPath - checks path and then installs.
 # minicondaPath - checks path and then installs
 # install as environment called seeker or have as argument.
 # minicondaEnv = "seeker" - installs and uses seeker environment by default,
