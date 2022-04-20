@@ -348,12 +348,15 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     if (dir.exists(file.path(trimSlashes(sraToolkitPath), 'sratoolkit', 'bin'))) {
       print('SRA Toolkit already found at location, skipping...')
     } else {
-      installSRAToolkit(sraToolkitPath, sraAddToPath)}}
+      installSRAToolkit(sraToolkitPath, sraAddToPath)
+    }
+  }
 
   if (!is.null(minicondaPath)) {
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
 
+    system3('conda', c('init'))
     system3('conda', c('activate', minicondaEnv))
 
     # Set channels
@@ -379,9 +382,12 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     } else {
       dir.create(refgenieDir)
       system3('refgenie', c('init', '-c', file.path(refgenieDir, 'genome_config.yaml')))
-      addToProfile(paste0('export REFGENIE="', file.path(refgenieDir, 'genome_config.yaml'), '"'))
+      addToProfile(paste0('export REFGENIE="', file.path(path.expand(refgenieDir), 'genome_config.yaml'), '"'))
+      addToProfile(
+        paste0("Sys.setenv(REFGENIE = '", file.path(path.expand(refgenieDir), 'genome_config.yaml'), "')"),
+        type = 'R')
       Sys.setenv(
-        REFGENIE = file.path(refgenieDir, 'genome_config.yaml'))
+        REFGENIE = file.path(path.expand(refgenieDir), 'genome_config.yaml'))
     }
   }
 
@@ -389,12 +395,12 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     if (length(salmonIndexes) == 0) {
       stop('If pulling salmon indexes, must provide at least one index to pull.')}
     for (salmonIndex in salmonIndexes) {
-      system3('refgenie', c('pull', '-c', salmonIndex))
+      print(salmonIndex)
+      system3('refgenie', c('pull', salmonIndex))
     }
   }
 
   if (!is.null(fastqDir)) {
     system3('fastq_screen', c('--get_genomes', '--outdir', fastqDir))
   }
-
 }
