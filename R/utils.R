@@ -139,6 +139,7 @@ system3 = function(...) {
   mc = getOption('seeker.miniconda', '~/miniconda3')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
   withr::local_path(p)
+  print(paste0('Conda path: ', p, ' Command and arguments: ', ..., collapse = ' '))
   system2(...)}
 
 
@@ -316,14 +317,14 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
       minicondaEnv))
   }
 
-  options(seeker.miniconda = minicondaEnvPath)
+  options(seeker.miniconda = path.expand(minicondaEnvPath))
   Sys.setenv(
     PATH = paste(Sys.getenv('PATH'),
                  path.expand(file.path(minicondaPath, 'bin')), sep = ':'))
   # Set the option.
   if (setSeekerOption) {
     addToProfile(
-      paste0("options(seeker.miniconda = '", minicondaEnvPath, "')"),
+      paste0("options(seeker.miniconda = '", path.expand(minicondaEnvPath), "')"),
       type = 'R')
   }
 }
