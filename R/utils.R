@@ -139,7 +139,7 @@ system3 = function(...) {
   mc = getOption('seeker.miniconda', '~/miniconda3')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
   withr::local_path(p)
-  print(paste0('Conda path: ', p, ' Command and arguments: ', ..., collapse = ' '))
+  print(paste('Conda path: ', p, ' Command and arguments: ', ..., collapse = ' '))
   system2(...)}
 
 
