@@ -373,7 +373,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
                   'refgenie',
                   'salmon',
                   'trim-galore')
-    system2('conda', c('install', 'mamba', '--yes', '-n', minicondaEnv, '-c', 'conda-forge'))
+    system2('conda', c('install', 'mamba', '--yes', '-c', 'conda-forge'))
     system3('mamba', c('install', '--yes', mambaPkgs))
   }
 
