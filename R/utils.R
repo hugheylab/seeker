@@ -362,7 +362,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
   if (!is.null(minicondaPath)) {
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
-    system3('mamba', c('env', 'update', '-n', minicondaEnv, '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
+    system3('mamba', c('env', 'update', '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
 
     # system3('conda', c('init'))
     # system3('conda', c('activate', minicondaEnv))
