@@ -27,6 +27,7 @@ Imports:
   methods,
   qs (>= 0.21.2),
   R.utils (>= 2.11.0),
+  RCurl (>= 1.98),
   readr (>= 1.4.0),
   sessioninfo (>= 1.2.0),
   testthat (>= 3.1.0),
