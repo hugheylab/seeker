@@ -4,8 +4,6 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - python=3.6
-  - mamba
   - fastq-screen
   - fastqc
   - multiqc
@@ -13,6 +11,3 @@ dependencies:
   - refgenie
   - salmon
   - trim-galore
-  - ca-certificates
-  - certifi
-  - openssl
