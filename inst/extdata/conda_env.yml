@@ -1,0 +1,18 @@
+name: seeker
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.6
+  - mamba
+  - fastq-screen
+  - fastqc
+  - multiqc
+  - pigz
+  - refgenie
+  - salmon
+  - trim-galore
+  - ca-certificates
+  - certifi
+  - openssl

@@ -139,7 +139,6 @@ system3 = function(...) {
   mc = getOption('seeker.miniconda', '~/miniconda3')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
   withr::local_path(p)
-  print(paste('Conda path: ', p, ' Command and arguments: ', ..., collapse = ' '))
   system2(...)}
 
 
@@ -311,10 +310,17 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
 
   # Create new environment if it doesnt exist.
   if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
+    yamlPath = system.file('extdata', 'conda_env.yml', package = 'seeker')
+    envYaml = yaml::read_yaml(yamlPath)
+    if (minicondaEnv != envYaml$name) {
+      yamlPath = file.path('.', 'conda_env.yml')
+      envYaml$name = minicondaEnv
+      yaml::write_yaml(envYaml, yamlPath)
+    }
     system(paste0(
-      minicondaPath,
-      '/bin/conda create --yes --name ',
-      minicondaEnv))
+      path.expand(minicondaPath),
+      '/bin/conda env create -f "',
+      yamlPath, '"'))
   }
 
   options(seeker.miniconda = path.expand(minicondaEnvPath))
@@ -357,24 +363,24 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
 
-    system3('conda', c('init'))
-    system3('conda', c('activate', minicondaEnv))
+    # system3('conda', c('init'))
+    # system3('conda', c('activate', minicondaEnv))
 
     # Set channels
-    system3('conda', c('config', '--add', 'channels', 'defaults'))
-    system3('conda', c('config', '--add', 'channels', 'bioconda'))
-    system3('conda', c('config', '--add', 'channels', 'conda-forge'))
+    # system3('conda', c('config', '--add', 'channels', 'defaults'))
+    # system3('conda', c('config', '--add', 'channels', 'bioconda'))
+    # system3('conda', c('config', '--add', 'channels', 'conda-forge'))
 
     # Install mamba and mamba packages.
-    mambaPkgs = c('fastq-screen',
-                  'fastqc',
-                  'multiqc',
-                  'pigz',
-                  'refgenie',
-                  'salmon',
-                  'trim-galore')
-    system2('conda', c('install', 'mamba', '--yes', '-c', 'conda-forge'))
-    system3('mamba', c('install', '--yes', mambaPkgs))
+    # mambaPkgs = c('fastq-screen',
+    #               'fastqc',
+    #               'multiqc',
+    #               'pigz',
+    #               'refgenie',
+    #               'salmon',
+    #               'trim-galore')
+    # system2('conda', c('install', 'mamba', '--yes', '-c', 'conda-forge'))
+    # system3('mamba', c('install', '--yes', mambaPkgs))
   }
 
   if (is.null(refgenieDir)) {
