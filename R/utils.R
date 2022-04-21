@@ -362,7 +362,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
   if (!is.null(minicondaPath)) {
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
-    system2('mamba', c('env', 'update', '-n', minicondaEnv, '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
+    system3('mamba', c('env', 'update', '-n', minicondaEnv, '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
 
     # system3('conda', c('init'))
     # system3('conda', c('activate', minicondaEnv))
@@ -384,7 +384,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
     # system3('mamba', c('install', '--yes', mambaPkgs))
   }
 
-  if (is.null(refgenieDir)) {
+  if (!is.null(refgenieDir)) {
     if (dir.exists(refgenieDir)) {
       print('Refgenie already exists at specified location, skipping...')
     } else {
