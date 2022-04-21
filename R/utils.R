@@ -296,6 +296,7 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
   if (dir.exists(file.path(minicondaPath))) {
     print('miniconda3 already installed, skipping install...')
   } else {
+    print('Installing miniconda3...')
     os = Sys.info()[['sysname']]
     miniOsSh = if (os == 'Darwin') 'MacOSX' else 'Linux'
     miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
@@ -305,11 +306,13 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
         glue('https://repo.anaconda.com/miniconda/{miniSh}')))
     system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
     system2('rm', c('Miniconda3*.sh'))
+    print('Running conda init...')
     system(paste0(minicondaPath, '/bin/conda init bash'))
   }
 
   # Create new environment if it doesnt exist.
   if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
+    print('Creating new environment...')
     yamlPath = system.file('extdata', 'conda_env.yml', package = 'seeker')
     envYaml = yaml::read_yaml(yamlPath)
     if (minicondaEnv != envYaml$name) {
@@ -317,12 +320,17 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
       envYaml$name = minicondaEnv
       yaml::write_yaml(envYaml, yamlPath)
     }
+    print('Environment command:')
+    print(paste0(
+      path.expand(minicondaPath),
+      '/bin/conda env create -f "',
+      yamlPath, '"'))
     system(paste0(
       path.expand(minicondaPath),
       '/bin/conda env create -f "',
       yamlPath, '"'))
   }
-
+  print(paste0('Setting seeker.miniconda option to "', minicondaEnvPath, '"'))
   options(seeker.miniconda = path.expand(minicondaEnvPath))
   Sys.setenv(
     PATH = paste(Sys.getenv('PATH'),
@@ -404,7 +412,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
       stop('If pulling salmon indexes, must provide at least one index to pull.')}
     for (salmonIndex in salmonIndexes) {
       print(salmonIndex)
-      system3('refgenie', c('pull', salmonIndex))
+      system3('refgenie', c('pull', '--force-overwrite', salmonIndex))
     }
   }
 
