@@ -2,6 +2,7 @@
 #' @importFrom data.table data.table fread fwrite set setDT setnames
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom glue glue
+#' @importFrom Rcurl getURL
 NULL
 # readr not called explicitly, but used by tximport
 

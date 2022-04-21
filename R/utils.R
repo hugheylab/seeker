@@ -240,7 +240,7 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
 
     # Determine latest available SRA Toolkit version
     url = 'https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/'
-    raw = RCurl::getURL(url)
+    raw = getURL(url)
     x = strsplit(raw, '\\n')[[1L]]
     pattern = '[0-9]\\.[0-9]\\.[0-9]'
     m = regexpr(glue('{pattern}'), x)
