@@ -147,7 +147,7 @@ safe = function(x) {
   return(y)}
 
 
-checkCommand = function(cmd) {
+validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
   # give warning on mac and error on linux
   old = getOption('warn')
@@ -180,23 +180,25 @@ checkDefaultCommands = function() {
   r = foreach(i = seq_len(nrow(d)), .combine = rbind) %do% {
     # cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
     cmd = d$cmd[i]
-    path = checkCommand(cmd)
+    path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
       system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
     data.table(command = d$cmd[i], path = path, version = version)}
 
   return(r)}
 
-
-assertCommand = function(cmd, cmdName, defaultPath) {
+checkCommand = function(cmd, cmdName, defaultPath) {
   if (is.null(cmd)) {
     if (is.na(defaultPath)) {
-      stop(glue('{cmdName} is not available at the default location.'))}
+      return(glue('{cmdName} is not available at the default location.'))}
   } else {
-    path = checkCommand(cmd)
+    path = validateCommand(cmd)
     if (is.na(path)) {
-      stop(glue("'{cmd}' is not a valid command."))}}
-  invisible()}
+      return(glue("'{cmd}' is not a valid command."))}}
+  return(TRUE)
+}
+
+assertCommand = checkmate:::makeAssertionFunction(checkCommand, use.namespace = TRUE)
 
 addToProfile = function(line, type = 'OS') {
   if (type == 'OS') {
@@ -260,16 +262,6 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
       c(sub('.tar.gz', '', sraTar, fixed = TRUE), 'sratoolkit'))
     system2('rm', c('sratoolkit*.tar.gz'))
     setwd(prevWd)
-  }
-  ncbiDir = file.path(path.expand('~'), '.ncbi')
-  if (!dir.exists(ncbiDir)) {
-    system2(
-      'mkdir',
-      c('-p', ncbiDir))
-    system(
-      "printf '/LIBS/IMAGE_GUID = \"%s\"\\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
-    system(
-      "printf '/libs/cloud/report_instance_identity = \"true\"\\n' >> ~/.ncbi/user-settings.mkfg")
   }
   if (addToPath) {
     # Add to OS path and .Rprofile path.

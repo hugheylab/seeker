@@ -13,6 +13,10 @@ checkSeekerArgs = function(params, parentDir) {
 
   command = NULL
   defaultCommands = checkDefaultCommands()
+
+  # assertCollection = makeAssertCollection()
+  # assertString(str, add = assertCollection)
+
   assertList(params)
   assertNames(names(params), permutation.of = c('study', steps))
   assertString(params$study, min.chars = 1L)
@@ -160,6 +164,8 @@ checkSeekerArgs = function(params, parentDir) {
     assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
     assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
 
+  # returnList = list(outputDir = outputDir)
+  # return(returnList)}
   return(outputDir)}
 
 
@@ -303,6 +309,8 @@ checkSeekerArgs = function(params, parentDir) {
 #' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
+#' @param dryRun Boolean to determine if you want to actually run the functions
+#'   or just validate your params and system requirements.
 #'
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
@@ -310,9 +318,14 @@ checkSeekerArgs = function(params, parentDir) {
 #'   [salmon()], [multiqc()], [tximport()]
 #'
 #' @export
-seeker = function(params, parentDir = '.') {
+seeker = function(params, parentDir = '.', dryRun = FALSE) {
   assertOS(c('linux', 'mac', 'solaris'))
   outputDir = checkSeekerArgs(params, parentDir)
+  # if (isTRUE(dryRun)) {
+  #   print('Dry run results: ')
+  #   print(checkResult$checkArgsList)
+  #   return()
+  # }
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
   ####################

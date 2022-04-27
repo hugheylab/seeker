@@ -24,7 +24,7 @@ getCommandsCheck = function(params, cmds = checkDefaultCommands()) {
       NULL}
 
     cmdExists = !((is.null(cmd) && is.na(cmdRow$path)) ||
-                  (!is.null(cmd) && is.na(checkCommand(cmd))))
+                  (!is.null(cmd) && is.na(validateCommand(cmd))))
     data.table(filename = cmdRow$command, exists = cmdExists)}
   return(result)}
 

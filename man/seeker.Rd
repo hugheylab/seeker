@@ -4,7 +4,7 @@
 \alias{seeker}
 \title{Process RNA-seq data end to end}
 \usage{
-seeker(params, parentDir = ".")
+seeker(params, parentDir = ".", dryRun = FALSE)
 }
 \arguments{
 \item{params}{Named list of parameters with components:
@@ -166,6 +166,9 @@ of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.ym
 
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{params$study}.}
+
+\item{dryRun}{Boolean to determine if you want to actually run the functions
+or just validate your params and system requirements.}
 }
 \value{
 Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
