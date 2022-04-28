@@ -37,7 +37,7 @@ test_that('seeker skip all', {
 test_that('checkSeekerArgs', {
   skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
-  outputDirObs = checkSeekerArgs(params, parentDir)
+  outputDirObs = checkSeekerArgs(params, parentDir)$outputDir
   expect_equal(outputDirObs, outputDir)
 })
 
