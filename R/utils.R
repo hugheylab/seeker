@@ -404,7 +404,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
       stop('If pulling salmon indexes, must provide at least one index to pull.')}
     for (salmonIndex in salmonIndexes) {
       print(salmonIndex)
-      system3('refgenie', c('pull', '--force-overwrite', salmonIndex))
+      system3('refgenie', c('pull', salmonIndex, '--genome-config', file.path(path.expand(refgenieDir), 'genome_config.yaml')))
     }
   }
 
