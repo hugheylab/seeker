@@ -324,7 +324,7 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #' @export
 seeker = function(params, parentDir = '.', dryRun = FALSE) {
   assertOS(c('linux', 'mac', 'solaris'))
-  checkList = seeker:::checkSeekerArgs(params, parentDir, dryRun)
+  checkList = checkSeekerArgs(params, parentDir, dryRun)
   if(isTRUE(dryRun)) {
     msg = paste0("Results of dry run: ", paste0(checkList$assertCollection$getMessages(), collapse = "\n"))
     writeLines(msg, 'seeker_dryrun.log')
