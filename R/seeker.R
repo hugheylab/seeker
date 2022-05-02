@@ -166,7 +166,7 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 
     assertString(params$tximport$countsFromAbundance, null.ok = FALSE, add = assertCollection)
     assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE, add = assertCollection)}
-  if(isFALSE(dryRun)) {
+  if (isFALSE(dryRun)) {
     reportAssertions(assertCollection)
   }
   returnList = list(outputDir = outputDir, assertCollection = assertCollection)
@@ -325,13 +325,13 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 seeker = function(params, parentDir = '.', dryRun = FALSE) {
   assertOS(c('linux', 'mac', 'solaris'))
   checkList = checkSeekerArgs(params, parentDir, dryRun)
-  if(isTRUE(dryRun)) {
-    msg = paste0("Results of dry run: ", paste0(checkList$assertCollection$getMessages(), collapse = "\n"))
+  if (isTRUE(dryRun)) {
+    msg = paste0('Results of dry run: ', paste0(checkList$assertCollection$getMessages(), collapse = '\n'))
     writeLines(msg, 'seeker_dryrun.log')
     print(msg)
     return(invisible())
   }
-  if(length(checkList$assertCollection) > 0) {
+  if (length(checkList$assertCollection) > 0) {
     reportAssertions(checkList$assertCollection)
   }
   outputDir = checkList$outputDir
