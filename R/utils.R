@@ -335,16 +335,20 @@ installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeeker
   }
 }
 
-# sraToolkitPath - checks path and then installs.
-# minicondaPath - checks path and then installs
-# install as environment called seeker or have as argument.
-# minicondaEnv = "seeker" - installs and uses seeker environment by default,
-# if "base" doesn't create new environment and uses base env.
-# If specified, installs all mamba packages by default
-# Add option setting to ~/.Rprofile so it sets every time.
-# refgenieDir - directory to initialize refgenie to. Checks first then runs init.
-# salmonIndexes - indexes to pull using refgenie, requires regenieDir to be set.
-# fastqDir - Dir to pass to -outdir
+#' Install seeker system dependencies for Mac and Ubuntu.
+#'
+#' @param sraToolkitPath Where to install the SRA Toolkit.
+#' @param sraAddToPath Boolean to add the SRA toolkit to the system and R path files.
+#' @param minicondaPath Where to install miniconda.
+#' @param minicondaEnv The name of the miniconda environment. "base" will use the default base environment.
+#' @param setSeekerOption Boolean to add the miniconda path as the "seeker.miniconda" option to the R profile.
+#' @param refgenieDir Where to add refgenie config files.
+#' @param salmonIndexes Which salmon indexes to pull from refgenie.
+#' @param fastqDir Where to output the fastq_screen command.
+#'
+#' @return `invisible()`
+#'
+#' @export
 installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
                         minicondaPath = '~', minicondaEnv = 'seeker',
                         setSeekerOption = TRUE,
@@ -362,26 +366,10 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
   if (!is.null(minicondaPath)) {
     # Install miniconda
     installMiniconda(minicondaPath, minicondaEnv, setSeekerOption)
-    system3('mamba', c('env', 'update', '-p', path.expand(file.path(minicondaPath, 'miniconda3', 'envs', minicondaEnv)), '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
-
-    # system3('conda', c('init'))
-    # system3('conda', c('activate', minicondaEnv))
-
-    # Set channels
-    # system3('conda', c('config', '--add', 'channels', 'defaults'))
-    # system3('conda', c('config', '--add', 'channels', 'bioconda'))
-    # system3('conda', c('config', '--add', 'channels', 'conda-forge'))
-
-    # Install mamba and mamba packages.
-    # mambaPkgs = c('fastq-screen',
-    #               'fastqc',
-    #               'multiqc',
-    #               'pigz',
-    #               'refgenie',
-    #               'salmon',
-    #               'trim-galore')
-    # system2('conda', c('install', 'mamba', '--yes', '-c', 'conda-forge'))
-    # system3('mamba', c('install', '--yes', mambaPkgs))
+    system3(
+      'mamba', c('env', 'update', '-p',
+                 path.expand(file.path(minicondaPath, 'miniconda3', 'envs', minicondaEnv)),
+                 '--file', system.file('extdata', 'mamba_env.yml', package = 'seeker')))
   }
 
   if (!is.null(refgenieDir)) {
@@ -404,11 +392,13 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
       stop('If pulling salmon indexes, must provide at least one index to pull.')}
     for (salmonIndex in salmonIndexes) {
       print(salmonIndex)
-      system3('refgenie', c('pull', salmonIndex, '--genome-config', file.path(path.expand(refgenieDir), 'genome_config.yaml')))
+      system3('refgenie', c('pull', salmonIndex, '--genome-config',
+                            file.path(path.expand(refgenieDir), 'genome_config.yaml')))
     }
   }
 
   if (!is.null(fastqDir)) {
     system3('fastq_screen', c('--get_genomes', '--outdir', fastqDir))
   }
+  return(invisible())
 }
