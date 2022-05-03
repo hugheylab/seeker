@@ -17,15 +17,8 @@ addToProfile = function(line, type = 'OS') {
   return(invisible())}
 
 
-trimSlashes = function(dirToTrim) {
-  if (endsWith(dirToTrim, '/')) dirToTrim = substring(dirToTrim, 1, nchar(dirToTrim) - 1)
-  return(dirToTrim)}
-
-
 installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
-  # Ensure no trailing slashes in installDir and
   os = Sys.info()[['sysname']]
-  installDir = trimSlashes(installDir)
   sraPath = file.path(installDir, 'sratoolkit', 'bin')
 
   # Check if sratoolkit already exists at location.
@@ -58,7 +51,7 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
       c(sub('.tar.gz', '', sraTar, fixed = TRUE), 'sratoolkit'))
     system2('rm', c('sratoolkit*.tar.gz'))
     setwd(prevWd)}
-  if (addToPath) {
+  if (isTRUE(addToPath)) {
     # Add to OS path and .Rprofile path.
     addToProfile(paste0('export PATH="$PATH:', path.expand(sraPath), '"'))
     addToProfile(
@@ -74,7 +67,6 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
 
 installMiniconda = function(installDir = '~', minicondaEnv = 'seeker', setSeekerOption = TRUE) {
   # Determine paths for miniconda
-  installDir = trimSlashes(installDir)
   minicondaPath = file.path(installDir, 'miniconda3')
   minicondaEnvPath = minicondaPath
   if (minicondaEnv != 'base') {
@@ -148,7 +140,7 @@ installTools = function(sraToolkitPath = '~', sraAddToPath = TRUE,
                         salmonIndexes = NULL,
                         fastqDir = NULL) {
   if (!is.null(sraToolkitPath)) {
-    if (dir.exists(file.path(trimSlashes(sraToolkitPath), 'sratoolkit', 'bin'))) {
+    if (dir.exists(file.path(sraToolkitPath, 'sratoolkit', 'bin'))) {
       print('SRA Toolkit already found at location, skipping...')
     } else {
       installSRAToolkit(sraToolkitPath, sraAddToPath)}}
