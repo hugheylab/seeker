@@ -66,7 +66,7 @@ installSRAToolkit = function(installDir = '~', addToPath = TRUE) {
   if (!dir.exists(ncbiDir)) {
     dir.create(ncbiDir)
     system(
-      "printf '/LIBS/IMAGE_GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
+      "printf '/LIBS/GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
     system(
       "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
     # system2(
