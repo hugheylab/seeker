@@ -64,13 +64,13 @@ installSRAToolkit = function(installDir = '~', addToPath = TRUE) {
                    path.expand(sraPath), sep = ':'))}
   ncbiDir = file.path(path.expand('~'), '.ncbi')
   if (!dir.exists(ncbiDir)) {
-    # dir.create(ncbiDir)
-    # system(
-    #   "printf '/LIBS/IMAGE_GUID = \"%s\"\\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
-    # system(
-    #   "printf '/libs/cloud/report_instance_identity = \"true\"\\n' >> ~/.ncbi/user-settings.mkfg")
-    system2(
-      '/bin/bash', args = c("-c", shQuote('vdb-config -i & read -t 3 ; kill $!')))
+    dir.create(ncbiDir)
+    system(
+      "printf '/LIBS/IMAGE_GUID = \"%s\"\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
+    system(
+      "printf '/libs/cloud/report_instance_identity = \"true\"\n' >> ~/.ncbi/user-settings.mkfg")
+    # system2(
+    #   '/bin/bash', args = c("-c", shQuote('vdb-config -i & read -t 3 ; kill $!')))
   }
   return(invisible())}
 
