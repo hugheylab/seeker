@@ -167,8 +167,8 @@ of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.ym
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{params$study}.}
 
-\item{dryRun}{Boolean to determine if you want to actually run the functions
-or just validate your params and system requirements.}
+\item{dryRun}{Logical indicating whether to check the validity of inputs
+without actually fetching or processing any data.}
 }
 \value{
 Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
