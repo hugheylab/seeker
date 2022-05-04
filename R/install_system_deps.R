@@ -70,7 +70,7 @@ installSRAToolkit = function(installDir = '~', addToPath = TRUE) {
     # system(
     #   "printf '/libs/cloud/report_instance_identity = \"true\"\\n' >> ~/.ncbi/user-settings.mkfg")
     system2(
-      'vdb-config',  c('-i & read -t 3 ; kill $!'))
+      'vdb-config',  c('-i & read ; kill $!'), timeout = 3)
   }
   return(invisible())}
 
