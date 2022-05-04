@@ -1,12 +1,12 @@
 addToProfile = function(line, type = 'OS') {
   if (type == 'OS') {
-    profilePath = '~/.bashrc'
-    if (Sys.info()[['sysname']] == 'Darwin' && file.exists(file.path('~', '.zshrc'))) {
-      profilePath = '~/.zshrc'}
-    profileFile = readLines(profilePath)
-    if (!(line %in% profileFile)) {
-      profileFile = c(profileFile, line)
-      writeLines(profileFile, profilePath)}
+    profilePaths = c('~/.bashrc', '~/.zshrc', '~/.profile')
+    for (profilePath in profilePaths) {
+      if (file.exists(profilePath)) {
+        profileFile = readLines(profilePath)
+        if (!(line %in% profileFile)) {
+          profileFile = c(profileFile, line)
+          writeLines(profileFile, profilePath)}}}
   } else {
     rProfilePath = path.expand(file.path('~', '.Rprofile'))
     rProfileFile = c()
@@ -17,7 +17,7 @@ addToProfile = function(line, type = 'OS') {
   return(invisible())}
 
 
-installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
+installSRAToolkit = function(installDir = '~', addToPath = TRUE) {
   os = Sys.info()[['sysname']]
   sraPath = file.path(installDir, 'sratoolkit', 'bin')
 
@@ -62,6 +62,16 @@ installSRAToolkit = function(installDir = '.', addToPath = TRUE) {
     Sys.setenv(
       PATH = paste(Sys.getenv('PATH'),
                    path.expand(sraPath), sep = ':'))}
+  ncbiDir = file.path(path.expand('~'), '.ncbi')
+  if (!dir.exists(ncbiDir)) {
+    # dir.create(ncbiDir)
+    # system(
+    #   "printf '/LIBS/IMAGE_GUID = \"%s\"\\n' `uuidgen` > ~/.ncbi/user-settings.mkfg")
+    # system(
+    #   "printf '/libs/cloud/report_instance_identity = \"true\"\\n' >> ~/.ncbi/user-settings.mkfg")
+    system(
+      "vdb-config -i & read -t 3 ; kill $!")
+  }
   return(invisible())}
 
 
