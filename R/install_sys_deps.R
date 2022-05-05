@@ -98,16 +98,16 @@ installMiniconda = function(installDir, minicondaEnv, setSeekerOption = TRUE) {
 
     system(glue('{minicondaPath}/bin/conda env create -f "{yamlPath}"'))}
 
-  cat('Installing conda packages via mamba...\n')
-  mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
-  mambaArgs = c('env', 'update', '-p', minicondaEnvPath, '--file', mambaEnvPath)
-  system3('mamba', mambaArgs)
-
   # Set the option
   if (setSeekerOption) {
     addToProfile(
       glue('options(seeker.miniconda = "{minicondaEnvPath}")'), type = 'R')
     options(seeker.miniconda = minicondaEnvPath)}
+
+  cat('Installing conda packages via mamba...\n')
+  mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
+  mambaArgs = c('env', 'update', '-p', minicondaEnvPath, '--file', mambaEnvPath)
+  system3('mamba', mambaArgs)
 
   invisible()}
 
