@@ -144,25 +144,23 @@ getSalmonIndexes = function(salmonIndexes) {
 # fastqscreenDir - Dir to pass to -outdir
 installSysDeps = function(
     sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
-    refgenieDir = '~/genomes', salmonIndexes = NULL, fastqscreenDir = NULL) {
+    refgenieDir = '~/refgenie_genomes', salmonIndexes = NULL,
+    fastqscreenDir = NULL) {
 
   assertString(sraToolkitDir, null.ok = TRUE)
   if (!is.null(sraToolkitDir)) assertDirectoryExists(sraToolkitDir)
   assertString(minicondaDir, null.ok = TRUE)
   if (!is.null(minicondaDir)) assertDirectoryExists(minicondaDir)
   assertString(minicondaEnv, pattern = '^\\S+$')
-  assertString(refgenieDir, null.ok = TRUE)
+  assertString(refgenieDir, null.ok = is.null(minicondaDir))
   assertCharacter(salmonIndexes, any.missing = FALSE, null.ok = TRUE)
   assertString(fastqscreenDir, null.ok = TRUE)
-  if (!is.null(fastqscreenDir)) assertDirectoryExists(fastqscreenDir)
 
   if (!is.null(sraToolkitDir)) {
     tryCatch(installSraToolkit(sraToolkitDir), error = warning)}
 
   if (!is.null(minicondaDir)) {
-    tryCatch(installMiniconda(minicondaDir, minicondaEnv), error = warning)}
-
-  if (!is.null(refgenieDir)) {
+    tryCatch(installMiniconda(minicondaDir, minicondaEnv), error = warning)
     if (is.na(validateCommand('refgenie'))) {
       warning('refgenie not found, cannot be configured.')
     } else {
@@ -179,6 +177,7 @@ installSysDeps = function(
       warning('fastq_screen not found, genomes cannot be fetched.')
     } else {
       cat('Fetching fastq_screen genomes...\n')
+      if (!dir.exists(fastqscreenDir)) dir.create(fastqscreenDir)
       tryCatch(
         system3('fastq_screen', c('--get_genomes', '--outdir', fastqscreenDir)),
         error = warning)}}
