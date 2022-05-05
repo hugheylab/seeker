@@ -1,6 +1,9 @@
 addToProfile = function(line, type = 'OS') {
-  paths = if (type == 'OS') c('.zshrc', '.bashrc', '.profile') else '.Rprofile'
-  paths = paste0('~/', paths)
+  paths = file.path('~', c('.zshrc', '.bashrc', '.profile'))
+  paths = if (type == 'OS') {
+    paths[file.exists(paths)]
+  } else {
+    file.path('~', '.Rprofile')}
 
   for (path in paths) {
     lines = if (file.exists(path)) readLines(path) else character()

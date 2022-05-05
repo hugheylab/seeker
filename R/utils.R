@@ -118,7 +118,7 @@ getRCondaInfo = function(outputDir = '.') {
 
   mc = getOption('seeker.miniconda')
   if (is.null(mc)) {
-    envName = 'base'
+    envName = 'seeker'
     condaPre = '~/miniconda3'
   } else if (basename(dirname(mc)) == 'envs') {
     envName = basename(mc)
@@ -135,7 +135,7 @@ getRCondaInfo = function(outputDir = '.') {
 
 
 system3 = function(...) {
-  mc = getOption('seeker.miniconda', '~/miniconda3')
+  mc = getOption('seeker.miniconda', '~/miniconda3/envs/seeker')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
   withr::local_path(p)
   system2(...)}
