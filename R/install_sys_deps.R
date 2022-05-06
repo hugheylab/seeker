@@ -135,16 +135,18 @@ getSalmonIndexes = function(salmonIndexes) {
   invisible()}
 
 
-# sraToolkitPath - checks path and then installs.
-# minicondaPath - checks path and then installs
-# install as environment called seeker or have as argument.
-# minicondaEnv = "seeker" - installs and uses seeker environment by default,
-# if "base" doesn't create new environment and uses base env.
-# If specified, installs all mamba packages by default
-# Add option setting to ~/.Rprofile so it sets every time.
-# refgenieDir - directory to initialize refgenie to. Checks first then runs init.
-# salmonIndexes - indexes to pull using refgenie, requires regenieDir to be set.
-# fastqscreenDir - Dir to pass to -outdir
+#' Install seeker system dependencies for Mac and Ubuntu.
+#'
+#' @param sraToolkitDir Where to install the SRA Toolkit.
+#' @param minicondaDir Where to install miniconda.
+#' @param minicondaEnv The name of the miniconda environment. "base" will use the default base environment.
+#' @param refgenieDir Where to add refgenie config files.
+#' @param salmonIndexes Which salmon indexes to pull from refgenie.
+#' @param fastqscreenDir Where to output the fastq_screen command.
+#'
+#' @return `invisible()`
+#'
+#' @export
 installSysDeps = function(
     sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
     refgenieDir = '~/refgenie_genomes', salmonIndexes = NULL,
