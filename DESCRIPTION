@@ -2,7 +2,9 @@ Package: seeker
 Type: Package
 Title: Process genomic data
 Version: 0.0.0.9066
-Authors@R: as.person("Jake Hughey <jakejhughey@gmail.com> [aut, cre]")
+Authors@R: c(
+  person('Jake', 'Hughey', , 'jakejhughey@gmail.com', c('aut', 'cre')),
+  person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', 'aut'))
 Description: Simplified processing of sequencing and microarray data.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
