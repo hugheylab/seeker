@@ -90,6 +90,8 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #'
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
+#' @seealso [seeker()]
+#'
 #' @export
 seekerArray = function(params, parentDir) {
   r = checkSeekerArrayArgs(params, parentDir)

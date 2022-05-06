@@ -127,38 +127,56 @@ setRefgenie = function(refgenieDir) {
   invisible()}
 
 
-getSalmonIndexes = function(salmonIndexes) {
-  cat('Fetching salmon indexes...\n')
-  for (salmonIndex in salmonIndexes) {
-    rgArgs = c('pull', salmonIndex, '--genome-config', Sys.getenv('REFGENIE'))
+getRefgenieGenomes = function(genomes) {
+  cat('Fetching refgenie genome assets...\n')
+  for (genome in genomes) {
+    rgArgs = c('pull', genome, '--genome-config', Sys.getenv('REFGENIE'))
     system3('refgenie', rgArgs)}
   invisible()}
 
 
-#' Install seeker system dependencies for Mac and Ubuntu.
+#' Install seeker's system dependencies
 #'
-#' @param sraToolkitDir Where to install the SRA Toolkit.
-#' @param minicondaDir Where to install miniconda.
-#' @param minicondaEnv The name of the miniconda environment. "base" will use the default base environment.
-#' @param refgenieDir Where to add refgenie config files.
-#' @param salmonIndexes Which salmon indexes to pull from refgenie.
-#' @param fastqscreenDir Where to output the fastq_screen command.
+#' This function installs and configures the various programs required for
+#' seeker to fetch and process RNA-seq data.
 #'
-#' @return `invisible()`
+#' @param sraToolkitDir String indicating directory in which to install the
+#'   [SRA Toolkit](https://github.com/ncbi/sra-tools). If `NULL`, the Toolkit
+#'   will not be installed.
+#' @param minicondaDir String indicating directory in which to install
+#'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). If `NULL`,
+#'   Miniconda will not be installed.
+#' @param minicondaEnv String indicating name of the Miniconda environment in
+#'   which to install various conda packges (fastq-screen, fastqc, multiqc,
+#'   pigz, refgenie, salmon, and trim-galore).
+#' @param refgenieDir String indicating directory in which to download genome
+#'   assets using refgenie. Only used if `minicondaDir` is not `NULL`.
+#' @param refgenieGenomes Character vector indicating genome assets, such as
+#'   transcriptome indexes for [salmon()], to pull from
+#'   [refgenomes](http://refgenomes.databio.org/index) using refgenie. If
+#'   `NULL`, no assets are fetched.
+#' @param fastqscreenDir String indicating directory in which to download the
+#'   genomes for [fastqscreen()]. This takes a long time. If `NULL`, genomes are
+#'   not downloaded.
+#'
+#' @return `NULL`, invisibly
+#'
+#' @seealso [seeker()]
 #'
 #' @export
 installSysDeps = function(
     sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
-    refgenieDir = '~/refgenie_genomes', salmonIndexes = NULL,
+    refgenieDir = '~/refgenie_genomes', refgenieGenomes = NULL,
     fastqscreenDir = NULL) {
 
+  assertOS(c('linux', 'mac', 'solaris'))
   assertString(sraToolkitDir, null.ok = TRUE)
   if (!is.null(sraToolkitDir)) assertDirectoryExists(sraToolkitDir)
   assertString(minicondaDir, null.ok = TRUE)
   if (!is.null(minicondaDir)) assertDirectoryExists(minicondaDir)
   assertString(minicondaEnv, pattern = '^\\S+$')
   assertString(refgenieDir, null.ok = is.null(minicondaDir))
-  assertCharacter(salmonIndexes, any.missing = FALSE, null.ok = TRUE)
+  assertCharacter(refgenieGenomes, any.missing = FALSE, null.ok = TRUE)
   assertString(fastqscreenDir, null.ok = TRUE)
 
   if (!is.null(sraToolkitDir)) {
@@ -171,11 +189,11 @@ installSysDeps = function(
     } else {
       tryCatch(setRefgenie(refgenieDir), error = warning)}}
 
-  if (!is.null(salmonIndexes)) {
+  if (!is.null(refgenieGenomes)) {
     if (is.na(validateCommand('refgenie'))) {
-      warning('refgenie not found, salmon indexes cannot be fetched.')
+      warning('refgenie not found, genome assets cannot be fetched.')
     } else {
-      tryCatch(getSalmonIndexes(salmonIndexes), error = warning)}}
+      tryCatch(getRefgenieGenomes(refgenieGenomes), error = warning)}}
 
   if (!is.null(fastqscreenDir)) {
     if (is.na(validateCommand('fastq_screen'))) {

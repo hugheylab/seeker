@@ -64,3 +64,6 @@ matrix was generated from processed data.
 The output may include other files from NCBI GEO or ArrayExpress. Files with
 extension "qs" can be read into R using \code{\link[qs:qread]{qs::qread()}}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}
+}

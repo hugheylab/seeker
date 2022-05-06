@@ -178,5 +178,5 @@ This function selectively performs various steps to process RNA-seq data.
 }
 \seealso{
 \code{\link[=fetchMetadata]{fetchMetadata()}}, \code{\link[=fetch]{fetch()}}, \code{\link[=trimgalore]{trimgalore()}}, \code{\link[=fastqc]{fastqc()}},
-\code{\link[=salmon]{salmon()}}, \code{\link[=multiqc]{multiqc()}}, \code{\link[=tximport]{tximport()}}
+\code{\link[=salmon]{salmon()}}, \code{\link[=multiqc]{multiqc()}}, \code{\link[=tximport]{tximport()}}, \code{\link[=installSysDeps]{installSysDeps()}}, \code{\link[=seekerArray]{seekerArray()}}
 }

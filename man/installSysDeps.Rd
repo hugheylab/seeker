@@ -2,33 +2,49 @@
 % Please edit documentation in R/install_sys_deps.R
 \name{installSysDeps}
 \alias{installSysDeps}
-\title{Install seeker system dependencies for Mac and Ubuntu.}
+\title{Install seeker's system dependencies}
 \usage{
 installSysDeps(
   sraToolkitDir = "~",
   minicondaDir = "~",
   minicondaEnv = "seeker",
   refgenieDir = "~/refgenie_genomes",
-  salmonIndexes = NULL,
+  refgenieGenomes = NULL,
   fastqscreenDir = NULL
 )
 }
 \arguments{
-\item{sraToolkitDir}{Where to install the SRA Toolkit.}
+\item{sraToolkitDir}{String indicating directory in which to install the
+\href{https://github.com/ncbi/sra-tools}{SRA Toolkit}. If \code{NULL}, the Toolkit
+will not be installed.}
 
-\item{minicondaDir}{Where to install miniconda.}
+\item{minicondaDir}{String indicating directory in which to install
+\href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. If \code{NULL},
+Miniconda will not be installed.}
 
-\item{minicondaEnv}{The name of the miniconda environment. "base" will use the default base environment.}
+\item{minicondaEnv}{String indicating name of the Miniconda environment in
+which to install various conda packges (fastq-screen, fastqc, multiqc,
+pigz, refgenie, salmon, and trim-galore).}
 
-\item{refgenieDir}{Where to add refgenie config files.}
+\item{refgenieDir}{String indicating directory in which to download genome
+assets using refgenie. Only used if \code{minicondaDir} is not \code{NULL}.}
 
-\item{salmonIndexes}{Which salmon indexes to pull from refgenie.}
+\item{refgenieGenomes}{Character vector indicating genome assets, such as
+transcriptome indexes for \code{\link[=salmon]{salmon()}}, to pull from
+\href{http://refgenomes.databio.org/index}{refgenomes} using refgenie. If
+\code{NULL}, no assets are fetched.}
 
-\item{fastqscreenDir}{Where to output the fastq_screen command.}
+\item{fastqscreenDir}{String indicating directory in which to download the
+genomes for \code{\link[=fastqscreen]{fastqscreen()}}. This takes a long time. If \code{NULL}, genomes are
+not downloaded.}
 }
 \value{
-\code{invisible()}
+\code{NULL}, invisibly
 }
 \description{
-Install seeker system dependencies for Mac and Ubuntu.
+This function installs and configures the various programs required for
+seeker to fetch and process RNA-seq data.
+}
+\seealso{
+\code{\link[=seeker]{seeker()}}
 }

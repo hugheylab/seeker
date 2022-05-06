@@ -345,7 +345,7 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
 #' @seealso [fetchMetadata()], [fetch()], [trimgalore()], [fastqc()],
-#'   [salmon()], [multiqc()], [tximport()]
+#'   [salmon()], [multiqc()], [tximport()], [installSysDeps()], [seekerArray()]
 #'
 #' @export
 seeker = function(params, parentDir = '.', dryRun = FALSE) {
