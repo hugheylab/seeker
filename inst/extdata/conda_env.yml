@@ -4,5 +4,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - python=3.8.13
+  - python=3.9.12
   - mamba
