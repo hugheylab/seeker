@@ -100,7 +100,7 @@ getTrimmedFilenames = function(x) {
 
     if (length(y) > 1) {
       y[i] = gsub('trimmed\\.fq', glue('val_{i}.fq'), y[i])}}
-      # y[i] = gsub('trimmed\\.fq\\.gz', glue('val_{i}.fq.gz'), y[i])}}
+  # y[i] = gsub('trimmed\\.fq\\.gz', glue('val_{i}.fq.gz'), y[i])}}
 
   return(y)}
 
@@ -114,12 +114,11 @@ getFastqcFilenames = function(fastqFilepaths) {
 
 getRCondaInfo = function(outputDir = '.') {
   sessioninfo::session_info(
-    info = c('platform', 'packages'),
-    to_file = file.path(outputDir, 'session.log'))
+    info = 'auto', to_file = file.path(outputDir, 'session.log'))
 
   mc = getOption('seeker.miniconda')
   if (is.null(mc)) {
-    envName = 'base'
+    envName = 'seeker'
     condaPre = '~/miniconda3'
   } else if (basename(dirname(mc)) == 'envs') {
     envName = basename(mc)
@@ -136,7 +135,7 @@ getRCondaInfo = function(outputDir = '.') {
 
 
 system3 = function(...) {
-  mc = getOption('seeker.miniconda', '~/miniconda3')
+  mc = getOption('seeker.miniconda', '~/miniconda3/envs/seeker')
   p = path.expand(file.path(mc, c('bin/scripts', 'bin')))
   withr::local_path(p)
   system2(...)}
@@ -147,7 +146,7 @@ safe = function(x) {
   return(y)}
 
 
-checkCommand = function(cmd) {
+validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
   # give warning on mac and error on linux
   old = getOption('warn')
@@ -180,7 +179,7 @@ checkDefaultCommands = function() {
   r = foreach(i = seq_len(nrow(d)), .combine = rbind) %do% {
     # cmd = if (d$cmd[i] == 'ascp') getAscpCmd() else d$cmd[i]
     cmd = d$cmd[i]
-    path = checkCommand(cmd)
+    path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
       system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
     data.table(command = d$cmd[i], path = path, version = version)}
@@ -188,12 +187,15 @@ checkDefaultCommands = function() {
   return(r)}
 
 
-assertCommand = function(cmd, cmdName, defaultPath) {
+checkCommand = function(cmd, cmdName, defaultPath) {
   if (is.null(cmd)) {
     if (is.na(defaultPath)) {
-      stop(glue('{cmdName} is not available at the default location.'))}
+      return(glue('{cmdName} is not available at the default location.'))}
   } else {
-    path = checkCommand(cmd)
+    path = validateCommand(cmd)
     if (is.na(path)) {
-      stop(glue("'{cmd}' is not a valid command."))}}
-  invisible()}
+      return(glue("'{cmd}' is not a valid command."))}}
+  return(TRUE)}
+
+
+assertCommand = checkmate::makeAssertionFunction(checkCommand)

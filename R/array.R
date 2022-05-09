@@ -90,6 +90,8 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #'
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
+#' @seealso [seeker()]
+#'
 #' @export
 seekerArray = function(params, parentDir) {
   r = checkSeekerArrayArgs(params, parentDir)
@@ -164,7 +166,6 @@ seekerArray = function(params, parentDir) {
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   sessioninfo::session_info(
-    info = c('platform', 'packages'),
-    to_file = file.path(outputDir, 'session.log'))
+    info = 'auto', to_file = file.path(outputDir, 'session.log'))
 
   invisible(outputDir)}

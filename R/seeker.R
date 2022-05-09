@@ -1,108 +1,131 @@
 #' @import checkmate
 #' @importFrom data.table data.table fread fwrite set setDT setnames
 #' @importFrom foreach foreach %do% %dopar%
-#' @importFrom glue glue
+#' @importFrom glue glue glue_data
+#' @importFrom readr read_delim
+#' @importFrom utils download.file
 NULL
 # readr not called explicitly, but used by tximport
 
 
-checkSeekerArgs = function(params, parentDir) {
+checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
   steps = c(
     'metadata', 'fetch', 'trimgalore', 'fastqc', 'salmon', 'multiqc', 'tximport')
 
   command = NULL
   defaultCommands = checkDefaultCommands()
-  assertList(params)
-  assertNames(names(params), permutation.of = c('study', steps))
-  assertString(params$study, min.chars = 1L)
 
-  assertString(parentDir)
-  assertDirectoryExists(parentDir)
+  coll = makeAssertCollection()
+
+  assertList(params, add = coll)
+  assertNames(
+    names(params), permutation.of = c('study', steps), add = coll)
+  assertString(params$study, min.chars = 1L, add = coll)
+
+  assertString(parentDir, add = coll)
+  assertDirectoryExists(parentDir, add = coll)
   outputDir = file.path(parentDir, params$study)
 
   for (step in steps) {
-    assertFlag(params[[step]]$run, .var.name = glue('params${step}$run'))}
+    assertFlag(
+      params[[step]]$run, .var.name = glue('params${step}$run'), add = coll)}
 
   if (params$metadata$run) {
     assertNames(
       names(params$metadata),
-      subset.of = c('run', 'bioproject', 'include', 'exclude'))
-    assertString(params$metadata$bioproject, min.chars = 1L)
+      subset.of = c('run', 'bioproject', 'include', 'exclude'), add = coll)
+    assertString(params$metadata$bioproject, min.chars = 1L, add = coll)
 
-    assertList(params$metadata$include, any.missing = FALSE, null.ok = TRUE)
+    assertList(
+      params$metadata$include, any.missing = FALSE, null.ok = TRUE, add = coll)
     if (!is.null(params$metadata$include)) {
       assertNames(names(params$metadata$include),
-                  permutation.of = c('colname', 'values'))
-      assertString(params$metadata$include$colname, min.chars = 1L)
-      assertVector(params$metadata$include$values, strict = TRUE)}
+                  permutation.of = c('colname', 'values'), add = coll)
+      assertString(params$metadata$include$colname, min.chars = 1L, add = coll)
+      assertVector(params$metadata$include$values, strict = TRUE, add = coll)}
 
-    assertList(params$metadata$exclude, any.missing = FALSE, null.ok = TRUE)
+    assertList(
+      params$metadata$exclude, any.missing = FALSE, null.ok = TRUE, add = coll)
     if (!is.null(params$metadata$exclude)) {
       assertNames(names(params$metadata$exclude),
-                  permutation.of = c('colname', 'values'))
-      assertString(params$metadata$exclude$colname, min.chars = 1L)
-      assertVector(params$metadata$exclude$values, strict = TRUE)}}
+                  permutation.of = c('colname', 'values'), add = coll)
+      assertString(params$metadata$exclude$colname, min.chars = 1L, add = coll)
+      assertVector(params$metadata$exclude$values, strict = TRUE, add = coll)}}
 
-  assert(checkFALSE(params$fetch$run),
-         checkTRUE(params$metadata$run),
-         checkFileExists(file.path(outputDir, 'metadata.csv')),
-         combine = 'or')
+  tryCatch(assert(checkFALSE(params$fetch$run),
+                  checkTRUE(params$metadata$run),
+                  checkFileExists(file.path(outputDir, 'metadata.csv')),
+                  combine = 'or'),
+           error = function(e) assertTRUE(e, add = coll))
 
   if (params$fetch$run) {
     assertNames(
       names(params$fetch),
       subset.of = c(
         'run', 'keep', 'overwrite', 'keepSra', 'prefetchCmd', 'prefetchArgs',
-        'fasterqdumpCmd', 'fasterqdumpArgs', 'pigzCmd', 'pigzArgs'))
-    assertFlag(params$fetch$keep, null.ok = TRUE)
-    assertFlag(params$fetch$overwrite, null.ok = TRUE)
-    assertFlag(params$fetch$keepSra, null.ok = TRUE)
+        'fasterqdumpCmd', 'fasterqdumpArgs', 'pigzCmd', 'pigzArgs'), add = coll)
+    assertFlag(params$fetch$keep, null.ok = TRUE, add = coll)
+    assertFlag(params$fetch$overwrite, null.ok = TRUE, add = coll)
+    assertFlag(params$fetch$keepSra, null.ok = TRUE, add = coll)
 
-    assertString(params$fetch$prefetchCmd, min.chars = 1L, null.ok = TRUE)
+    assertString(
+      params$fetch$prefetchCmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$fetch$prefetchCmd, 'prefetch',
-                  defaultCommands[command == 'prefetch']$path)
-    assertCharacter(params$fetch$prefetchArgs, any.missing = FALSE, null.ok = TRUE)
+                  defaultCommands[command == 'prefetch']$path, add = coll)
+    assertCharacter(
+      params$fetch$prefetchArgs, any.missing = FALSE, null.ok = TRUE, add = coll)
 
-    assertString(params$fetch$fasterqdumpCmd, min.chars = 1L, null.ok = TRUE)
+    assertString(
+      params$fetch$fasterqdumpCmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$fetch$fasterqdumpCmd, 'fasterq-dump',
-                  defaultCommands[command == 'fasterq-dump']$path)
-    assertCharacter(params$fetch$fasterqdumpArgs, any.missing = FALSE, null.ok = TRUE)
+                  defaultCommands[command == 'fasterq-dump']$path, add = coll)
+    assertCharacter(
+      params$fetch$fasterqdumpArgs, any.missing = FALSE, null.ok = TRUE, add = coll)
 
-    assertString(params$fetch$pigzCmd, min.chars = 1L, null.ok = TRUE)
+    assertString(params$fetch$pigzCmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$fetch$pigzCmd, 'pigz',
-                  defaultCommands[command == 'pigz']$path)
-    assertCharacter(params$fetch$pigzArgs, any.missing = FALSE, null.ok = TRUE)}
+                  defaultCommands[command == 'pigz']$path, add = coll)
+    assertCharacter(
+      params$fetch$pigzArgs, any.missing = FALSE, null.ok = TRUE, add = coll)}
 
-  assert(checkFALSE(params$trimgalore$run),
-         checkTRUE(params$fetch$run),
-         checkDirectoryExists(file.path(outputDir, 'fetch_output')),
-         combine = 'or')
+    tryCatch(assert(checkFALSE(params$trimgalore$run),
+                    checkTRUE(params$fetch$run),
+                    checkDirectoryExists(file.path(outputDir, 'fetch_output')),
+                    combine = 'or'),
+             error = function(e) assertTRUE(e, add = coll))
 
   if (params$trimgalore$run) {
-    assertNames(names(params$trimgalore),
-                subset.of = c('run', 'keep', 'cmd', 'args', 'pigzCmd'))
-    assertFlag(params$trimgalore$keep, null.ok = TRUE)
-    assertString(params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE)
+    assertNames(
+      names(params$trimgalore),
+      subset.of = c('run', 'keep', 'cmd', 'args', 'pigzCmd'), add = coll)
+    assertFlag(params$trimgalore$keep, null.ok = TRUE, add = coll)
+    assertString(
+      params$trimgalore$cmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$trimgalore$cmd, 'trim_galore',
-                  defaultCommands[command == 'trim_galore']$path)
-    assertCharacter(params$trimgalore$args, any.missing = FALSE, null.ok = TRUE)
-    assertString(params$trimgalore$pigzCmd, min.chars = 1L, null.ok = TRUE)
+                  defaultCommands[command == 'trim_galore']$path, add = coll)
+    assertCharacter(
+      params$trimgalore$args, any.missing = FALSE, null.ok = TRUE, add = coll)
+    assertString(
+      params$trimgalore$pigzCmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$trimgalore$pigzCmd, 'pigz',
-                  defaultCommands[command == 'pigz']$path)}
+                  defaultCommands[command == 'pigz']$path, add = coll)}
 
-  assert(checkFALSE(params$fastqc$run),
-         checkTRUE(params$trimgalore$run),
-         checkTRUE(params$fetch$run),
-         checkDirectoryExists(file.path(outputDir, 'fetch_output')),
-         combine = 'or')
+  tryCatch(assert(checkFALSE(params$fastqc$run),
+                  checkTRUE(params$trimgalore$run),
+                  checkTRUE(params$fetch$run),
+                  checkDirectoryExists(file.path(outputDir, 'fetch_output')),
+                  combine = 'or'),
+           error = function(e) assertTRUE(e, add = coll))
 
   if (params$fastqc$run) {
-    assertNames(names(params$fastqc), subset.of = c('run', 'keep', 'cmd', 'args'))
-    assertFlag(params$fastqc$keep, null.ok = TRUE)
-    assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE)
+    assertNames(
+      names(params$fastqc), subset.of = c('run', 'keep', 'cmd', 'args'), add = coll)
+    assertFlag(params$fastqc$keep, null.ok = TRUE, add = coll)
+    assertString(params$fastqc$cmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$fastqc$cmd, 'fastqc',
-                  defaultCommands[command == 'fastqc']$path)
-    assertCharacter(params$fastqc$args, any.missing = FALSE, null.ok = TRUE)}
+                  defaultCommands[command == 'fastqc']$path, add = coll)
+    assertCharacter(
+      params$fastqc$args, any.missing = FALSE, null.ok = TRUE, add = coll)}
 
   assert(checkFALSE(params$salmon$run),
          checkTRUE(params$trimgalore$run),
@@ -113,22 +136,26 @@ checkSeekerArgs = function(params, parentDir) {
   if (params$salmon$run) {
     assertNames(
       names(params$salmon),
-      subset.of = c('run', 'indexDir', 'sampleColname', 'keep', 'cmd', 'args'))
-    assertString(params$salmon$indexDir, min.chars = 1L)
-    assertDirectoryExists(params$salmon$indexDir)
-    assertString(params$salmon$sampleColname, null.ok = TRUE)
-    assertFlag(params$salmon$keep, null.ok = TRUE)
-    assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE)
+      subset.of = c('run', 'indexDir', 'sampleColname', 'keep', 'cmd', 'args'),
+      add = coll)
+    assertString(params$salmon$indexDir, min.chars = 1L, add = coll)
+    assertDirectoryExists(params$salmon$indexDir, add = coll)
+    assertString(params$salmon$sampleColname, null.ok = TRUE, add = coll)
+    assertFlag(params$salmon$keep, null.ok = TRUE, add = coll)
+    assertString(params$salmon$cmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$salmon$cmd, 'salmon',
-                  defaultCommands[command == 'salmon']$path)
-    assertCharacter(params$salmon$args, any.missing = FALSE, null.ok = TRUE)}
+                  defaultCommands[command == 'salmon']$path, add = coll)
+    assertCharacter(
+      params$salmon$args, any.missing = FALSE, null.ok = TRUE, add = coll)}
 
   if (params$multiqc$run) {
-    assertNames(names(params$multiqc), subset.of = c('run', 'cmd', 'args'))
-    assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE)
+    assertNames(
+      names(params$multiqc), subset.of = c('run', 'cmd', 'args'), add = coll)
+    assertString(params$multiqc$cmd, min.chars = 1L, null.ok = TRUE, add = coll)
     assertCommand(params$multiqc$cmd, 'multiqc',
-                  defaultCommands[command == 'multiqc']$path)
-    assertCharacter(params$multiqc$args, any.missing = FALSE, null.ok = TRUE)}
+                  defaultCommands[command == 'multiqc']$path, add = coll)
+    assertCharacter(
+      params$multiqc$args, any.missing = FALSE, null.ok = TRUE, add = coll)}
 
   assert(checkFALSE(params$tximport$run),
          checkTRUE(params$salmon$run),
@@ -138,8 +165,10 @@ checkSeekerArgs = function(params, parentDir) {
   if (params$tximport$run) {
     assertNames(
       names(params$tximport),
-      subset.of = c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'))
-    assertList(params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE)
+      subset.of = c('run', 'tx2gene', 'countsFromAbundance', 'ignoreTxVersion'),
+      add = coll)
+    assertList(
+      params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE, add = coll)
 
     if (!is.null(params$tximport$tx2gene)) {
       assert(checkNames(names(params$tximport$tx2gene), must.include = 'species',
@@ -148,18 +177,26 @@ checkSeekerArgs = function(params, parentDir) {
              combine = 'or')
 
       if ('species' %in% names(params$tximport$tx2gene)) {
-        assertString(params$tximport$tx2gene$species, min.chars = 2L)
-        assertNumber(params$tximport$tx2gene$version, null.ok = TRUE)
+        assertString(params$tximport$tx2gene$species, min.chars = 2L, add = coll)
+        assertNumber(params$tximport$tx2gene$version, null.ok = TRUE, add = coll)
       } else {
-        assertFileExists(file.path(outputDir, params$tximport$tx2gene$filename))
-        tx2gene = fread(file.path(outputDir, params$tximport$tx2gene$filename))
-        assertDataTable(
-          tx2gene, types = 'character', any.missing = FALSE, ncols = 2L)}}
+        acLen = length(coll)
+        assertFileExists(
+          file.path(outputDir, params$tximport$tx2gene$filename), add = coll)
+        if (acLen != length(coll)) {
+          tx2gene = fread(file.path(outputDir, params$tximport$tx2gene$filename))
+          assertDataTable(
+            tx2gene, types = 'character', any.missing = FALSE, ncols = 2L,
+            add = coll)}}}
 
-    assertString(params$tximport$countsFromAbundance, null.ok = FALSE)
-    assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE)}
+    assertString(
+      params$tximport$countsFromAbundance, null.ok = FALSE, add = coll)
+    assertFlag(params$tximport$ignoreTxVersion, null.ok = TRUE, add = coll)}
 
-  return(outputDir)}
+  if (!dryRun) reportAssertions(coll)
+
+  res = list(outputDir = outputDir, assertCollection = coll)
+  return(res)}
 
 
 #' Process RNA-seq data end to end
@@ -302,16 +339,32 @@ checkSeekerArgs = function(params, parentDir) {
 #' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `params$study`.
+#' @param dryRun Logical indicating whether to check the validity of inputs
+#'   without actually fetching or processing any data.
 #'
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
 #'
 #' @seealso [fetchMetadata()], [fetch()], [trimgalore()], [fastqc()],
-#'   [salmon()], [multiqc()], [tximport()]
+#'   [salmon()], [multiqc()], [tximport()], [installSysDeps()], [seekerArray()]
 #'
 #' @export
-seeker = function(params, parentDir = '.') {
+seeker = function(params, parentDir = '.', dryRun = FALSE) {
   assertOS(c('linux', 'mac', 'solaris'))
-  outputDir = checkSeekerArgs(params, parentDir)
+  assertFlag(dryRun)
+  checkArgsRes = checkSeekerArgs(params, parentDir, dryRun)
+  coll = checkArgsRes$assertCollection
+
+  if (dryRun) {
+    m = if (length(coll$getMessages()) == 0) {
+      'Dry run encountered no errors. All systems go.\n'
+    } else {
+      sprintf('Dry run encountered the following errors:\n%s\n',
+              paste(coll$getMessages(), collapse = '\n'))}
+    cat(m)
+    writeLines(m, 'seeker_dry_run.log')
+    return(invisible())}
+
+  outputDir = checkArgsRes$outputDir
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
   ####################

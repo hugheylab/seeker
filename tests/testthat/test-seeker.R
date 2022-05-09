@@ -11,7 +11,8 @@ test_that('seeker', {
   seeker(params, parentDirSeeker)
 
   seekerOutputObs = list.files(outputDirSeeker, recursive = TRUE)
-  seekerOutputExp = snapshot(seekerOutputObs, file.path(dataDir, 'seeker_output_full.qs'))
+  seekerOutputExp = snapshot(
+    seekerOutputObs, file.path(dataDir, 'seeker_output_full.qs'))
 
   expect_equal(seekerOutputObs, seekerOutputExp)
 })
@@ -23,13 +24,15 @@ test_that('seeker skip all', {
   parentDirSeekerSkip = file.path(dataDir, 'staging_seeker_skip')
   dir.create(parentDirSeekerSkip)
   withr::local_file(parentDirSeekerSkip)
-  file.copy(file.path(dataDir, 'GSE143524'), parentDirSeekerSkip, recursive = TRUE)
+  file.copy(file.path(dataDir, 'GSE143524'),
+            parentDirSeekerSkip, recursive = TRUE)
   outputDirSeekerSkip = file.path(parentDirSeekerSkip, 'GSE143524')
 
   seeker(paramsSkip, parentDirSeekerSkip)
 
   seekerOutputObs = list.files(outputDirSeekerSkip, recursive = TRUE)
-  seekerOutputExp = snapshot(seekerOutputObs, file.path(dataDir, 'seeker_output_skip.qs'))
+  seekerOutputExp = snapshot(
+    seekerOutputObs, file.path(dataDir, 'seeker_output_skip.qs'))
 
   expect_equal(seekerOutputObs, seekerOutputExp)
 })
@@ -37,11 +40,11 @@ test_that('seeker skip all', {
 test_that('checkSeekerArgs', {
   skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
-  outputDirObs = checkSeekerArgs(params, parentDir)
+  outputDirObs = checkSeekerArgs(params, parentDir)$outputDir
   expect_equal(outputDirObs, outputDir)
 })
 
-test_that('checkSeekerArgs Errors', {
+test_that('checkSeekerArgs errors', {
   skip_on_os('windows', arch = NULL)
 
   # Error variable and directory
@@ -79,7 +82,8 @@ test_that('checkSeekerArgs Errors', {
   paramsErr$fastqc$run = TRUE
   paramsErr$trimgalore$run = TRUE
   file.path(parentDirErr, 'GSE143524')
-  file.copy(file.path(dataDir, 'GSE143524', 'fetch_output'), file.path(parentDirErr, 'GSE143524'), recursive = TRUE)
+  file.copy(file.path(dataDir, 'GSE143524', 'fetch_output'),
+            file.path(parentDirErr, 'GSE143524'), recursive = TRUE)
 
   # Run tximport without running salmon or already having salmonDir
   paramsErr$salmon$run = FALSE

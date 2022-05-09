@@ -4,7 +4,7 @@
 \alias{seeker}
 \title{Process RNA-seq data end to end}
 \usage{
-seeker(params, parentDir = ".")
+seeker(params, parentDir = ".", dryRun = FALSE)
 }
 \arguments{
 \item{params}{Named list of parameters with components:
@@ -166,6 +166,9 @@ of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.ym
 
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{params$study}.}
+
+\item{dryRun}{Logical indicating whether to check the validity of inputs
+without actually fetching or processing any data.}
 }
 \value{
 Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
@@ -175,5 +178,5 @@ This function selectively performs various steps to process RNA-seq data.
 }
 \seealso{
 \code{\link[=fetchMetadata]{fetchMetadata()}}, \code{\link[=fetch]{fetch()}}, \code{\link[=trimgalore]{trimgalore()}}, \code{\link[=fastqc]{fastqc()}},
-\code{\link[=salmon]{salmon()}}, \code{\link[=multiqc]{multiqc()}}, \code{\link[=tximport]{tximport()}}
+\code{\link[=salmon]{salmon()}}, \code{\link[=multiqc]{multiqc()}}, \code{\link[=tximport]{tximport()}}, \code{\link[=installSysDeps]{installSysDeps()}}, \code{\link[=seekerArray]{seekerArray()}}
 }
