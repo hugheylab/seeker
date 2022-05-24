@@ -171,13 +171,13 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
       params$tximport$tx2gene, any.missing = FALSE, null.ok = TRUE, add = coll)
 
     if (!is.null(params$tximport$tx2gene)) {
-      assert(checkNames(names(params$tximport$tx2gene), must.include = 'species',
-                        subset.of = c('species', 'version')),
+      assert(checkNames(names(params$tximport$tx2gene), must.include = 'organism',
+                        subset.of = c('organism', 'version')),
              checkNames(names(params$tximport$tx2gene), identical.to = 'filename'),
              combine = 'or')
 
-      if ('species' %in% names(params$tximport$tx2gene)) {
-        assertString(params$tximport$tx2gene$species, min.chars = 2L, add = coll)
+      if ('organism' %in% names(params$tximport$tx2gene)) {
+        assertString(params$tximport$tx2gene$organism, min.chars = 2L, add = coll)
         assertNumber(params$tximport$tx2gene$version, null.ok = TRUE, add = coll)
       } else {
         acLen = length(coll)
@@ -317,14 +317,14 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #'     `parentDir`/`study`/tximport_output.qs. If `FALSE`, expects and does
 #'     nothing. Following components are only checked if `run` is `TRUE`.
 #'   * `tx2gene`: Optional named list with components:
-#'     * `species`: String indicating species and thereby ensembl gene dataset.
+#'     * `organism`: String indicating organism and thereby ensembl gene dataset.
 #'       See [getTx2gene()].
 #'     * `version`: Optional number indicating ensembl version. `NULL` indicates
 #'       the latest version. See [getTx2gene()].
 #'     * `filename`: Optional string indicating name of pre-existing text file
 #'       in `parentDir`/`params$study` containing mapping between transcripts
 #'       (first column) and genes (second column), with column names in the
-#'       first row. If `filename` is specified, `species` and `version` must not
+#'       first row. If `filename` is specified, `organism` and `version` must not
 #'       be specified.
 #'
 #'     If not `NULL`, saves a file `parentDir`/`study`/tx2gene.csv.gz.
@@ -488,7 +488,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     paramsNow$run = NULL
 
     if (is.list(paramsNow$tx2gene)) {
-      if ('species' %in% names(paramsNow$tx2gene)) {
+      if ('organism' %in% names(paramsNow$tx2gene)) {
         tx2gene = do.call(getTx2gene, c(
           list(outputDir = outputDir), paramsNow$tx2gene))
         params[[step]]$tx2gene$version = attr(tx2gene, 'version') # for output yml

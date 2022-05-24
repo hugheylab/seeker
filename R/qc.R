@@ -30,18 +30,22 @@ fastqc = function(
   assertString(cmd)
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
 
+  reg = checkParallel()
+  doOp = if (reg) `%dopar%` else `%do%`
+
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(fs))
 
-  feo = foreach(f = fs, i = seq_len(length(fs)), .combine = c,
-                .options.future = list(scheduling = Inf))
+  feo = foreach(
+    f = fs, i = seq_len(length(fs)), .combine = c,
+    .options.future = list(scheduling = Inf))
 
-  result = feo %dopar% {
+  result = doOp(feo, {
     argsNow = c(args, '-o', safe(outputDir), safe(f))
     r = system3(path.expand(cmd), argsNow)
     writeLogFile(logPath, f, i, r)
-    r}
+    r})
 
   writeLogFile(logPath, n = -length(fs))
   invisible(result)}
@@ -80,6 +84,7 @@ fastqscreen = function(
   assertPathForOutput(outputDir, overwrite = TRUE)
   assertString(cmd)
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
+  checkParallel()
 
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
   logPath = getLogPath(outputDir)
@@ -142,10 +147,14 @@ trimgalore = function(
   if (grepl('(-j|--cores|--basename|--gzip|-o|--paired)', args)) {
     stop('args contains unallowed arguments.')}
 
-  feo = foreach(f = filepaths, i = seq_len(length(filepaths)), .combine = rbind,
-                .options.future = list(scheduling = Inf))
+  reg = checkParallel()
+  doOp = if (reg) `%dopar%` else `%do%`
 
-  result = feo %dopar% {
+  feo = foreach(
+    f = filepaths, i = seq_len(length(filepaths)), .combine = rbind,
+    .options.future = list(scheduling = Inf))
+
+  result = doOp(feo, {
     argsNow = c(
       args, '-o', safe(outputDir), if (length(f) > 1) '--paired', safe(f))
     r = system3(path.expand(cmd), argsNow)
@@ -153,10 +162,8 @@ trimgalore = function(
 
     paths = file.path(outputDir, basename(getTrimmedFilenames(f)))
     . = system3(path.expand(pigzCmd), c('-p', 1, '-f', safe(paths)))
-    # fastqTrimmed = paste(
-    #   file.path(outputDir, basename(getTrimmedFilenames(f))), collapse = ';')
     data.table(
-      fastq_trimmed = paste(paste0(paths, '.gz'), collapse = ';'), status = r)}
+      fastq_trimmed = paste(paste0(paths, '.gz'), collapse = ';'), status = r)})
 
   writeLogFile(logPath, n = -length(filepaths))
   invisible(result)}

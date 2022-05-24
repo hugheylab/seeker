@@ -1,4 +1,4 @@
-platform,mappingFunction,dbName,interName,geneColname,splitColumn,species
+platform,mappingFunction,dbName,interName,geneColname,splitColumn,organism
 GPL81,Direct,,,ENTREZ_GENE_ID,,Mm
 GPL180,Anno,org.Hs.egSYMBOL2EG,GENE_SYM,,,Hs
 GPL341,Direct,,,ENTREZ_GENE_ID,,Rn

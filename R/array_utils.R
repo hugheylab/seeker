@@ -227,12 +227,12 @@ getProbeGeneMappingAnno = function(featureDt, dbName, interName) {
   return(mapping)}
 
 
-getEntrezEnsemblMapping = function(species) {
-  pkgName = glue('org.{species}.eg.db')
+getEntrezEnsemblMapping = function(organism) {
+  pkgName = glue('org.{organism}.eg.db')
   if (!requireNamespace(pkgName, quietly = TRUE)) {
     BiocManager::install(pkgName)}
 
-  mapTmp1 = eval(parse(text = glue('{pkgName}::org.{species}.egENSEMBL')))
+  mapTmp1 = eval(parse(text = glue('{pkgName}::org.{organism}.egENSEMBL')))
   mapTmp2 = AnnotationDbi::mappedkeys(mapTmp1)
   mapTmp3 = as.list(mapTmp1[mapTmp2])
 
@@ -257,7 +257,7 @@ getProbeGeneMapping = function(featureDt, platformDt, geneIdType) {
     set(mapping, j = col, value = as.character(mapping[[col]]))}
 
   if (geneIdType == 'ensembl') {
-    m = getEntrezEnsemblMapping(platformDt$species)
+    m = getEntrezEnsemblMapping(platformDt$organism)
     mapping = merge(mapping[, .(probe_set, entrez = gene_id)], m, by = 'entrez')
     set(mapping, j = 'entrez', value = NULL)
     setnames(mapping, 'ensembl', 'gene_id')

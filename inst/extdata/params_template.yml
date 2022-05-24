@@ -45,7 +45,7 @@ tximport:
   run: TRUE # [logical]
   tx2gene:
     # [named list or NULL]
-    species: 'mmusculus' # [string]
+    organism: 'mmusculus' # [string]
     # version # [number or NULL]
   countsFromAbundance: '' # [string]
   # ignoreTxVersion # [logical or NULL]

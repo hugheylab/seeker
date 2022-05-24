@@ -174,6 +174,9 @@ fetch = function(
   assertString(pigzCmd)
   assertCharacter(pigzArgs, any.missing = FALSE, null.ok = TRUE)
 
+  reg = checkParallel()
+  doOp = if (reg) `%dopar%` else `%do%`
+
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
 
   logPath = getLogPath(outputDir)
@@ -183,9 +186,7 @@ fetch = function(
     acc = accessions, i = seq_len(length(accessions)),
     .options.future = list(scheduling = Inf))
 
-  # TODO: possibly use dopar loop and single-thread fasterqdump and pigz
-  result = feo %dopar% {
-  # result = feo %do% {
+  result = doOp(feo, {
     pat = '^{acc}(_1|_2|)\\.fastq'
     paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)
 
@@ -198,15 +199,11 @@ fetch = function(
       args = c(prefetchArgs, '-O', safe(outputDir), acc)
       r = system3(path.expand(prefetchCmd), args)
 
-      args = c(
-        fasterqdumpArgs, '-e', 1,
-        # fasterqdumpArgs, '-e', foreach::getDoParWorkers(),
-        '-O', safe(outputDir), '-f', acc)
+      args = c(fasterqdumpArgs, '-e', 1, '-O', safe(outputDir), '-f', acc)
       r = system3(path.expand(fasterqdumpCmd), args)
 
       args = c(
         pigzArgs, '-p', 1,
-        # pigzArgs, '-p', foreach::getDoParWorkers(),
         '-f', safe(dir(outputDir, glue(pat, '$'), full.names = TRUE)))
       r = system3(path.expand(pigzCmd), args)
       paths = dir(outputDir, glue(pat, '\\.gz$'), full.names = TRUE)
@@ -215,7 +212,7 @@ fetch = function(
         unlink(file.path(outputDir, acc), recursive = TRUE)}}
 
     writeLogFile(logPath, acc, i, r)
-    list(paths, r)}
+    list(paths, r)})
 
   writeLogFile(logPath, n = -length(accessions))
   d = list(localFilepaths = getFileVec(lapply(result, `[[`, 1L)),

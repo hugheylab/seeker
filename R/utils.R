@@ -199,3 +199,12 @@ checkCommand = function(cmd, cmdName, defaultPath) {
 
 
 assertCommand = checkmate::makeAssertionFunction(checkCommand)
+
+
+checkParallel = function() {
+  reg = foreach::getDoParRegistered()
+  if (!reg) {
+    w = paste('No parallel backend registered.',
+              'Running on a single core, this could take a while.')
+    warning(w, call. = FALSE)}
+  invisible(reg)}

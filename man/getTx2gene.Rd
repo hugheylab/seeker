@@ -4,10 +4,10 @@
 \alias{getTx2gene}
 \title{Get mapping between transcripts and genes}
 \usage{
-getTx2gene(species = "mmusculus", version = NULL, outputDir = "data")
+getTx2gene(organism = "mmusculus", version = NULL, outputDir = "data")
 }
 \arguments{
-\item{species}{String used to pass \code{paste0(species, "_gene_ensembl")} as the
+\item{organism}{String used to pass \code{paste0(organism, "_gene_ensembl")} as the
 \code{dataset} argument to \code{\link[biomaRt:useEnsembl]{biomaRt::useEnsembl()}}. To see available datasets,
 do \verb{mart = biomaRt::useEnsembl("genes"); biomaRt::listDatasets(mart)}.}
 

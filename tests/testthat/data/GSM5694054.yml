@@ -19,5 +19,5 @@ multiqc:
 tximport:
   run: yes
   tx2gene:
-    species: mmusculus
+    organism: mmusculus
   countsFromAbundance: lengthScaledTPM
