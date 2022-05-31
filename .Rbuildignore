@@ -9,3 +9,4 @@
 ^IBMAspera
 ^sratoolkit
 ^lint_ignore\.csv$
+^codecov\.yml$
