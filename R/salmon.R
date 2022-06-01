@@ -40,6 +40,7 @@ salmon = function(
   assertString(cmd)
   assertCharacter(args, any.missing = FALSE, null.ok = TRUE)
   assertFlag(compress)
+  checkParallel()
 
   if (!dir.exists(outputDir)) dir.create(outputDir, recursive = TRUE)
   argsBase = c('quant', args, '-i', safe(indexDir))
@@ -48,8 +49,9 @@ salmon = function(
   logPath = getLogPath(outputDir)
   writeLogFile(logPath, n = length(samplesUnique))
 
-  feo = foreach(i = seq_len(length(samplesUnique)), .combine = c,
-                .options.future = list(scheduling = Inf))
+  feo = foreach(
+    i = seq_len(length(samplesUnique)), .combine = c,
+    .options.future = list(scheduling = Inf))
 
   result = feo %do% {
     samp = samplesUnique[i]

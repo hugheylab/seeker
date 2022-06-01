@@ -46,7 +46,7 @@ tximport:
   run: TRUE # [logical]
   tx2gene:
     # [named list or NULL]
-    species: 'mmusculus' # [string]
+    organism: 'mmusculus' # [string]
     # version # [number or NULL]
     # filename # [string or NULL]
   countsFromAbundance: 'lengthScaledTPM' # [string]

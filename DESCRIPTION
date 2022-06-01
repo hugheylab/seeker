@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process genomic data
-Version: 0.0.0.9066
+Version: 0.0.0.9067
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', 'aut'))
@@ -10,7 +10,7 @@ URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 3.5)
 Imports:

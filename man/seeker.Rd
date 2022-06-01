@@ -140,14 +140,14 @@ quantification results, and saves results to
 nothing. Following components are only checked if \code{run} is \code{TRUE}.
 \item \code{tx2gene}: Optional named list with components:
 \itemize{
-\item \code{species}: String indicating species and thereby ensembl gene dataset.
+\item \code{organism}: String indicating organism and thereby ensembl gene dataset.
 See \code{\link[=getTx2gene]{getTx2gene()}}.
 \item \code{version}: Optional number indicating ensembl version. \code{NULL} indicates
 the latest version. See \code{\link[=getTx2gene]{getTx2gene()}}.
 \item \code{filename}: Optional string indicating name of pre-existing text file
 in \code{parentDir}/\code{params$study} containing mapping between transcripts
 (first column) and genes (second column), with column names in the
-first row. If \code{filename} is specified, \code{species} and \code{version} must not
+first row. If \code{filename} is specified, \code{organism} and \code{version} must not
 be specified.
 }
 

@@ -7,7 +7,7 @@ test_that('getPlatforms', {
   d = getPlatforms('mapping')
   expect_s3_class(d, 'data.table')
   cols = c('platform', 'mappingFunction', 'dbName', 'interName',
-           'geneColname', 'splitColumn', 'species')
+           'geneColname', 'splitColumn', 'organism')
   expect_names(colnames(d), permutation.of = cols, what = 'colnames')
 
   expect_error(getPlatforms('platt'))

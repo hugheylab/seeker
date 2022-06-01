@@ -90,7 +90,7 @@ test_that('checkSeekerArgs errors', {
   expect_error(checkSeekerArgs(paramsErr, parentDirErr))
   paramsErr$salmon$run = TRUE
 
-  # No tx2gene species or filename
+  # No tx2gene organism or filename
   # Commented out regex value passes test expectation when I run it line by line
   # myself, but not when actually testing package.
   paramsErr$tximport$tx2gene$filename = NULL

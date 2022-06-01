@@ -3,7 +3,7 @@
 #' This function uses the
 #' [biomaRt package](https://doi.org/doi:10.18129/B9.bioc.biomaRt).
 #'
-#' @param species String used to pass `paste0(species, "_gene_ensembl")` as the
+#' @param organism String used to pass `paste0(organism, "_gene_ensembl")` as the
 #'   `dataset` argument to [biomaRt::useEnsembl()]. To see available datasets,
 #'   do `mart = biomaRt::useEnsembl("genes"); biomaRt::listDatasets(mart)`.
 #' @param version Passed to [biomaRt::useEnsembl()]. `NULL` indicates the latest
@@ -16,11 +16,12 @@
 #'
 #' @export
 getTx2gene = function(
-  species = 'mmusculus', version = NULL, outputDir = 'data') {
+  organism = 'mmusculus', version = NULL, outputDir = 'data') {
 
-  assertString(species)
+  assertString(organism)
   assertNumber(version, null.ok = TRUE)
   assertString(outputDir, null.ok = TRUE)
+  withr::local_options(timeout = 600)
 
   if (is.null(version)) { # let's be strict
     arch = setDT(biomaRt::listEnsemblArchives(https = TRUE))
@@ -30,9 +31,9 @@ getTx2gene = function(
     assertPathForOutput(outputDir, overwrite = TRUE)}
 
   if (testthat::is_testing()) {
-    return('Tested function assertions.')
-  }
-  dataset = paste0(species, '_gene_ensembl')
+    return('Tested function assertions.')}
+
+  dataset = paste0(organism, '_gene_ensembl')
   mart = biomaRt::useEnsembl('genes', dataset, version = version)
   attribs = c('ensembl_transcript_id', 'ensembl_gene_id')
   t2g = setDT(biomaRt::getBM(attributes = attribs, mart = mart))
