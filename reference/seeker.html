@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9066</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9067</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -178,14 +178,14 @@ directory <code>parentDir</code>/<code>study</code>/salmon_output containing dir
 quantification results, and saves results to
 <code>parentDir</code>/<code>study</code>/tximport_output.qs. If <code>FALSE</code>, expects and does
 nothing. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
-<li><p><code>tx2gene</code>: Optional named list with components:</p><ul><li><p><code>species</code>: String indicating species and thereby ensembl gene dataset.
+<li><p><code>tx2gene</code>: Optional named list with components:</p><ul><li><p><code>organism</code>: String indicating organism and thereby ensembl gene dataset.
 See <code><a href="getTx2gene.html">getTx2gene()</a></code>.</p></li>
 <li><p><code>version</code>: Optional number indicating ensembl version. <code>NULL</code> indicates
 the latest version. See <code><a href="getTx2gene.html">getTx2gene()</a></code>.</p></li>
 <li><p><code>filename</code>: Optional string indicating name of pre-existing text file
 in <code>parentDir</code>/<code>params$study</code> containing mapping between transcripts
 (first column) and genes (second column), with column names in the
-first row. If <code>filename</code> is specified, <code>species</code> and <code>version</code> must not
+first row. If <code>filename</code> is specified, <code>organism</code> and <code>version</code> must not
 be specified.</p></li>
 </ul><p>If not <code>NULL</code>, saves a file <code>parentDir</code>/<code>study</code>/tx2gene.csv.gz.</p></li>
 <li><p><code>countsFromAbundance</code>: String indicating whether or how to estimate
