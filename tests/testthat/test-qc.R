@@ -1,4 +1,5 @@
 test_that('fastqc', {
+  skip_on_cran()
   skip_if(!commandsDt[filename == 'fastqc']$exists, 'Missing fastqc command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'fastqc'
@@ -17,6 +18,7 @@ test_that('fastqc', {
 })
 
 test_that('trimgalore', {
+  skip_on_cran()
   skip_if(!commandsDt[filename == 'trim_galore']$exists, 'Missing trim_galore command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'trimgalore'
@@ -35,6 +37,7 @@ test_that('trimgalore', {
 })
 
 test_that('multiqc', {
+  skip_on_cran()
   skip_if(!commandsDt[filename == 'multiqc']$exists, 'Missing multiqc command, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'multiqc'

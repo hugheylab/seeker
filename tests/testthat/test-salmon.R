@@ -1,4 +1,5 @@
 test_that('salmon and getSalmonMetadata', {
+  skip_on_cran()
   skip_if(
     (!commandsDt[filename == 'salmon']$exists || !commandsDt[filename == 'salmon_index']$exists),
     'Missing salmon command and/or index, skipping.')

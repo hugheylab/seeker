@@ -1,4 +1,5 @@
 test_that('seeker', {
+  skip_on_cran()
   skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
 
@@ -18,6 +19,7 @@ test_that('seeker', {
 })
 
 test_that('seeker skip all', {
+  skip_on_cran()
   skip_on_os('windows', arch = NULL)
 
   paramsSkip = yaml::read_yaml(file.path(dataDir, 'GSE143524_skip_all.yml'))
@@ -38,6 +40,7 @@ test_that('seeker skip all', {
 })
 
 test_that('checkSeekerArgs', {
+  skip_on_cran()
   skip_if(anyMissing, 'Missing required system dependencies, skipping.')
   skip_on_os('windows', arch = NULL)
   outputDirObs = checkSeekerArgs(params, parentDir)$outputDir
@@ -45,6 +48,7 @@ test_that('checkSeekerArgs', {
 })
 
 test_that('checkSeekerArgs errors', {
+  skip_on_cran()
   skip_on_os('windows', arch = NULL)
 
   # Error variable and directory
