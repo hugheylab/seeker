@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9067</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9068</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <img src="" class="logo" alt=""><h1>Reproducibility with seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-06-01</h4>
+            <h4 data-toc-skip class="date">2022-06-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/reproducibility.Rmd" class="external-link"><code>vignettes/reproducibility.Rmd</code></a></small>
       <div class="d-none name"><code>reproducibility.Rmd</code></div>
@@ -91,10 +91,11 @@
 <div class="section level2">
 <h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
 </h2>
-<p>The <code>seeker</code> package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Copy the files to your working directory:</p>
+<p>The <code>seeker</code> package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Here we’ll download the files from GitHub to avoid having to install the package locally:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'run_seeker.R'</span>, <span class="st">'run_seeker.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span class="va">urlBase</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'run_seeker.R'</span>, <span class="st">'run_seeker.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">urlBase</span>, <span class="va">filename</span><span class="op">)</span>, <span class="va">filename</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p>PRJNA600892.yml:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>study<span class="sc">:</span> <span class="st">'PRJNA600892'</span> <span class="co"># [string]</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">:</span></span>
@@ -169,7 +170,7 @@
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ghcr.io<span class="sc">/</span>hugheylab<span class="sc">/</span>socker \</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  bash <span class="sc">-</span>c \</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"source /home/rstudio/miniconda3/etc/profile.d/conda.sh \</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; conda activate \</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; conda activate seeker \</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; refgenie pull mm10/salmon_partial_sa_index \</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">      &amp;&amp; Rscript run_seeker.R PRJNA600892.yml ."</span> \</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> PRJNA600892_progress.log</span></code></pre></div>
@@ -180,10 +181,11 @@
 <div class="section level2">
 <h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
 </h2>
-<p>The <code>seeker</code> package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Copy the files to your working directory:</p>
+<p>The <code>seeker</code> package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Download the files to your working directory:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'GSE25585.yml'</span>, <span class="st">'run_seeker_array.R'</span>, <span class="st">'run_seeker_array.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span class="va">urlBase</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'GSE25585.yml'</span>, <span class="st">'run_seeker_array.R'</span>, <span class="st">'run_seeker_array.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">urlBase</span>, <span class="va">filename</span><span class="op">)</span>, <span class="va">filename</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p>GSE25585.yml:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">study</span><span class="op">:</span> <span class="st">'GSE25585'</span>
