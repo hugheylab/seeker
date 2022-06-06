@@ -506,6 +506,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   ####################
   fwrite(metadata, metadataPath)
+  fwrite(checkDefaultCommands(), file.path(outputDir, 'command_versions.csv'))
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   getRCondaInfo(outputDir)
 
