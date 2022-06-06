@@ -57,8 +57,9 @@ The output will appear in your working directory. You can follow `seeker()`'s pr
 The `seeker` package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Copy the files to your working directory:
 
 ```{r, eval = FALSE}
+urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
 for (filename in c('GSE25585.yml', 'run_seeker_array.R', 'run_seeker_array.sh')) {
-  file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
+  download.file(paste0(urlBase, filename), file.path('.', filename))}
 ```
 
 GSE25585.yml:
