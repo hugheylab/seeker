@@ -182,6 +182,7 @@ checkDefaultCommands = function() {
     path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
       system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
+    version = trimws(gsub('\\"', '', version))
     data.table(command = d$cmd[i], path = path, version = version)}
 
   return(r)}

@@ -1,7 +1,6 @@
 # seeker 1.0.0
-* Updated logging of `seeker` function to save the command versions.
-* Revised tests to prepare for a cran submission.
-* Just moving to 1.0.0 version for cran.
+* Updated `seeker()` to output info of SRA Toolkit-based dependencies.
+* Revised tests and updated version number to prepare for a CRAN submission.
 
 # seeker 0.0.0.9068
 * Updated `run_seeker.sh` to use correct conda environment.
