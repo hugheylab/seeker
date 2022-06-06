@@ -21,7 +21,7 @@ docker pull ghcr.io/hugheylab/socker
 
 ## RNA-seq data
 
-The `seeker` package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Copy the files to your working directory:
+The `seeker` package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Here we'll download the files from GitHub to avoid having to install the package locally:
 
 ```{r, eval = FALSE}
 urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
@@ -54,7 +54,7 @@ The output will appear in your working directory. You can follow `seeker()`'s pr
 
 ## Microarray data
 
-The `seeker` package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Copy the files to your working directory:
+The `seeker` package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Download the files to your working directory:
 
 ```{r, eval = FALSE}
 urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
