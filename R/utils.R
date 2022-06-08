@@ -145,19 +145,21 @@ safe = function(x) {
   y = glue("'{path.expand(x)}'")
   return(y)}
 
-logSeekerCommands = function(params, outputDir) {
-  command = NULL
-  commandsDt = checkDefaultCommands()
-  if (!is.null(params$fetch$prefetchCmd)) {
-    prefetchVersion = system3(path.expand(params$fetch$prefetchCmd), '--version', stdout = TRUE)[2]
-    prefetchVersion = trimws(gsub('\\"', '', prefetchVersion))
-    commandsDt[command == 'prefetch', `:=`(path = params$fetch$prefetchCmd, version = prefetchVersion)]}
-  if (!is.null(params$fetch$fasterqdumpCmd)) {
-    fasterqVersion = system3(path.expand(params$fetch$fasterqdumpCmd), '--version', stdout = TRUE)[2]
-    fasterqVersion = trimws(gsub('\\"', '', fasterqVersion))
-    commandsDt[command == 'fasterq-dump', `:=`(path = params$fetch$fasterqdumpCmd, version = fasterqVersion)]}
-  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))
-}
+logSeekerCommands = function(outputDir, params) {
+  commandsDt = checkDefaultCommands(TRUE)
+  for(i in seq_len(nrow(commandsDt))) {
+    commandName = gsub('_', '', gsub('-', '', commandsDt[i]$command))
+    if (commandName %in% c('prefetch', 'fasterqdump', 'pigz') &&
+        !is.null(params$fetch[[glue('{commandName}Cmd')]])) {
+      commandName = glue('{commandName}Cmd')
+      versionFound = system3(path.expand(params$fetch[[commandName]]), '--version', stdout = TRUE)[commandsDt[i]$idx]
+      versionFound = trimws(gsub('\\"', '', versionFound))
+      commandsDt[i, `:=`(path = params$fetch[[commandName]], version = versionFound)]
+    } else if (!is.null(params[[commandName]]$cmd)) {
+      versionFound = system3(path.expand(params[[commandName]]$cmd), '--version', stdout = TRUE)[commandsDt[i]$idx]
+      versionFound = trimws(gsub('\\"', '', versionFound))
+      commandsDt[i, `:=`(path = params[[commandName]]$cmd, version = versionFound)]}}
+  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))}
 
 validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
@@ -176,10 +178,12 @@ validateCommand = function(cmd) {
 #' This function checks whether the command-line tools used by seeker are
 #' accessible in the expected places.
 #'
+#' @param keepIdx Logical indicating whether or not to keep the `idx` column of d.
+#'
 #' @return A data.table with columns for command, path, and version.
 #'
 #' @export
-checkDefaultCommands = function() {
+checkDefaultCommands = function(keepIdx = FALSE) {
   d = data.table(
     # cmd = c('ascp', 'wget', 'fastqc', 'fastq_screen', 'trim_galore', 'cutadapt',
     #         'multiqc', 'salmon'),
@@ -196,7 +200,10 @@ checkDefaultCommands = function() {
     version = if (is.na(path)) NA_character_ else
       system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
     version = trimws(gsub('\\"', '', version))
-    data.table(command = d$cmd[i], path = path, version = version)}
+    if (isTRUE(keepIdx)) {
+      data.table(command = d$cmd[i], path = path, version = version, idx = d$idx[i])
+    } else {
+      data.table(command = d$cmd[i], path = path, version = version)}}
 
   return(r)}
 

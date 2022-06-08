@@ -4,7 +4,10 @@
 \alias{checkDefaultCommands}
 \title{Check for presence of command-line interfaces}
 \usage{
-checkDefaultCommands()
+checkDefaultCommands(keepIdx = FALSE)
+}
+\arguments{
+\item{keepIdx}{Logical indicating whether or not to keep the \code{idx} column of d.}
 }
 \value{
 A data.table with columns for command, path, and version.

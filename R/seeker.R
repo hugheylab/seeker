@@ -506,7 +506,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   ####################
   fwrite(metadata, metadataPath)
-  logSeekerCommands(params, outputDir)
+  logSeekerCommands(outputDir, params)
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   getRCondaInfo(outputDir)
 
