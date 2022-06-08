@@ -506,16 +506,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   ####################
   fwrite(metadata, metadataPath)
-  commandVersions = checkDefaultCommands()
-  if (!is.null(params$fetch$prefetchCmd)) {
-    prefetchVersion = system3(path.expand(params$fetch$prefetchCmd), '--version', stdout = TRUE)[2]
-    prefetchVersion = trimws(gsub('\\"', '', prefetchVersion))
-    commandVersions[command == 'prefetch', `:=`(path = params$fetch$prefetchCmd, version = prefetchVersion)]}
-  if (!is.null(params$fetch$fasterqdumpCmd)) {
-    fasterqVersion = system3(path.expand(params$fetch$fasterqdumpCmd), '--version', stdout = TRUE)[2]
-    fasterqVersion = trimws(gsub('\\"', '', fasterqVersion))
-    commandVersions[command == 'fasterq-dump', `:=`(path = params$fetch$fasterqdumpCmd, version = fasterqVersion)]}
-  fwrite(commandVersions, file.path(outputDir, 'command_versions.csv'))
+  logSeekerCommands(params, outputDir)
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   getRCondaInfo(outputDir)
 

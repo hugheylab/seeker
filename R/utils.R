@@ -145,6 +145,18 @@ safe = function(x) {
   y = glue("'{path.expand(x)}'")
   return(y)}
 
+logSeekerCommands = function(params, outputDir) {
+  commandsDt = checkDefaultCommands()
+  if (!is.null(params$fetch$prefetchCmd)) {
+    prefetchVersion = system3(path.expand(params$fetch$prefetchCmd), '--version', stdout = TRUE)[2]
+    prefetchVersion = trimws(gsub('\\"', '', prefetchVersion))
+    commandsDt[command == 'prefetch', `:=`(path = params$fetch$prefetchCmd, version = prefetchVersion)]}
+  if (!is.null(params$fetch$fasterqdumpCmd)) {
+    fasterqVersion = system3(path.expand(params$fetch$fasterqdumpCmd), '--version', stdout = TRUE)[2]
+    fasterqVersion = trimws(gsub('\\"', '', fasterqVersion))
+    commandsDt[command == 'fasterq-dump', `:=`(path = params$fetch$fasterqdumpCmd, version = fasterqVersion)]}
+  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))
+}
 
 validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
