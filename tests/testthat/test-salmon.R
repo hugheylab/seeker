@@ -1,8 +1,11 @@
 test_that('salmon and getSalmonMetadata', {
   skip_on_cran()
   skip_if(
-    (!commandsDt[filename == 'salmon']$exists || !commandsDt[filename == 'salmon_index']$exists),
-    'Missing salmon command and/or index, skipping.')
+    (!commandsDt[filename == 'salmon']$exists),
+    'Missing salmon command, skipping.')
+  skip_if(
+    (!commandsDt[filename == 'salmon_index']$exists),
+    'Missing salmon index, skipping.')
   skip_on_os('windows', arch = NULL)
   step = 'salmon'
   paramsNow = params[[step]]
