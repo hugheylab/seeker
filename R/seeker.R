@@ -1,5 +1,5 @@
 #' @import checkmate
-#' @importFrom data.table data.table fread fwrite set setDT setnames
+#' @importFrom data.table data.table fread fwrite set setDT setnames `:=`
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom glue glue glue_data
 #' @importFrom readr read_delim

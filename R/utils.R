@@ -146,6 +146,7 @@ safe = function(x) {
   return(y)}
 
 logSeekerCommands = function(params, outputDir) {
+  command = NULL
   commandsDt = checkDefaultCommands()
   if (!is.null(params$fetch$prefetchCmd)) {
     prefetchVersion = system3(path.expand(params$fetch$prefetchCmd), '--version', stdout = TRUE)[2]
