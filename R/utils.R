@@ -159,7 +159,8 @@ logSeekerCommands = function(outputDir, params) {
       versionFound = system3(path.expand(params[[commandName]]$cmd), '--version', stdout = TRUE)[commandsDt[i]$idx]
       versionFound = trimws(gsub('\\"', '', versionFound))
       commandsDt[i, `:=`(path = params[[commandName]]$cmd, version = versionFound)]}}
-  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))}
+  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))
+  invisible()}
 
 validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
