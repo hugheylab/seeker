@@ -41,16 +41,9 @@ If you decide to reject the package for CRAN, please give us some feedback on wh
   0 errors ✓ | 0 warnings ✓ | 1 notes x
   
 
-`devtools::check_mac_release()` Mac result:
+`devtools::check_rhub()` Mac result:
 
-  > checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Jake Hughey <jakejhughey@gmail.com>'
-
-  New submission
-
-  Size of tarball: 9536357 bytes
-
-  0 errors ✓ | 0 warnings ✓ | 1 notes x
+  0 errors ✓ | 0 warnings ✓ | 0 notes x
 
 Online check notes:
   - The tarball is large (nearly 10MB) due to the amount of data required for adequate testing and use within the package. If this is found to be a problem, we can attempt to slim it down.
