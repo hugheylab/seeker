@@ -147,7 +147,7 @@ safe = function(x) {
 
 logSeekerCommands = function(outputDir, params) {
   commandsDt = checkDefaultCommands(TRUE)
-  for(i in seq_len(nrow(commandsDt))) {
+  for (i in seq_len(nrow(commandsDt))) {
     commandName = gsub('_', '', gsub('-', '', commandsDt[i]$command))
     if (commandName %in% c('prefetch', 'fasterqdump', 'pigz') &&
         !is.null(params$fetch[[glue('{commandName}Cmd')]])) {
