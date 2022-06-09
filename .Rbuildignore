@@ -10,3 +10,4 @@
 ^sratoolkit
 ^lint_ignore\.csv$
 ^codecov\.yml$
+^cran-comments\.md$
