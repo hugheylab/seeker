@@ -145,22 +145,6 @@ safe = function(x) {
   y = glue("'{path.expand(x)}'")
   return(y)}
 
-logSeekerCommands = function(outputDir, params) {
-  commandsDt = checkDefaultCommands(TRUE)
-  for (i in seq_len(nrow(commandsDt))) {
-    commandName = gsub('_', '', gsub('-', '', commandsDt[i]$command))
-    if (commandName %in% c('prefetch', 'fasterqdump', 'pigz') &&
-        !is.null(params$fetch[[glue('{commandName}Cmd')]])) {
-      commandName = glue('{commandName}Cmd')
-      versionFound = system3(path.expand(params$fetch[[commandName]]), '--version', stdout = TRUE)[commandsDt[i]$idx]
-      versionFound = trimws(gsub('\\"', '', versionFound))
-      commandsDt[i, `:=`(path = params$fetch[[commandName]], version = versionFound)]
-    } else if (!is.null(params[[commandName]]$cmd)) {
-      versionFound = system3(path.expand(params[[commandName]]$cmd), '--version', stdout = TRUE)[commandsDt[i]$idx]
-      versionFound = trimws(gsub('\\"', '', versionFound))
-      commandsDt[i, `:=`(path = params[[commandName]]$cmd, version = versionFound)]}}
-  fwrite(commandsDt, file.path(outputDir, 'seeker_commands_log.csv'))
-  invisible()}
 
 validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
@@ -172,6 +156,12 @@ validateCommand = function(cmd) {
   options(warn = old)
   if (length(path) == 0) path = NA_character_
   return(path)}
+
+
+getCommandVersion = function(cmd, idx) {
+  version = system3(path.expand(cmd), '--version', stdout = TRUE)[idx]
+  return(trimws(gsub('\\"', '', version)))
+}
 
 
 #' Check for presence of command-line interfaces
@@ -199,8 +189,7 @@ checkDefaultCommands = function(keepIdx = FALSE) {
     cmd = d$cmd[i]
     path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
-      system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
-    version = trimws(gsub('\\"', '', version))
+      getCommandVersion(cmd, d$idx[i])
     if (isTRUE(keepIdx)) {
       data.table(command = d$cmd[i], path = path, version = version, idx = d$idx[i])
     } else {

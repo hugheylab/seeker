@@ -135,6 +135,21 @@ getRefgenieGenomes = function(genomes) {
   invisible()}
 
 
+getSystemDeps = function(outputDir, params) {
+  commandsDt = checkDefaultCommands(TRUE)
+  for (i in seq_len(nrow(commandsDt))) {
+    commandName = gsub('_', '', gsub('-', '', commandsDt[i]$command))
+    paramCmdVal = params[[commandName]]$cmd
+    if (commandName %in% c('prefetch', 'fasterqdump', 'pigz')) {
+      commandName = glue('{commandName}Cmd')
+      paramCmdVal = params$fetch[[commandName]]}
+    if (!is.null(paramCmdVal)) {
+      versionFound = getCommandVersion(paramCmdVal, commandsDt[i]$idx)
+      commandsDt[i, `:=`(path = paramCmdVal, version = versionFound)]}}
+  fwrite(commandsDt, file.path(outputDir, 'system_dependencies.tsv'), sep = '\t')
+  return(commandsDt)}
+
+
 #' Install seeker's system dependencies
 #'
 #' This function installs and configures the various programs required for
