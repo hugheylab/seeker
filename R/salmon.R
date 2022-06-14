@@ -66,6 +66,10 @@ salmon = function(
       args2 = c('-r', safe(unlist(f)))}
 
     r = system3(path.expand(cmd), c(args1, args2))
+
+    auxPath = file.path(outputDir, samp, 'aux_info', 'ambig_info.tsv')
+    if (file.exists(auxPath)) R.utils::gzip(auxPath, overwrite = TRUE)
+
     if (compress) {
       R.utils::gzip(file.path(outputDir, samp, 'quant.sf'), overwrite = TRUE)}
     writeLogFile(logPath, samp, i, r)
