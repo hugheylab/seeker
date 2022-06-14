@@ -13,7 +13,7 @@ writeLogFile = function(path, task, idx, status, n = NULL) {
       append = FALSE
     } else {
       x = 'finished'}
-    d = data.table(d, task = glue('{x} {abs(n)} tasks'), idx = 0, status = 0)}
+    d = data.table(d, task = glue('{x} {abs(n)} task(s)'), idx = 0, status = 0)}
   fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
   invisible(d)}
 

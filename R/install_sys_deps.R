@@ -137,14 +137,16 @@ getRefgenieGenomes = function(genomes) {
 
 getSysDeps = function(outputDir, params) {
   commandsDt = checkDefaultCommands(TRUE)
+
   for (i in seq_len(nrow(commandsDt))) {
     cmdName = gsub('_|-', '', commandsDt[i]$command)
     paramCmdVal = params[[cmdName]]$cmd
     if (cmdName %in% c('prefetch', 'fasterqdump', 'pigz')) {
       paramCmdVal = params$fetch[[glue('{cmdName}Cmd')]]}
     if (!is.null(paramCmdVal)) {
-      version = getCommandVersion(paramCmdVal, commandsDt[i]$idx)
-      commandsDt[i, `:=`(path = paramCmdVal, version = version)]}}
+      ver = getCommandVersion(paramCmdVal, commandsDt[i]$idx)
+      commandsDt[i, `:=`(path = paramCmdVal, version = ver)]}}
+
   set(commandsDt, j = 'idx', value = NULL)
   fwrite(commandsDt, file.path(outputDir, 'system_dependencies.tsv'), sep = '\t')
   invisible(commandsDt)}

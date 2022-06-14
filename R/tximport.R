@@ -10,14 +10,16 @@
 #'   version. To see available versions, do `biomaRt::listEnsemblArchives()`.
 #' @param outputDir Directory in which to save the result, a file named
 #'   "tx2gene.csv.gz". If `NULL`, no file is saved.
-#' @param checkArgsOnly Boolean used for testing purposes.
+#' @param checkArgsOnly Logical indicating whether to only check function
+#'   arguments. Used for testing.
 #'
-#' @return A data.table based on the result from [biomaRt::getBM()], with an
-#'   attribute "version".
+#' @return If `checkArgsOnly` is `FALSE`, a data.table based on the result from
+#'   [biomaRt::getBM()], with an attribute "version". Otherwise `0`.
 #'
 #' @export
 getTx2gene = function(
-  organism = 'mmusculus', version = NULL, outputDir = 'data', checkArgsOnly = FALSE) {
+  organism = 'mmusculus', version = NULL, outputDir = 'data',
+  checkArgsOnly = FALSE) {
 
   assertString(organism)
   assertNumber(version, null.ok = TRUE)
@@ -31,9 +33,8 @@ getTx2gene = function(
   if (!is.null(outputDir)) {
     assertPathForOutput(outputDir, overwrite = TRUE)}
 
-  # If `testthat` isn't found, we know they can't be testing, therefore short circuit.
-  if (checkArgsOnly) {
-    return('Tested function assertions.')}
+  assertLogical(checkArgsOnly)
+  if (checkArgsOnly) return(0)
 
   dataset = paste0(organism, '_gene_ensembl')
   mart = biomaRt::useEnsembl('genes', dataset, version = version)

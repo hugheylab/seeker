@@ -39,7 +39,8 @@ test_that('getNaiveEsetGeo', {
 
     resObs = getNaiveEsetGeo(study, outputDir, file.path(outputDir, 'raw'))
     # reduce disk size of expression set while preserving dimensions
-    Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 100), ] = 1
+    Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 1000), ] = 1
+    rownames(resObs$eset@featureData@data) = NULL
 
     filesObs = dir(outputDir, recursive = TRUE)
 
@@ -65,7 +66,8 @@ test_that('getNaiveEsetAe supported', {
 
   resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
   # reduce disk size of expression set while preserving dimensions
-  Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 100), ] = 1
+  Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 1000), ] = 1
+  rownames(resObs$eset@featureData@data) = NULL
 
   filesObs = dir(outputDir, recursive = TRUE)
 
