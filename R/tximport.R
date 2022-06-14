@@ -10,6 +10,7 @@
 #'   version. To see available versions, do `biomaRt::listEnsemblArchives()`.
 #' @param outputDir Directory in which to save the result, a file named
 #'   "tx2gene.csv.gz". If `NULL`, no file is saved.
+#' @param checkArgsOnly Boolean used for testing purposes.
 #'
 #' @return A data.table based on the result from [biomaRt::getBM()], with an
 #'   attribute "version".

@@ -4,7 +4,12 @@
 \alias{getTx2gene}
 \title{Get mapping between transcripts and genes}
 \usage{
-getTx2gene(organism = "mmusculus", version = NULL, outputDir = "data")
+getTx2gene(
+  organism = "mmusculus",
+  version = NULL,
+  outputDir = "data",
+  checkArgsOnly = FALSE
+)
 }
 \arguments{
 \item{organism}{String used to pass \code{paste0(organism, "_gene_ensembl")} as the
@@ -16,6 +21,8 @@ version. To see available versions, do \code{biomaRt::listEnsemblArchives()}.}
 
 \item{outputDir}{Directory in which to save the result, a file named
 "tx2gene.csv.gz". If \code{NULL}, no file is saved.}
+
+\item{checkArgsOnly}{Boolean used for testing purposes.}
 }
 \value{
 A data.table based on the result from \code{\link[biomaRt:getBM]{biomaRt::getBM()}}, with an
