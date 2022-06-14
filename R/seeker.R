@@ -506,8 +506,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   ####################
   fwrite(metadata, metadataPath)
-  getSystemDeps(outputDir, params)
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
+  getSysDeps(outputDir, params)
   getRCondaInfo(outputDir)
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {

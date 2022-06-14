@@ -159,9 +159,9 @@ validateCommand = function(cmd) {
 
 
 getCommandVersion = function(cmd, idx) {
-  version = system3(path.expand(cmd), '--version', stdout = TRUE)[idx]
-  return(trimws(gsub('\\"', '', version)))
-}
+  ver = system3(path.expand(cmd), '--version', stdout = TRUE)[idx]
+  ver = trimws(gsub('\\"', '', ver))
+  return(ver)}
 
 
 #' Check for presence of command-line interfaces
@@ -190,10 +190,9 @@ checkDefaultCommands = function(keepIdx = FALSE) {
     path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
       getCommandVersion(cmd, d$idx[i])
-    if (isTRUE(keepIdx)) {
-      data.table(command = d$cmd[i], path = path, version = version, idx = d$idx[i])
-    } else {
-      data.table(command = d$cmd[i], path = path, version = version)}}
+    rNow = data.table(command = d$cmd[i], path = path, version = version)
+    if (isTRUE(keepIdx)) set(rNow, j = 'idx', value = d$idx[i])
+    rNow}
 
   return(r)}
 

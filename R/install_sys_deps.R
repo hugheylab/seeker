@@ -135,19 +135,19 @@ getRefgenieGenomes = function(genomes) {
   invisible()}
 
 
-getSystemDeps = function(outputDir, params) {
+getSysDeps = function(outputDir, params) {
   commandsDt = checkDefaultCommands(TRUE)
   for (i in seq_len(nrow(commandsDt))) {
-    commandName = gsub('_', '', gsub('-', '', commandsDt[i]$command))
-    paramCmdVal = params[[commandName]]$cmd
-    if (commandName %in% c('prefetch', 'fasterqdump', 'pigz')) {
-      commandName = glue('{commandName}Cmd')
-      paramCmdVal = params$fetch[[commandName]]}
+    cmdName = gsub('_|-', '', commandsDt[i]$command)
+    paramCmdVal = params[[cmdName]]$cmd
+    if (cmdName %in% c('prefetch', 'fasterqdump', 'pigz')) {
+      paramCmdVal = params$fetch[[glue('{cmdName}Cmd')]]}
     if (!is.null(paramCmdVal)) {
-      versionFound = getCommandVersion(paramCmdVal, commandsDt[i]$idx)
-      commandsDt[i, `:=`(path = paramCmdVal, version = versionFound)]}}
+      version = getCommandVersion(paramCmdVal, commandsDt[i]$idx)
+      commandsDt[i, `:=`(path = paramCmdVal, version = version)]}}
+  set(commandsDt, j = 'idx', value = NULL)
   fwrite(commandsDt, file.path(outputDir, 'system_dependencies.tsv'), sep = '\t')
-  return(commandsDt)}
+  invisible(commandsDt)}
 
 
 #' Install seeker's system dependencies
