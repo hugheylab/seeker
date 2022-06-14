@@ -366,11 +366,15 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   outputDir = checkArgsRes$outputDir
   if (!dir.exists(outputDir)) dir.create(outputDir)
+  logPath = getLogPath(outputDir)
+  logIdx = 0
+  writeLogFile(logPath, glue('validation complete'), logIdx, 0)
 
   ####################
   step = 'metadata'
   paramsNow = params[[step]]
   metadataPath = file.path(outputDir, 'metadata.csv')
+  logIdx = logIdx + 1
 
   if (paramsNow$run) {
     # host must be 'ena' to download fastq files using ascp
@@ -378,6 +382,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
     metadata = fread(metadataPath, na.strings = '')}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   # exclude supersedes include
   if (!is.null(paramsNow$include)) {
@@ -404,6 +409,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
   # remoteColname = 'fastq_aspera'
   remoteColname = 'run_accession'
   fetchColname = 'fastq_fetched'
+  logIdx = logIdx + 1
 
   if (paramsNow$run) {
     paramsNow[c('run', 'keep')] = NULL
@@ -424,6 +430,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
         dir(fetchDir, glue('^{acc}(_1|_2|)\\.fastq\\.gz$'), full.names = TRUE),
         collapse = ';')})
     set(metadata, j = fetchColname, value = localFilepaths)}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   fwrite(metadata, metadataPath) # could be overwritten
 
@@ -432,6 +439,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
   paramsNow = params[[step]]
   trimDir = file.path(outputDir, paste0(step, '_output'))
   trimColname = 'fastq_trimmed'
+  logIdx = logIdx + 1
 
   if (paramsNow$run) {
     paramsNow[c('run', 'keep')] = NULL
@@ -440,23 +448,27 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       paramsNow))
     set(metadata, j = trimColname, value = result$fastq_trimmed)
     fwrite(metadata, metadataPath)} # could be overwritten
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   ####################
   step = 'fastqc'
   paramsNow = params[[step]]
   fastqcDir = file.path(outputDir, paste0(step, '_output'))
   fileColname = if (params$trimgalore$run) trimColname else fetchColname
+  logIdx = logIdx + 1
 
   if (paramsNow$run) {
     paramsNow[c('run', 'keep')] = NULL
     result = do.call(fastqc, c(
       list(filepaths = metadata[[fileColname]], outputDir = fastqcDir),
       paramsNow))}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   ####################
   step = 'salmon'
   paramsNow = params[[step]]
   salmonDir = file.path(outputDir, paste0(step, '_output'))
+  logIdx = logIdx + 1
   # sampleColname = 'sample_accession'
   # 'sample_accession', unlike 'sample_alias', should be a valid name without
   # colons or spaces regardless of whether dataset originated from SRA or ENA
@@ -468,10 +480,12 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
            samples = metadata[[sampleColname]], outputDir = salmonDir),
       paramsNow))
     getSalmonMetadata(salmonDir, outputDir)}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   ####################
   step = 'multiqc'
   multiqcDir = file.path(outputDir, paste0(step, '_output'))
+  logIdx = logIdx + 1
 
   if (params[[step]]$run) {
     paramsNow = params[[step]]
@@ -479,10 +493,12 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
     result = do.call(multiqc, c(
       list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   ####################
   step = 'tximport'
   paramsNow = params[[step]]
+  logIdx = logIdx + 1
 
   if (paramsNow$run) {
     paramsNow$run = NULL
@@ -495,6 +511,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       } else {
         tx2gene = fread(file.path(outputDir, paramsNow$tx2gene$filename))}
       paramsNow$tx2gene = NULL # for calling tximport
+      writeLogFile(logPath, glue('tx2gene complete'), logIdx, 0)
+      logIdx = logIdx + 1
     } else {
       tx2gene = NULL}
 
@@ -503,6 +521,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       list(inputDir = salmonDir, tx2gene = tx2gene,
            samples = metadata[[sampleColname]], outputDir = outputDir),
       paramsNow))}
+  writeLogFile(logPath, glue('{step} complete'), logIdx, 0)
 
   ####################
   fwrite(metadata, metadataPath)

@@ -5,6 +5,7 @@ test_that('getTx2gene', {
 
   paramsNow$run = NULL
   paramsNow$tx2gene$filename = NULL
+  paramsNow$tx2gene$checkArgsOnly = TRUE
 
   tx2geneObs = do.call(getTx2gene, c(
     list(outputDir = outputDir), paramsNow$tx2gene))

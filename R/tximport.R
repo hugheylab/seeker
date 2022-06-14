@@ -16,7 +16,7 @@
 #'
 #' @export
 getTx2gene = function(
-  organism = 'mmusculus', version = NULL, outputDir = 'data') {
+  organism = 'mmusculus', version = NULL, outputDir = 'data', checkArgsOnly = FALSE) {
 
   assertString(organism)
   assertNumber(version, null.ok = TRUE)
@@ -31,7 +31,7 @@ getTx2gene = function(
     assertPathForOutput(outputDir, overwrite = TRUE)}
 
   # If `testthat` isn't found, we know they can't be testing, therefore short circuit.
-  if (require('testthat') && testthat::is_testing()) {
+  if (checkArgsOnly) {
     return('Tested function assertions.')}
 
   dataset = paste0(organism, '_gene_ensembl')

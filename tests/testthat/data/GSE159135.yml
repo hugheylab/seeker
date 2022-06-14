@@ -22,4 +22,5 @@ tximport:
   run: yes
   tx2gene:
     organism: mmusculus
+    checkArgsOnly: TRUE
   countsFromAbundance: 'no'
