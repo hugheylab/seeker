@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
-Title: Process genomic data
-Version: 0.0.0.9068
+Title: Process Genomic Data
+Version: 1.0.0
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', 'aut'))
@@ -36,6 +36,7 @@ Imports:
   withr (>= 2.4.2),
   yaml (>= 2.2.1)
 Suggests:
+  Biobase,
   doParallel (>= 1.0.16),
   knitr,
   org.Mm.eg.db,

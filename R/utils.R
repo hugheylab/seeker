@@ -13,7 +13,7 @@ writeLogFile = function(path, task, idx, status, n = NULL) {
       append = FALSE
     } else {
       x = 'finished'}
-    d = data.table(d, task = glue('{x} {abs(n)} tasks'), idx = 0, status = 0)}
+    d = data.table(d, task = glue('{x} {abs(n)} task(s)'), idx = 0, status = 0)}
   fwrite(d, path, sep = '\t', append = append, logical01 = TRUE)
   invisible(d)}
 
@@ -158,15 +158,23 @@ validateCommand = function(cmd) {
   return(path)}
 
 
+getCommandVersion = function(cmd, idx) {
+  ver = system3(path.expand(cmd), '--version', stdout = TRUE)[idx]
+  ver = trimws(gsub('\\"', '', ver))
+  return(ver)}
+
+
 #' Check for presence of command-line interfaces
 #'
 #' This function checks whether the command-line tools used by seeker are
 #' accessible in the expected places.
 #'
+#' @param keepIdx Logical indicating whether or not to keep the `idx` column of d.
+#'
 #' @return A data.table with columns for command, path, and version.
 #'
 #' @export
-checkDefaultCommands = function() {
+checkDefaultCommands = function(keepIdx = FALSE) {
   d = data.table(
     # cmd = c('ascp', 'wget', 'fastqc', 'fastq_screen', 'trim_galore', 'cutadapt',
     #         'multiqc', 'salmon'),
@@ -181,8 +189,10 @@ checkDefaultCommands = function() {
     cmd = d$cmd[i]
     path = validateCommand(cmd)
     version = if (is.na(path)) NA_character_ else
-      system3(path.expand(cmd), '--version', stdout = TRUE)[d$idx[i]]
-    data.table(command = d$cmd[i], path = path, version = version)}
+      getCommandVersion(cmd, d$idx[i])
+    rNow = data.table(command = d$cmd[i], path = path, version = version)
+    if (isTRUE(keepIdx)) set(rNow, j = 'idx', value = d$idx[i])
+    rNow}
 
   return(r)}
 

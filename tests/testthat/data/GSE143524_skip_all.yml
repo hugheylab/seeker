@@ -15,11 +15,12 @@ fastqc:
   run: no
 salmon:
   run: no
-  indexDir: /home/runner/genomes/alias/mm10/salmon_partial_sa_index/default
+  indexDir: /home/runner/refgenie_genomes/alias/mm10/salmon_partial_sa_index/default
 multiqc:
   run: no
 tximport:
   run: no
   tx2gene:
     organism: mmusculus
+    checkArgsOnly: TRUE
   countsFromAbundance: lengthScaledTPM

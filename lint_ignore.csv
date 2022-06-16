@@ -1,4 +1,4 @@
 filename,line_number,message,line
 R/array_utils.R,245,Variable and function name style should be camelCase.,. = probe_set = gene_id = NULL
 R/array_utils.R,282,Variable and function name style should be camelCase.,.SD = NULL
-R/tximport.R,73,Variable and function name style should be camelCase.,path = .N = . = NULL
+R/tximport.R,76,Variable and function name style should be camelCase.,path = .N = . = NULL

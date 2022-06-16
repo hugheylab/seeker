@@ -1,5 +1,5 @@
 #' @import checkmate
-#' @importFrom data.table data.table fread fwrite set setDT setnames
+#' @importFrom data.table data.table fread fwrite set setDT setnames `:=`
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom glue glue glue_data
 #' @importFrom readr read_delim
@@ -367,6 +367,12 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
   outputDir = checkArgsRes$outputDir
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
+  logPath = getLogPath(outputDir)
+  if (file.exists(logPath)) file.remove(logPath)
+  logIdx = 1
+  writeLogFile(logPath, 'input validation finished', logIdx, 0)
+  logIdx = logIdx + 1
+
   ####################
   step = 'metadata'
   paramsNow = params[[step]]
@@ -378,6 +384,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
     metadata = fread(metadataPath, na.strings = '')}
+  writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+  logIdx = logIdx + 1
 
   # exclude supersedes include
   if (!is.null(paramsNow$include)) {
@@ -424,6 +432,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
         dir(fetchDir, glue('^{acc}(_1|_2|)\\.fastq\\.gz$'), full.names = TRUE),
         collapse = ';')})
     set(metadata, j = fetchColname, value = localFilepaths)}
+  writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+  logIdx = logIdx + 1
 
   fwrite(metadata, metadataPath) # could be overwritten
 
@@ -439,7 +449,9 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       list(filepaths = metadata[[fetchColname]], outputDir = trimDir),
       paramsNow))
     set(metadata, j = trimColname, value = result$fastq_trimmed)
-    fwrite(metadata, metadataPath)} # could be overwritten
+    fwrite(metadata, metadataPath) # could be overwritten
+    writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+    logIdx = logIdx + 1}
 
   ####################
   step = 'fastqc'
@@ -451,7 +463,9 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     paramsNow[c('run', 'keep')] = NULL
     result = do.call(fastqc, c(
       list(filepaths = metadata[[fileColname]], outputDir = fastqcDir),
-      paramsNow))}
+      paramsNow))
+    writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+    logIdx = logIdx + 1}
 
   ####################
   step = 'salmon'
@@ -467,7 +481,9 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       list(filepaths = metadata[[fileColname]],
            samples = metadata[[sampleColname]], outputDir = salmonDir),
       paramsNow))
-    getSalmonMetadata(salmonDir, outputDir)}
+    getSalmonMetadata(salmonDir, outputDir)
+    writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+    logIdx = logIdx + 1}
 
   ####################
   step = 'multiqc'
@@ -478,7 +494,9 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     paramsNow$run = NULL
 
     result = do.call(multiqc, c(
-      list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))}
+      list(parentDir = outputDir, outputDir = multiqcDir), paramsNow))
+    writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+    logIdx = logIdx + 1}
 
   ####################
   step = 'tximport'
@@ -495,6 +513,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
       } else {
         tx2gene = fread(file.path(outputDir, paramsNow$tx2gene$filename))}
       paramsNow$tx2gene = NULL # for calling tximport
+      writeLogFile(logPath, 'tx2gene finished', logIdx, 0)
+      logIdx = logIdx + 1
     } else {
       tx2gene = NULL}
 
@@ -502,11 +522,14 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     result = do.call(tximport, c(
       list(inputDir = salmonDir, tx2gene = tx2gene,
            samples = metadata[[sampleColname]], outputDir = outputDir),
-      paramsNow))}
+      paramsNow))
+    writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
+    logIdx = logIdx + 1}
 
   ####################
   fwrite(metadata, metadataPath)
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
+  getSysDeps(outputDir, params)
   getRCondaInfo(outputDir)
 
   if (params$fetch$run && isFALSE(params$fetch$keep)) {
@@ -523,4 +546,5 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     unlink(file.path(salmonDir, unique(metadata[[sampleColname]]), 'quant.sf*'),
            recursive = TRUE)}
 
+  writeLogFile(logPath, 'cleanup finished', logIdx, 0)
   invisible(outputDir)}
