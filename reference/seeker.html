@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,9 @@
 <li><p><code>metadata</code>: Named list with components:</p><ul><li><p><code>run</code>: Logical indicating whether to fetch metadata. See
 <code><a href="fetchMetadata.html">fetchMetadata()</a></code>. If <code>TRUE</code>, saves a file
 <code>parentDir</code>/<code>study</code>/metadata.csv. If <code>FALSE</code>, expects that file to
-already exist. Following components are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
+already exist. The unmodified fetched or found metadata is saved to a
+file <code>parentDir</code>/<code>study</code>/metadata_original.csv. Following components
+are only checked if <code>run</code> is <code>TRUE</code>.</p></li>
 <li><p><code>bioproject</code>: String indicating the study's bioproject accession.</p></li>
 <li><p><code>include</code>: Optional named list for specifying which rows of metadata to
 include for further processing, with components:</p><ul><li><p><code>colname</code>: String indicating column in metadata</p></li>
