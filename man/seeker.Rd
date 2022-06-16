@@ -15,7 +15,9 @@ seeker(params, parentDir = ".", dryRun = FALSE)
 \item \code{run}: Logical indicating whether to fetch metadata. See
 \code{\link[=fetchMetadata]{fetchMetadata()}}. If \code{TRUE}, saves a file
 \code{parentDir}/\code{study}/metadata.csv. If \code{FALSE}, expects that file to
-already exist. Following components are only checked if \code{run} is \code{TRUE}.
+already exist. A file \code{parentDir}/\code{study}/metadata_original.csv is always
+saved of the unmodified metadata fetched or found. Following components
+are only checked if \code{run} is \code{TRUE}.
 \item \code{bioproject}: String indicating the study's bioproject accession.
 \item \code{include}: Optional named list for specifying which rows of metadata to
 include for further processing, with components:

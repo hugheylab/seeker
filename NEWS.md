@@ -1,3 +1,6 @@
+# seeker 1.0.1
+* Updated `seeker()` to save unmodified metadata file.
+
 # seeker 1.0.0
 * Updated `seeker()` to output info of SRA Toolkit-based dependencies.
 * Revised tests and updated version number to prepare for a CRAN submission.

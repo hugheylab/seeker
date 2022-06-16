@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Process Genomic Data
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', 'aut'))
