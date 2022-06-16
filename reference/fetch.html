@@ -18,7 +18,7 @@ require hundreds of gigabytes if files are processed in parallel."><!-- mathjax 
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9068</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ require hundreds of gigabytes if files are processed in parallel."><!-- mathjax 
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://www.hugheylab.org/software/" aria-label="Hughey Lab">Hughey Lab</a>
+  <a class="external-link nav-link" href="https://www.hugheylab.org/software/" target="_blank" aria-label="Hughey Lab">Hughey Lab</a>
 </li>
 <li class="nav-item">
   <a class="external-link nav-link" href="https://github.com/hugheylab/seeker/" aria-label="github">
@@ -91,35 +91,56 @@ require hundreds of gigabytes if files are processed in parallel.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>accessions</dt>
 <dd><p>Character vector of SRA run accessions.</p></dd>
+
+
 <dt>outputDir</dt>
 <dd><p>String indicating the local directory in which to save the
 files. Will be created if it doesn't exist.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Logical indicating whether to overwrite files that already
 exist in <code>outputDir</code>.</p></dd>
+
+
 <dt>keepSra</dt>
 <dd><p>Logical indicating whether to keep the ".sra" files.</p></dd>
+
+
 <dt>prefetchCmd</dt>
 <dd><p>String indicating command for prefetch, which downloads
 ".sra" files.</p></dd>
+
+
 <dt>prefetchArgs</dt>
 <dd><p>Character vector indicating arguments to pass to
 prefetch.</p></dd>
+
+
 <dt>fasterqdumpCmd</dt>
 <dd><p>String indicating command for fasterq-dump, which
 uses ".sra" files to create ".fastq" files.</p></dd>
+
+
 <dt>fasterqdumpArgs</dt>
 <dd><p>Character vector indicating arguments to pass to
 fasterq-dump.</p></dd>
+
+
 <dt>pigzCmd</dt>
 <dd><p>String indicating command for pigz, which converts ".fastq"
 files to ".fastq.gz" files.</p></dd>
+
+
 <dt>pigzArgs</dt>
 <dd><p>Character vector indicating arguments to pass to pigz.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list. As the function runs, it updates a tab-delimited log file in
+    
+
+<p>A list. As the function runs, it updates a tab-delimited log file in
 <code>outputDir</code> called "progress.tsv".</p>
     </div>
     <div class="section level2">
@@ -136,7 +157,7 @@ files to ".fastq.gz" files.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
