@@ -209,7 +209,9 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #'   * `run`: Logical indicating whether to fetch metadata. See
 #'     [fetchMetadata()]. If `TRUE`, saves a file
 #'     `parentDir`/`study`/metadata.csv. If `FALSE`, expects that file to
-#'     already exist. Following components are only checked if `run` is `TRUE`.
+#'     already exist. The unmodified fetched or found metadata is saved to a
+#'     file `parentDir`/`study`/metadata_original.csv. Following components
+#'     are only checked if `run` is `TRUE`.
 #'   * `bioproject`: String indicating the study's bioproject accession.
 #'   * `include`: Optional named list for specifying which rows of metadata to
 #'     include for further processing, with components:
@@ -384,6 +386,7 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     fwrite(metadata, metadataPath) # could be overwritten
   } else {
     metadata = fread(metadataPath, na.strings = '')}
+  fwrite(metadata, file.path(outputDir, 'metadata_original.csv'))
   writeLogFile(logPath, glue('{step} finished'), logIdx, 0)
   logIdx = logIdx + 1
 
