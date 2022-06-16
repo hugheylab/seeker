@@ -209,8 +209,8 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #'   * `run`: Logical indicating whether to fetch metadata. See
 #'     [fetchMetadata()]. If `TRUE`, saves a file
 #'     `parentDir`/`study`/metadata.csv. If `FALSE`, expects that file to
-#'     already exist. A file `parentDir`/`study`/metadata_original.csv is always
-#'     saved of the unmodified metadata fetched or found. Following components
+#'     already exist. The unmodified fetched or found metadata is saved to a
+#'     file `parentDir`/`study`/metadata_original.csv. Following components
 #'     are only checked if `run` is `TRUE`.
 #'   * `bioproject`: String indicating the study's bioproject accession.
 #'   * `include`: Optional named list for specifying which rows of metadata to
