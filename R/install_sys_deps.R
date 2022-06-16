@@ -164,7 +164,7 @@ getSysDeps = function(outputDir, params) {
 #'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). If `NULL`,
 #'   Miniconda will not be installed.
 #' @param minicondaEnv String indicating name of the Miniconda environment in
-#'   which to install various conda packges (fastq-screen, fastqc, multiqc,
+#'   which to install various conda packages (fastq-screen, fastqc, multiqc,
 #'   pigz, refgenie, salmon, and trim-galore).
 #' @param refgenieDir String indicating directory in which to download genome
 #'   assets using refgenie. Only used if `minicondaDir` is not `NULL`.

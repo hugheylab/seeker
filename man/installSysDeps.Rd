@@ -23,7 +23,7 @@ will not be installed.}
 Miniconda will not be installed.}
 
 \item{minicondaEnv}{String indicating name of the Miniconda environment in
-which to install various conda packges (fastq-screen, fastqc, multiqc,
+which to install various conda packages (fastq-screen, fastqc, multiqc,
 pigz, refgenie, salmon, and trim-galore).}
 
 \item{refgenieDir}{String indicating directory in which to download genome
