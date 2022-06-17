@@ -4,7 +4,7 @@
 \alias{seekerArray}
 \title{Process microarray data end to end}
 \usage{
-seekerArray(params, parentDir)
+seekerArray(params, parentDir = ".")
 }
 \arguments{
 \item{params}{Named list of parameters with components:
