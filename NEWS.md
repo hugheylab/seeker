@@ -1,3 +1,6 @@
+# seeker 1.0.2
+* Set default parent directory for `seekerArray()`.
+
 # seeker 1.0.1
 * Updated `seeker()` to save unmodified metadata file.
 
