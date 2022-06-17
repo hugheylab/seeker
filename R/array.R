@@ -93,7 +93,7 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #' @seealso [seeker()]
 #'
 #' @export
-seekerArray = function(params, parentDir) {
+seekerArray = function(params, parentDir = '.') {
   r = checkSeekerArrayArgs(params, parentDir)
   repo = r$repo
   outputDir = r$outputDir
