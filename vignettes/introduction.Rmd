@@ -42,7 +42,7 @@ Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 
 ## Microarray data
 
-To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also process raw Affymetrix data stored locally. The main input is again a list of parameters, but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
+To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also process raw Affymetrix data stored locally. The main inputs are arguments for `study`, `geneIdType`, and `platform`. You can also supply list of parameters, similar to but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
 
 ```{yaml, eval = FALSE}
 study: '' # [string indicating study accession]
@@ -51,19 +51,18 @@ geneIdType: '' # [string 'ensembl' or 'entrez']
 # or for GEO-based data using multiple platforms]
 ```
 
-A convenient way to run `seekerArray()` is then using a script such as the one below.
-
-```{r, code = readLines(system.file('extdata', 'run_seeker_array.R', package = 'seeker')), eval = FALSE}
-```
-
-Copy the script to your working directory like so:
+To run `seekerArray()`, you can either provide the values directly or in a named list, as shown below.
 
 ```{r, eval = FALSE}
-file.copy(system.file('extdata', 'run_seeker_array.R', package = 'seeker'), '.')
+library('seeker')
+
+# Using direct arguments
+study = 'GSE25585'
+geneIdType = 'ensembl'
+seekerArray(study, geneIdType, parentDir = '.')
+
+# Using params
+params = list(study = study, geneIdType = geneIdType)
+seekerArray(params = params, parentDir = '.')
 ```
 
-Then you can create the yaml file for the dataset you want and run the script using something like
-
-```{sh, eval = FALSE}
-Rscript run_seeker_array.R <study>.yml <path/to/parent/directory>
-```
