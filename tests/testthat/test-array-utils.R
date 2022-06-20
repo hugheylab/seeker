@@ -162,6 +162,10 @@ test_that('getEntrezEnsemblMapping', {
 
 
 test_that('getProbeGeneMapping', {
+  mapPkgVerObs = packageVersion('org.Mm.eg.db')
+  mapPkgVerExp = snapshot(mapPkgVerObs, file.path(dataDir, 'map_pkg_ver.qs'))
+  skip_if(mapPkgVerObs != mapPkgVerExp, 'Mapping package is different version, skipping.')
+
   platforms = getPlatforms('mapping')
   annos = c('GPL6887', 'GPL7202')
 
