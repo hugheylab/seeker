@@ -1,5 +1,6 @@
 # seeker 1.0.2
 * Set default parent directory for `seekerArray()`.
+* Added custom CDF support for platform GPL17400.
 
 # seeker 1.0.1
 * Updated `seeker()` to save unmodified metadata file.
