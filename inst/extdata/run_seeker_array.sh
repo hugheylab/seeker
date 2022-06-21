@@ -5,5 +5,5 @@ docker run \
   -w /home/rstudio/projects \
   --rm \
   ghcr.io/hugheylab/socker \
-  bash -c "Rscript -e "'"'"seeker::seekerArray('GSE25585', 'ensembl', parentDir = '.')"'"' \
+  bash -c "Rscript run_seeker_array.R GSE25585 ensembl ." \
   &> GSE25585_progress.log

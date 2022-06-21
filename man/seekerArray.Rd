@@ -4,7 +4,7 @@
 \alias{seekerArray}
 \title{Process microarray data end to end}
 \usage{
-seekerArray(study, geneIdType, platform = NULL, params = NULL, parentDir = ".")
+seekerArray(study, geneIdType, platform = NULL, parentDir = ".")
 }
 \arguments{
 \item{study}{String indicating the study accession and used to name the output
@@ -24,17 +24,11 @@ data. See \url{https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms}.
 Only necessary if \code{study} starts with "LOCAL", or starts with "GSE"
 and the study uses multiple platforms.}
 
-\item{params}{Named list of parameters with components for \code{study}, \code{geneIdType}, and \code{platform}.
-
-\code{params} can be derived from a yaml file, see
-\code{vignette("introduction", package = "seeker")}. The yaml representation
-of \code{params} will be saved to \code{parentDir}/\code{params$study}/params.yml.}
-
 \item{parentDir}{Directory in which to store the output, which will be a
-directory named according to \code{params$study}.}
+directory named according to \code{study}.}
 }
 \value{
-Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
+Path to the output directory \code{parentDir}/\code{study}, invisibly.
 }
 \description{
 This function fetches data and metadata from NCBI GEO and ArrayExpress,

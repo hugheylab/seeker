@@ -75,27 +75,16 @@ checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
 #'   Only necessary if `study` starts with "LOCAL", or starts with "GSE"
 #'   and the study uses multiple platforms.
 #'
-#' @param params Named list of parameters with components for `study`, `geneIdType`, and `platform`.
-#'
-#' `params` can be derived from a yaml file, see
-#' \code{vignette("introduction", package = "seeker")}. The yaml representation
-#' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
-#'   directory named according to `params$study`.
+#'   directory named according to `study`.
 #'
-#' @return Path to the output directory `parentDir`/`params$study`, invisibly.
+#' @return Path to the output directory `parentDir`/`study`, invisibly.
 #'
 #' @seealso [seeker()]
 #'
 #' @export
-seekerArray = function(study, geneIdType, platform = NULL, params = NULL, parentDir = '.') {
-  if (!is.null(params)) {
-    study = params$study
-    geneIdType = params$geneIdType
-    platform = params$platform
-  } else {
-    params = list(study = study, geneIdType = geneIdType, platform = platform)
-  }
+seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
+
   r = checkSeekerArrayArgs(study, geneIdType, platform, parentDir)
   repo = r$repo
   outputDir = r$outputDir
@@ -166,7 +155,10 @@ seekerArray = function(study, geneIdType, platform = NULL, params = NULL, parent
     emat = getEmatGene(emat, mapping)}
 
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
-  yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
+  yaml::write_yaml(list(study = study,
+                        geneIdType = geneIdType,
+                        platform = platform),
+                   file.path(outputDir, 'params.yml'))
   sessioninfo::session_info(
     info = 'auto', to_file = file.path(outputDir, 'session.log'))
 

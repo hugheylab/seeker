@@ -58,8 +58,13 @@ The `seeker` package also includes an example shell script for fetching and proc
 
 ```{r, eval = FALSE}
 urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
-filename = 'run_seeker_array.sh'
-download.file(paste0(urlBase, filename), filename)
+for (filename in c('run_seeker_array.R', 'run_seeker_array.sh')) {
+  download.file(paste0(urlBase, filename), filename)}
+```
+
+run_seeker_array.R:
+
+```{r, code = readLines(system.file('extdata', 'run_seeker_array.R', package = 'seeker')), eval = FALSE}
 ```
 
 run_seeker_array.sh:

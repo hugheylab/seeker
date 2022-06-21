@@ -42,27 +42,13 @@ Rscript run_seeker.R <study>.yml <path/to/parent/directory>
 
 ## Microarray data
 
-To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also process raw Affymetrix data stored locally. The main inputs are arguments for `study`, `geneIdType`, and `platform`. You can also supply list of parameters, similar to but much simpler than for `seeker()`. A template yaml file for the parameters is shown below.
-
-```{yaml, eval = FALSE}
-study: '' # [string indicating study accession]
-geneIdType: '' # [string 'ensembl' or 'entrez']
-# platform: '' # [string indicating GEO-based platform accession for local data
-# or for GEO-based data using multiple platforms]
-```
-
-To run `seekerArray()`, you can either provide the values directly or in a named list, as shown below.
+To process microarray data, use the `seekerArray()` function. Currently `seekerArray()` can process data from [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/) and [ArrayExpress](https://www.ebi.ac.uk/arrayexpress/). It can also process raw Affymetrix data stored locally. The main inputs are arguments for `study`, `geneIdType`, and `platform`.
 
 ```{r, eval = FALSE}
 library('seeker')
 
-# Using direct arguments
 study = 'GSE25585'
 geneIdType = 'ensembl'
 seekerArray(study, geneIdType, parentDir = '.')
-
-# Using params
-params = list(study = study, geneIdType = geneIdType)
-seekerArray(params = params, parentDir = '.')
 ```
 
