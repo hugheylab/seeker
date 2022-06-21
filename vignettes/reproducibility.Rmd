@@ -58,7 +58,7 @@ The `seeker` package also includes an example shell script for fetching and proc
 
 ```{r, eval = FALSE}
 urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
-for (filename in c('run_seeker_array.R', 'run_seeker_array.sh')) {
+for (filename in c('run_seeker_array.R', 'run_seeker_array.sh', 'GSE25585.yml')) {
   download.file(paste0(urlBase, filename), filename)}
 ```
 
@@ -70,6 +70,20 @@ run_seeker_array.R:
 run_seeker_array.sh:
 
 ```{r, code = readLines(system.file('extdata', 'run_seeker_array.sh', package = 'seeker')), eval = FALSE}
+```
+
+Alternatively, you could modify line 8 of run_seeker_array.sh to use GSE25585.yml instead of providing the arguments directly:
+```{sh, eval = FALSE}
+#!/bin/sh
+
+docker run \
+  --mount type=bind,src=`pwd`,dst=/home/rstudio/projects \
+  -w /home/rstudio/projects \
+  --rm \
+  ghcr.io/hugheylab/socker \
+  bash -c "Rscript run_seeker_array.R GSE25585.yml ." \
+  &> GSE25585_progress.log
+
 ```
 
 Now simply run the shell script:
