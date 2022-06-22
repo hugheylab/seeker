@@ -16,7 +16,7 @@ checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
     assert(is.null(platform), startsWith(platform, 'GPL'))
   } else if (startsWith(study, 'E-')) {
     repo = 'ae'
-    assert(is.null(platform))
+    assertNull(platform)
   } else {
     repo = 'local'
     assertString(platform, min.chars = 4)

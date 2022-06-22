@@ -165,10 +165,11 @@ test_that('getProbeGeneMapping', {
   mapPkgVerObs = packageVersion('org.Mm.eg.db')
   mapPkgVerExp = snapshot(mapPkgVerObs, file.path(dataDir, 'map_pkg_ver.qs'))
   if (mapPkgVerObs != mapPkgVerExp) {
-    if (mapPkgVerObs < mapPkgVerExp) warning(
-    'New version of map package available, test snapshots should be regenerated.')
-    skip('Mapping package is different version, skipping.')
-  }
+    if (mapPkgVerObs < mapPkgVerExp) {
+      w = c('New version of map package available,',
+            'test snapshots should be regenerated.')
+      warning(paste(w, collapse = ' '))}
+    skip('Mapping package is different version, skipping.')}
 
   platforms = getPlatforms('mapping')
   annos = c('GPL6887', 'GPL7202')
@@ -189,8 +190,9 @@ test_that('getEmatGene', {
   ematProbe = matrix(
     as.numeric(1:8), nrow = 4L,
     dimnames = list(paste0('probe', 1:4), paste0('sample', 1:2)))
-  mapping = data.table(probe_set = paste0('probe', 4:1),
-                       gene_id = paste0('gene', c(1, 1, 2, 3)))
+  mapping = data.table(
+    probe_set = paste0('probe', 4:1),
+    gene_id = paste0('gene', c(1, 1, 2, 3)))
   ematGeneObs = getEmatGene(ematProbe, mapping)
   ematGeneExp = matrix(
     c(3.5, 2, 1, 7.5, 6, 5), nrow = 3L,

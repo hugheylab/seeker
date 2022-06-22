@@ -14,6 +14,7 @@ test_that('checkSeekerArrayArgs', {
   expect_equal(resultObs, resultExp)
 })
 
+
 test_that('checkSeekerArrayArgs errors', {
   skip_on_os('windows', arch = NULL)
 
@@ -30,11 +31,12 @@ test_that('checkSeekerArrayArgs errors', {
     'LOCAL', paramsArray$geneIdType, 'GPL1', parentDirArr))
 })
 
+
 test_that('seekerArray GSE', {
   skip_on_os('windows', arch = NULL)
 
   seekerArray(paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
-              parentDir = parentDirArr)
+              parentDirArr)
 
   resultObs = list.files(parentDirArr, recursive = TRUE)
   resultExp = snapshot(
@@ -42,6 +44,7 @@ test_that('seekerArray GSE', {
 
   expect_equal(resultObs, resultExp)
 })
+
 
 test_that('seekerArray Ae', {
   skip_on_os('windows', arch = NULL)
@@ -53,7 +56,7 @@ test_that('seekerArray Ae', {
   paramsArrayAe$study = 'E-MTAB-8714'
 
   seekerArray(paramsArrayAe$study, paramsArrayAe$geneIdType,
-              paramsArrayAe$platform, parentDir = parentDirArrAe)
+              paramsArrayAe$platform, parentDirArrAe)
 
   resultObs = list.files(parentDirArrAe, recursive = TRUE)
   resultExp = snapshot(
@@ -61,6 +64,7 @@ test_that('seekerArray Ae', {
 
   expect_equal(resultObs, resultExp)
 })
+
 
 test_that('seekerArray LOCAL', {
   skip_on_os('windows', arch = NULL)
@@ -72,7 +76,7 @@ test_that('seekerArray LOCAL', {
   file.copy(file.path(dataDir, 'LOCAL01'), parentDirArrLcl, recursive = TRUE)
 
   seekerArray(paramsArrayLocal$study, paramsArrayLocal$geneIdType,
-              paramsArrayLocal$platform, parentDir = parentDirArrLcl)
+              paramsArrayLocal$platform, parentDirArrLcl)
 
   resultObs = list.files(parentDirArrLcl, recursive = TRUE)
   resultExp = snapshot(
