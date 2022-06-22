@@ -92,4 +92,3 @@ sh run_seeker_array.sh
 ```
 
 The output will appear in your working directory. You can follow `seekerArray()`'s progress using the log file. To process a different dataset, modify the shell script accordingly.
-

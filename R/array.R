@@ -155,10 +155,9 @@ seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
     emat = getEmatGene(emat, mapping)}
 
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
-  yaml::write_yaml(list(study = study,
-                        geneIdType = geneIdType,
-                        platform = platform),
-                   file.path(outputDir, 'params.yml'))
+
+  params = list(study = study, geneIdType = geneIdType, platform = platform)
+  yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   sessioninfo::session_info(
     info = 'auto', to_file = file.path(outputDir, 'session.log'))
 
