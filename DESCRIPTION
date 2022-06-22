@@ -3,7 +3,7 @@ Type: Package
 Title: Process Genomic Data
 Version: 1.0.3
 Authors@R: c(
-  person('Jake', 'Hughey', , 'josh.schoenbachler@gmail.com', role = c('aut', 'cre')),
+  person('Jake', 'Hughey', , 'jakejhughey@gmail.com', role = c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', role = 'aut'))
 Description: Simplified processing of sequencing and microarray data.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
