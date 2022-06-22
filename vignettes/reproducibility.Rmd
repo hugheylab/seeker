@@ -54,7 +54,7 @@ The output will appear in your working directory. You can follow `seeker()`'s pr
 
 ## Microarray data
 
-The `seeker` package also includes an example shell script for fetching and processing a microarray dataset. Download the file to your working directory:
+The `seeker` package also includes an example shell script for fetching and processing a microarray dataset. Download the fileS to your working directory:
 
 ```{r, eval = FALSE}
 urlBase = 'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'
@@ -70,25 +70,6 @@ run_seeker_array.R:
 run_seeker_array.sh:
 
 ```{r, code = readLines(system.file('extdata', 'run_seeker_array.sh', package = 'seeker')), eval = FALSE}
-```
-
-Alternatively, you could modify line 8 of run_seeker_array.sh to use GSE25585.yml instead of providing the arguments directly:
-```{sh, eval = FALSE}
-#!/bin/sh
-
-docker run \
-  --mount type=bind,src=`pwd`,dst=/home/rstudio/projects \
-  -w /home/rstudio/projects \
-  --rm \
-  ghcr.io/hugheylab/socker \
-  bash -c "Rscript run_seeker_array.R GSE25585.yml ." \
-  &> GSE25585_progress.log
-
-```
-
-Now simply run the shell script:
-```{sh, eval = FALSE}
-sh run_seeker_array.sh
 ```
 
 The output will appear in your working directory. You can follow `seekerArray()`'s progress using the log file. To process a different dataset, modify the shell script accordingly.

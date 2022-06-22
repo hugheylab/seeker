@@ -165,8 +165,8 @@ test_that('getProbeGeneMapping', {
   mapPkgVerObs = packageVersion('org.Mm.eg.db')
   mapPkgVerExp = snapshot(mapPkgVerObs, file.path(dataDir, 'map_pkg_ver.qs'))
   if (mapPkgVerObs != mapPkgVerExp) {
-    if (mapPkgVerObs < mapPkgVerExp) warning('New version of map package available,
-                                             test snapshots should be regenerated.')
+    if (mapPkgVerObs < mapPkgVerExp) warning(
+    'New version of map package available, test snapshots should be regenerated.')
     skip('Mapping package is different version, skipping.')
   }
 

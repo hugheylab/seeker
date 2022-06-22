@@ -6,8 +6,8 @@ withr::local_file(parentDirArr)
 test_that('checkSeekerArrayArgs', {
   skip_on_os('windows', arch = NULL)
 
-  resultObs = checkSeekerArrayArgs(paramsArray$study, paramsArray$geneIdType,
-                                   paramsArray$platform, parentDirArr)
+  resultObs = checkSeekerArrayArgs(
+    paramsArray$study, paramsArray$geneIdType, paramsArray$platform, parentDirArr)
   resultExp = snapshot(
     resultObs, file.path(dataDir, 'seeker_array_args_output.qs'))
 
@@ -18,16 +18,16 @@ test_that('checkSeekerArrayArgs errors', {
   skip_on_os('windows', arch = NULL)
 
   # GSE platform not null or GPL
-  expect_error(checkSeekerArrayArgs(paramsArray$study, paramsArray$geneIdType,
-                                    'abcd', parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    paramsArray$study, paramsArray$geneIdType, 'abcd', parentDirArr))
 
   # E- with platform
-  expect_error(checkSeekerArrayArgs('E-test', paramsArray$geneIdType, 'abcd',
-                                    parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    'E-test', paramsArray$geneIdType, 'abcd', parentDirArr))
 
   # raw with raw dir not existing
-  expect_error(checkSeekerArrayArgs('LOCAL', paramsArray$geneIdType, 'GPL1',
-                                    parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    'LOCAL', paramsArray$geneIdType, 'GPL1', parentDirArr))
 })
 
 test_that('seekerArray GSE', {
