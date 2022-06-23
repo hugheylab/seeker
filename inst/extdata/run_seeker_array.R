@@ -1,6 +1,8 @@
 cArgs = commandArgs(TRUE)
-yamlPath = cArgs[1L]
+
+params = yaml::read_yaml(cArgs[1L])
 parentDir = cArgs[2L]
 
-params = yaml::read_yaml(yamlPath)
-seeker::seekerArray(params, parentDir)
+seeker::seekerArray(
+  study = params$study, geneIdType = params$geneIdType,
+  platform = params$platform, parentDir)

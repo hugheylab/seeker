@@ -6,36 +6,37 @@ withr::local_file(parentDirArr)
 test_that('checkSeekerArrayArgs', {
   skip_on_os('windows', arch = NULL)
 
-  resultObs = checkSeekerArrayArgs(paramsArray, parentDirArr)
+  resultObs = checkSeekerArrayArgs(
+    paramsArray$study, paramsArray$geneIdType, paramsArray$platform, parentDirArr)
   resultExp = snapshot(
     resultObs, file.path(dataDir, 'seeker_array_args_output.qs'))
 
   expect_equal(resultObs, resultExp)
 })
 
+
 test_that('checkSeekerArrayArgs errors', {
   skip_on_os('windows', arch = NULL)
 
-  paramsArrayErr = paramsArray
-
   # GSE platform not null or GPL
-  paramsArrayErr$platform = 'abcd'
-  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    paramsArray$study, paramsArray$geneIdType, 'abcd', parentDirArr))
 
   # E- with platform
-  paramsArrayErr$study = 'E-test'
-  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    'E-test', paramsArray$geneIdType, 'abcd', parentDirArr))
 
   # raw with raw dir not existing
-  paramsArrayErr$study = 'LOCAL'
-  paramsArrayErr$platform = 'GPL1'
-  expect_error(checkSeekerArrayArgs(paramsArrayErr, parentDirArr))
+  expect_error(checkSeekerArrayArgs(
+    'LOCAL', paramsArray$geneIdType, 'GPL1', parentDirArr))
 })
+
 
 test_that('seekerArray GSE', {
   skip_on_os('windows', arch = NULL)
 
-  seekerArray(paramsArray, parentDirArr)
+  seekerArray(paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
+              parentDirArr)
 
   resultObs = list.files(parentDirArr, recursive = TRUE)
   resultExp = snapshot(
@@ -43,6 +44,7 @@ test_that('seekerArray GSE', {
 
   expect_equal(resultObs, resultExp)
 })
+
 
 test_that('seekerArray Ae', {
   skip_on_os('windows', arch = NULL)
@@ -53,7 +55,8 @@ test_that('seekerArray Ae', {
   paramsArrayAe = paramsArray
   paramsArrayAe$study = 'E-MTAB-8714'
 
-  seekerArray(paramsArrayAe, parentDirArrAe)
+  seekerArray(paramsArrayAe$study, paramsArrayAe$geneIdType,
+              paramsArrayAe$platform, parentDirArrAe)
 
   resultObs = list.files(parentDirArrAe, recursive = TRUE)
   resultExp = snapshot(
@@ -61,6 +64,7 @@ test_that('seekerArray Ae', {
 
   expect_equal(resultObs, resultExp)
 })
+
 
 test_that('seekerArray LOCAL', {
   skip_on_os('windows', arch = NULL)
@@ -71,7 +75,8 @@ test_that('seekerArray LOCAL', {
   paramsArrayLocal = yaml::read_yaml(file.path(dataDir, 'LOCAL01.yml'))
   file.copy(file.path(dataDir, 'LOCAL01'), parentDirArrLcl, recursive = TRUE)
 
-  seekerArray(paramsArrayLocal, parentDirArrLcl)
+  seekerArray(paramsArrayLocal$study, paramsArrayLocal$geneIdType,
+              paramsArrayLocal$platform, parentDirArrLcl)
 
   resultObs = list.files(parentDirArrLcl, recursive = TRUE)
   resultExp = snapshot(

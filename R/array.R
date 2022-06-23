@@ -1,32 +1,26 @@
-checkSeekerArrayArgs = function(params, parentDir) {
-  assertList(params)
-  assertNames(names(params), must.include = 'study')
-  assertString(params$study)
-  assertTRUE(any(startsWith(params$study, c('GSE', 'E-', 'LOCAL'))))
-  assertNames(names(params), must.include = c('study', 'geneIdType'))
-  assertChoice(params$geneIdType, c('ensembl', 'entrez'))
+checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
+  assertString(study)
+  assertTRUE(any(startsWith(study, c('GSE', 'E-', 'LOCAL'))))
+  assertChoice(geneIdType, c('ensembl', 'entrez'))
 
   assertString(parentDir)
   assertDirectoryExists(parentDir)
-  outputDir = file.path(path.expand(parentDir), params$study) # untar no like ~
+  outputDir = file.path(path.expand(parentDir), study) # untar no like ~
   rawDir = file.path(outputDir, 'raw')
   metadataPath = file.path(outputDir, 'sample_metadata.csv')
   sampColname = 'sample_id'
 
-  if (startsWith(params$study, 'GSE')) {
+  if (startsWith(study, 'GSE')) {
     repo = 'geo'
-    assertNames(names(params), subset.of = c('study', 'geneIdType', 'platform'))
-    assertString(params$platform, min.chars = 4, null.ok = TRUE)
-    assert(is.null(params$platform), startsWith(params$platform, 'GPL'))
-  } else if (startsWith(params$study, 'E-')) {
+    assertString(platform, min.chars = 4, null.ok = TRUE)
+    assert(is.null(platform), startsWith(platform, 'GPL'))
+  } else if (startsWith(study, 'E-')) {
     repo = 'ae'
-    assertNames(names(params), permutation.of = c('study', 'geneIdType'))
+    assertNull(platform)
   } else {
     repo = 'local'
-    assertNames(
-      names(params), permutation.of = c('study', 'geneIdType', 'platform'))
-    assertString(params$platform, min.chars = 4)
-    assertTRUE(startsWith(params$platform, 'GPL'))
+    assertString(platform, min.chars = 4)
+    assertTRUE(startsWith(platform, 'GPL'))
     assertDirectoryExists(rawDir)
     assertFileExists(metadataPath)
     d = fread(metadataPath, na.strings = '')
@@ -66,35 +60,32 @@ checkSeekerArrayArgs = function(params, parentDir) {
 #' The output may include other files from NCBI GEO or ArrayExpress. Files with
 #' extension "qs" can be read into R using [qs::qread()].
 #'
-#' @param params Named list of parameters with components:
-#' * `study`: String indicating the study accession and used to name the output
+#' @param study String indicating the study accession and used to name the output
 #'   directory within `parentDir`. Must start with "GSE", "E-", or "LOCAL". If
 #'   starts with "GSE", data are fetched using [GEOquery::getGEO()]. If starts
 #'   with "E-", data are fetched using [ArrayExpress::getAE()]. If starts with
 #'   "LOCAL", data in the form of cel(.gz) files must in the directory
-#'   `parentDir`/`params$study`/raw, and `parentDir`/`params$study` must contain
+#'   `parentDir`/`study`/raw, and `parentDir`/`study` must contain
 #'   a file "sample_metadata.csv" that has a column `sample_id` containing the
 #'   names of the cel(.gz) files without the file extension.
-#' * `geneIdType`: String indicating whether to map probes to gene IDs from
+#' @param geneIdType String indicating whether to map probes to gene IDs from
 #'   Ensembl ("ensembl") or Entrez ("entrez").
-#' * `platform`: String indicating the GEO-based platform accession for the raw
+#' @param platform String indicating the GEO-based platform accession for the raw
 #'   data. See <https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms>.
-#'   Only necessary if `params$study` starts with "LOCAL", or starts with "GSE"
+#'   Only necessary if `study` starts with "LOCAL", or starts with "GSE"
 #'   and the study uses multiple platforms.
 #'
-#' `params` can be derived from a yaml file, see
-#' \code{vignette("introduction", package = "seeker")}. The yaml representation
-#' of `params` will be saved to `parentDir`/`params$study`/params.yml.
 #' @param parentDir Directory in which to store the output, which will be a
-#'   directory named according to `params$study`.
+#'   directory named according to `study`.
 #'
-#' @return Path to the output directory `parentDir`/`params$study`, invisibly.
+#' @return Path to the output directory `parentDir`/`study`, invisibly.
 #'
 #' @seealso [seeker()]
 #'
 #' @export
-seekerArray = function(params, parentDir = '.') {
-  r = checkSeekerArrayArgs(params, parentDir)
+seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
+
+  r = checkSeekerArrayArgs(study, geneIdType, platform, parentDir)
   repo = r$repo
   outputDir = r$outputDir
   rawDir = r$rawDir
@@ -107,11 +98,11 @@ seekerArray = function(params, parentDir = '.') {
   withr::local_envvar(VROOM_CONNECTION_SIZE = 131072 * 20)
 
   result = if (repo == 'geo') {
-    getNaiveEsetGeo(params$study, outputDir, rawDir, params$platform)
+    getNaiveEsetGeo(study, outputDir, rawDir, platform)
   } else if (repo == 'ae') {
-    getNaiveEsetAe(params$study, outputDir, rawDir)
+    getNaiveEsetAe(study, outputDir, rawDir)
   } else {
-    getNaiveEsetLocal(params$study, params$platform)}
+    getNaiveEsetLocal(study, platform)}
 
   eset = result$eset
   rmaOk = result$rmaOk
@@ -129,7 +120,7 @@ seekerArray = function(params, parentDir = '.') {
     return(invisible())}
 
   if (rmaOk) {
-    cdfname = getCdfname(eset@annotation, params$geneIdType)
+    cdfname = getCdfname(eset@annotation, geneIdType)
     if (!requireNamespace(cdfname, quietly = TRUE)) {
       installCustomCdfPackages(cdfname)}
     fwrite(list(cdfname), file.path(outputDir, 'custom_cdf_name.txt'))
@@ -157,13 +148,15 @@ seekerArray = function(params, parentDir = '.') {
     platforms = getPlatforms('mapping')
     platformDt = platforms[platforms$platform == eset@annotation]
 
-    mapping = getProbeGeneMapping(featureDt, platformDt, params$geneIdType)
+    mapping = getProbeGeneMapping(featureDt, platformDt, geneIdType)
     fwrite(mapping, file.path(outputDir, 'probe_gene_mapping.csv.gz'))
 
     emat = getLogTransformedEmat(eset@assayData$exprs)
     emat = getEmatGene(emat, mapping)}
 
   qs::qsave(emat, file.path(outputDir, 'gene_expression_matrix.qs'))
+
+  params = list(study = study, geneIdType = geneIdType, platform = platform)
   yaml::write_yaml(params, file.path(outputDir, 'params.yml'))
   sessioninfo::session_info(
     info = 'auto', to_file = file.path(outputDir, 'session.log'))

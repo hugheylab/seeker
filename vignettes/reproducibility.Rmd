@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
 
-Using `seeker` together with docker, it's easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the [socker](https://github.com/hugheylab/socker) image, which has seeker and its dependencies already installed.
+Using the `seeker` package together with docker, it's easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the [socker](https://github.com/hugheylab/socker) image, which has `seeker` and its dependencies already installed.
 
 ```{sh, eval = FALSE}
 docker pull ghcr.io/hugheylab/socker
@@ -50,7 +50,7 @@ Now simply run the shell script:
 sh run_seeker.sh
 ```
 
-The output will appear in your working directory. You can follow `seeker()`'s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Note: the example yaml file and shell script use salmon_partial_sa_index to minimize computational requirements; for actual use we recommend salmon_sa_index.
+The output will appear in your working directory. You can follow `seeker()`'s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Beware this example uses "salmon_partial_sa_index" from refgenie to minimize computational requirements; for actual use we recommend "salmon_sa_index".
 
 ## Microarray data
 
@@ -83,4 +83,3 @@ sh run_seeker_array.sh
 ```
 
 The output will appear in your working directory. You can follow `seekerArray()`'s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly.
-
