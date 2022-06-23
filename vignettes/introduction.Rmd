@@ -27,7 +27,7 @@ for (filename in c('PRJNA600892.yml', 'params_template.yml')) {
   file.copy(system.file('extdata', filename, package = 'seeker'), '.')}
 ```
 
-A basic way to run `seeker()` is then (beware even this minimal example could take some time):
+If you've already installed the system dependencies, such as with `installSysDeps()`, a basic way to run `seeker()` is then:
 
 ```{r, eval = FALSE}
 library('seeker')
@@ -37,6 +37,8 @@ yamlPath = 'PRJNA600892.yml'
 params = yaml::read_yaml(yamlPath)
 seeker(params)
 ```
+
+Beware even this minimal example could take some time.
 
 ## Microarray data
 

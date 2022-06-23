@@ -47,7 +47,7 @@ If you don't want to use Docker, you can follow the instructions below.
 
 ### System dependencies
 
-If not using the docker image, use [`seeker::installSysDeps()`](https://seeker.hugheylab.org/reference/installsysdeps) to conveniently install and configure the various programs required for `seeker` to fetch and process sequencing data.
+If not using the docker image, use [`seeker::installSysDeps()`](https://seeker.hugheylab.org/reference/installsysdeps) to conveniently install and configure the various programs required to fetch and process sequencing data.
 
 ## Usage
 
