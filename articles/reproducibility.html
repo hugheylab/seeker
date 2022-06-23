@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <img src="" class="logo" alt=""><h1>Reproducibility with seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-06-20</h4>
+            <h4 data-toc-skip class="date">2022-06-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/reproducibility.Rmd" class="external-link"><code>vignettes/reproducibility.Rmd</code></a></small>
       <div class="d-none name"><code>reproducibility.Rmd</code></div>
@@ -86,7 +86,7 @@
 
     
     
-<p>Using <code>seeker</code> together with docker, it’s easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> image, which has seeker and its dependencies already installed.</p>
+<p>Using the <code>seeker</code> package together with docker, it’s easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> image, which has <code>seeker</code> and its dependencies already installed.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
 <div class="section level2">
 <h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
@@ -176,7 +176,7 @@
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> PRJNA600892_progress.log</span></code></pre></div>
 <p>Now simply run the shell script:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> run_seeker.sh</span></code></pre></div>
-<p>The output will appear in your working directory. You can follow <code><a href="../reference/seeker.html">seeker()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Note: the example yaml file and shell script use salmon_partial_sa_index to minimize computational requirements; for actual use we recommend salmon_sa_index.</p>
+<p>The output will appear in your working directory. You can follow <code><a href="../reference/seeker.html">seeker()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Beware this example uses “salmon_partial_sa_index” from refgenie to minimize computational requirements; for actual use we recommend “salmon_sa_index”.</p>
 </div>
 <div class="section level2">
 <h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
@@ -189,15 +189,17 @@
 <p>GSE25585.yml:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">study</span><span class="op">:</span> <span class="st">'GSE25585'</span>
-<span class="va">geneIdType</span><span class="op">:</span> <span class="st">'ensembl'</span></code></pre></div>
+<span class="va">geneIdType</span><span class="op">:</span> <span class="st">'entrez'</span></code></pre></div>
 <p>run_seeker_array.R:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cArgs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/commandArgs.html" class="external-link">commandArgs</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">yamlPath</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span>
+
+<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">cArgs</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span>
 <span class="va">parentDir</span> <span class="op">=</span> <span class="va">cArgs</span><span class="op">[</span><span class="fl">2L</span><span class="op">]</span>
 
-<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
-<span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span><span class="va">params</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
+<span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span>
+  study <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">study</span>, geneIdType <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">geneIdType</span>,
+  platform <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">platform</span>, <span class="va">parentDir</span><span class="op">)</span></code></pre></div>
 <p>run_seeker_array.sh:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
