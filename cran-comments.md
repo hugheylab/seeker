@@ -1,4 +1,17 @@
+## Resubmission Notes
+
+This package was originally submitted as 1.0.1 on 2022/06/16. There were errors on win builder as can be found here (if files aren't gone now): https://win-builder.r-project.org/incoming_pretest/seeker_1.0.1_20220617_021039/
+
+The problems were found to be the following:
+
+1. The Debian build was failing because it is running the R-devel (4.3) version of R, and Bioconductor isn't available for R 4.3 yet. Since this is out of our control and is (I assume) affecting other packages as well, I don't believe we should take any action.
+2. The NOTE concerning the "possibly" invalid URL is wrong. The URL is fine and can be accessed.
+3. The ERROR on Windows due to test failures has been resolved. The test was using a package that contains gene mappings for organisms, so if the version of the package present while running the test didn't match the exact version used to generate the snapshot, the test would fail. Conditions were added to the test to skip if it isn't the same version, and produce a warning if a new version of the mapping package is available.
+
+This should cover all issues brought up with the original submission.
+
 ## Important information about the package
+
 The primary functions in this package are either wrappers to various CLIs used in the fetching and processing of RNA-Seq transcriptome data, or functions that handle fetching and processing of Microarray transcriptome data. Due to this, we have to skip many tests not only on cran, but in any environment in which the system dependencies cannot be found. We include functions that install and configure the system dependencies, as well as maintain a Docker image that can be used with the package. Due to these requirements, the majority of the package's functionality is limited to Linux and Mac operating systems.
 
 Included below are the local checks (Mac) and rhub checks (Windows, Ubuntu, Mac). The local check is run with all system dependencies available and fully tests the package, as opposed to the rhub checks which simply skip the majority of tests. If you wish to see the results of a full online check, see the checks run on Windows, Ubuntu, and Mac using our GitHub Actions workflows [here](https://github.com/hugheylab/seeker/actions). Additionally, if you wish to see coverage reports of tests done in a Ubuntu environment, you can see the Codecov report [here](https://app.codecov.io/gh/hugheylab/seeker).
