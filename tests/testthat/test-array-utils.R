@@ -58,6 +58,7 @@ test_that('getNaiveEsetGeo', {
 
 
 test_that('getNaiveEsetAe supported', {
+  skip_on_cran()
   study = 'E-MTAB-8714'
 
   outputDir = tempfile()

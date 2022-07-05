@@ -1,3 +1,6 @@
+# seeker 1.0.4
+* Skip "`getNaiveEsetAe()` supported" test on CRAN due to BioConductor issues.
+
 # seeker 1.0.3
 * Made `getProbeGeneMapping()` test check for version number of mapping package.
 * Revised arguments for `seekerArray()` and updated tests and vignettes accordingly.
