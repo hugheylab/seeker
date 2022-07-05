@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <img src="" class="logo" alt=""><h1>Introduction to seeker</h1>
                         <h4 data-toc-skip class="author">Jake Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-06-24</h4>
+            <h4 data-toc-skip class="date">2022-07-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
@@ -145,16 +145,16 @@
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
 <p>An empty template yaml file is available at <code>system.file('extdata', 'params_template.yml', package = 'seeker')</code>. You can copy these yaml files to your working directory like so:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'params_template.yml'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'params_template.yml'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></span></code></pre></div>
 <p>If you’ve already installed the system dependencies, such as with <code><a href="../reference/installSysDeps.html">installSysDeps()</a></code>, a basic way to run <code><a href="../reference/seeker.html">seeker()</a></code> is then:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span>
-<span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">yamlPath</span> <span class="op">=</span> <span class="st">'PRJNA600892.yml'</span>
-<span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span>
-<span class="fu"><a href="../reference/seeker.html">seeker</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span></span>
+<span><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">yamlPath</span> <span class="op">=</span> <span class="st">'PRJNA600892.yml'</span></span>
+<span><span class="va">params</span> <span class="op">=</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">yamlPath</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/seeker.html">seeker</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span></span></code></pre></div>
 <p>Beware even this minimal example could take some time.</p>
 </div>
 <div class="section level2">
@@ -162,11 +162,11 @@
 </h2>
 <p>Here you can use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function, which can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/" class="external-link">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/" class="external-link">ArrayExpress</a>, and can process raw Affymetrix data stored locally. The main arguments are <code>study</code> and <code>geneIdType</code>. For example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span>
-
-<span class="va">study</span> <span class="op">=</span> <span class="st">'GSE25585'</span>
-<span class="va">geneIdType</span> <span class="op">=</span> <span class="st">'entrez'</span>
-<span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span><span class="va">study</span>, <span class="va">geneIdType</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">study</span> <span class="op">=</span> <span class="st">'GSE25585'</span></span>
+<span><span class="va">geneIdType</span> <span class="op">=</span> <span class="st">'entrez'</span></span>
+<span><span class="fu"><a href="../reference/seekerArray.html">seekerArray</a></span><span class="op">(</span><span class="va">study</span>, <span class="va">geneIdType</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
