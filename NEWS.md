@@ -1,5 +1,6 @@
 # seeker 1.0.4
-* Skip "`getNaiveEsetAe()` supported" test on CRAN due to BioConductor issues.
+* Skipped "`getNaiveEsetAe()` supported" test on CRAN due to BioConductor issues.
+* Added `GSE67964.yml` and `GSE79164.yml` for analysis repository.
 
 # seeker 1.0.3
 * Made `getProbeGeneMapping()` test check for version number of mapping package.
