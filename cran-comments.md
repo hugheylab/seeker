@@ -1,14 +1,13 @@
 ## Resubmission Notes
 
-This package was originally submitted as 1.0.1 on 2022/06/16. There were errors on win builder as can be found here (if files aren't gone now): https://win-builder.r-project.org/incoming_pretest/seeker_1.0.1_20220617_021039/
+This package was originally submitted as 1.0.1 on 2022/06/16, then again as 1.0.3 on 2022/07/04. There were errors on the win builder pre-checks, and the following notes pertain to the 2nd submission.
 
 The problems were found to be the following:
 
-1. The Debian build was failing because it is running the R-devel (4.3) version of R, and Bioconductor isn't available for R 4.3 yet. Since this is out of our control and is (I assume) affecting other packages as well, I don't believe we should take any action.
+1. The builds were failing because the R-devel (4.3) version of R is being used, and Bioconductor isn't available for R 4.3 yet. This package will install gene mapping packages from BioConductor if they aren't found, which was causing some test failures. The related tests are now skipped on CRAN, but the results can still be seen at the below links for test results.
 2. The NOTE concerning the "possibly" invalid URL is wrong. The URL is fine and can be accessed.
-3. The ERROR on Windows due to test failures has been resolved. The test was using a package that contains gene mappings for organisms, so if the version of the package present while running the test didn't match the exact version used to generate the snapshot, the test would fail. Conditions were added to the test to skip if it isn't the same version, and produce a warning if a new version of the mapping package is available.
 
-This should cover all issues brought up with the original submission.
+This should cover all issues brought up with the first resubmission.
 
 ## Important information about the package
 
