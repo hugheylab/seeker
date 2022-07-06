@@ -1,9 +1,9 @@
-addToProfile = function(line, type = 'OS') {
+addToProfile = function(line, type = 'OS', rprofileDir = '~') {
   paths = file.path('~', c('.zshrc', '.bashrc', '.profile'))
   paths = if (type == 'OS') {
     paths[file.exists(paths)]
   } else {
-    file.path('~', '.Rprofile')}
+    file.path(rprofileDir, '.Rprofile')}
 
   for (path in paths) {
     lines = if (file.exists(path)) readLines(path) else character()
@@ -12,7 +12,7 @@ addToProfile = function(line, type = 'OS') {
   invisible()}
 
 
-installSraToolkit = function(installDir, addToPath = TRUE) {
+installSraToolkit = function(installDir, rprofileDir) {
   sraPath = path.expand(file.path(installDir, 'sratoolkit', 'bin'))
 
   # Check if sratoolkit already exists at location
@@ -54,17 +54,16 @@ installSraToolkit = function(installDir, addToPath = TRUE) {
       .x = list(uuid = uuid, home = Sys.getenv('HOME')))
     writeLines(lines, configPath)}
 
-  if (addToPath) {
-    # Add to OS path and .Rprofile path
-    addToProfile(glue('export PATH="$PATH:{sraPath}"'))
-    path = paste(Sys.getenv('PATH'), sraPath, sep = ':')
-    addToProfile(glue('Sys.setenv(PATH = "{path}")'), type = 'R')
-    Sys.setenv(PATH = path)}
+  # Add to OS path and .Rprofile path
+  addToProfile(glue('export PATH="$PATH:{sraPath}"'))
+  path = paste(Sys.getenv('PATH'), sraPath, sep = ':')
+  addToProfile(glue('Sys.setenv(PATH = "{path}")'), 'R', rprofileDir)
+  Sys.setenv(PATH = path)
 
   invisible()}
 
 
-installMiniconda = function(installDir, minicondaEnv, setSeekerOption = TRUE) {
+installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Determine paths for miniconda
   minicondaPath = path.expand(file.path(installDir, 'miniconda3'))
   minicondaEnvPath = if (minicondaEnv == 'base') {
@@ -102,10 +101,10 @@ installMiniconda = function(installDir, minicondaEnv, setSeekerOption = TRUE) {
     system(glue('{minicondaPath}/bin/conda env create -f "{yamlPath}"'))}
 
   # Set the option
-  if (setSeekerOption) {
-    addToProfile(
-      glue('options(seeker.miniconda = "{minicondaEnvPath}")'), type = 'R')
-    options(seeker.miniconda = minicondaEnvPath)}
+  # if (setSeekerOption) {
+  addToProfile(
+    glue('options(seeker.miniconda = "{minicondaEnvPath}")'), 'R', rprofileDir)
+  options(seeker.miniconda = minicondaEnvPath)#}
 
   cat('Installing conda packages via mamba...\n')
   mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
@@ -115,14 +114,15 @@ installMiniconda = function(installDir, minicondaEnv, setSeekerOption = TRUE) {
   invisible()}
 
 
-setRefgenie = function(refgenieDir) {
+setRefgenie = function(refgenieDir, rprofileDir) {
   cat('Configuring refgenie...\n')
   if (!dir.exists(refgenieDir)) dir.create(refgenieDir)
   refgenieYamlPath = file.path(path.expand(refgenieDir), 'genome_config.yaml')
   if (!file.exists(refgenieYamlPath)) {
     system3('refgenie', c('init', '-c', refgenieYamlPath))}
   addToProfile(glue('export REFGENIE="{refgenieYamlPath}"'))
-  addToProfile(glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), type = 'R')
+  addToProfile(
+    glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), 'R', rprofileDir)
   Sys.setenv(REFGENIE = refgenieYamlPath)
   invisible()}
 
@@ -175,6 +175,8 @@ getSysDeps = function(outputDir, params) {
 #' @param fastqscreenDir String indicating directory in which to download the
 #'   genomes for [fastqscreen()]. This takes a long time. If `NULL`, genomes are
 #'   not downloaded.
+#' @param rprofileDir String indicating directory in which to create or modify
+#'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #'
 #' @return `NULL`, invisibly
 #'
@@ -184,7 +186,7 @@ getSysDeps = function(outputDir, params) {
 installSysDeps = function(
     sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
     refgenieDir = '~/refgenie_genomes', refgenieGenomes = NULL,
-    fastqscreenDir = NULL) {
+    fastqscreenDir = NULL, rprofileDir = '~') {
 
   assertOS(c('linux', 'mac', 'solaris'))
   assertString(sraToolkitDir, null.ok = TRUE)
@@ -195,16 +197,19 @@ installSysDeps = function(
   assertString(refgenieDir, null.ok = is.null(minicondaDir))
   assertCharacter(refgenieGenomes, any.missing = FALSE, null.ok = TRUE)
   assertString(fastqscreenDir, null.ok = TRUE)
+  assertString(rprofileDir)
+  assertDirectoryExists(rprofileDir)
 
   if (!is.null(sraToolkitDir)) {
-    tryCatch(installSraToolkit(sraToolkitDir), error = warning)}
+    tryCatch(installSraToolkit(sraToolkitDir, rprofileDir), error = warning)}
 
   if (!is.null(minicondaDir)) {
-    tryCatch(installMiniconda(minicondaDir, minicondaEnv), error = warning)
+    tryCatch(installMiniconda(
+      minicondaDir, minicondaEnv, rprofileDir), error = warning)
     if (is.na(validateCommand('refgenie'))) {
       warning('refgenie not found, cannot be configured.')
     } else {
-      tryCatch(setRefgenie(refgenieDir), error = warning)}}
+      tryCatch(setRefgenie(refgenieDir, rprofileDir), error = warning)}}
 
   if (!is.null(refgenieGenomes)) {
     if (is.na(validateCommand('refgenie'))) {
