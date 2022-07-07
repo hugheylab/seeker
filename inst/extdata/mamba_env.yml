@@ -10,4 +10,5 @@ dependencies:
   - pigz
   - refgenie
   - salmon
+  - snakemake
   - trim-galore

@@ -1,3 +1,6 @@
+# seeker 1.0.6
+* Added installation of snakemake by `installSysDeps()` for easier reproducible analyses.
+
 # seeker 1.0.5
 * Added argument to `installSysDeps()` to specify directory in which to create or modify .Rprofile.
 
