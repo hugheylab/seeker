@@ -48,6 +48,7 @@ test_that('seekerArray GSE', {
 
 test_that('seekerArray Ae', {
   skip_on_os('windows', arch = NULL)
+  skip_on_cran()
 
   parentDirArrAe = file.path(dataDir, 'staging_seeker_array_ae')
   dir.create(parentDirArrAe)

@@ -10,7 +10,8 @@ installSysDeps(
   minicondaEnv = "seeker",
   refgenieDir = "~/refgenie_genomes",
   refgenieGenomes = NULL,
-  fastqscreenDir = NULL
+  fastqscreenDir = NULL,
+  rprofileDir = "~"
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ transcriptome indexes for \code{\link[=salmon]{salmon()}}, to pull from
 \item{fastqscreenDir}{String indicating directory in which to download the
 genomes for \code{\link[=fastqscreen]{fastqscreen()}}. This takes a long time. If \code{NULL}, genomes are
 not downloaded.}
+
+\item{rprofileDir}{String indicating directory in which to create or modify
+.Rprofile, which is run by R on startup. Common options are "~" or ".".}
 }
 \value{
 \code{NULL}, invisibly
