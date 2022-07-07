@@ -26,7 +26,7 @@ If you decide to reject the package for CRAN, please give us some feedback on wh
 
 ### Online check
 
-RHUB has disabled their windows and linux environments "due to a billing issue". Additionally, at the time of submission, the mac R builder website is having gateway issues. In lieu, `devtools::check_win_devel()` was run in addition to the local check (run on an Intel Macbook).
+RHUB has disabled their windows and linux environments "due to a billing issue". Additionally, at the time of submission, the Mac M1 R-project builder website is having gateway issues. In lieu, `devtools::check_win_devel()` and `devtools::check_rhub(platforms = 'macos-m1-bigsur-release')` were run in addition to the local check (run on an Intel Macbook).
 
 `devtools::check_win_devel()` Windows result:
 
@@ -45,6 +45,11 @@ RHUB has disabled their windows and linux environments "due to a billing issue".
         Message: Bad Request
 
   0 errors ✓ | 0 warnings ✓ | 1 note x
+  
+`devtools::check_rhub(platforms = 'macos-m1-bigsur-release')` Mac M1 result:
+
+
+  0 errors ✓ | 0 warnings ✓ | 0 notes ✔
   
 
 Online check notes:
