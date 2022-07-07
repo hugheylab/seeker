@@ -1,13 +1,13 @@
 ## Resubmission Notes
 
-This package was originally submitted as 1.0.1 on 2022/06/16, then again as 1.0.3 on 2022/07/04. There were errors on the win builder pre-checks, and the following notes pertain to the 2nd submission.
+This package was originally submitted as 1.0.1 on 2022/06/16, again as 1.0.3 on 2022/07/04, and most recently as 1.0.4 on 2022/07/06. There were errors on the win builder pre-checks, and the following notes pertain to the 3rd submission.
 
 The problems were found to be the following:
 
-1. The builds were failing because the R-devel (4.3) version of R is being used, and Bioconductor isn't available for R 4.3 yet. This package will install gene mapping packages from BioConductor if they aren't found, which was causing some test failures. The related tests are now skipped on CRAN, but the results can still be seen at the below links for test results.
+1. The debian build failed because (similar to the 2nd submission notes) the R-devel (4.3) version of R is being used, and Bioconductor isn't available for R 4.3 yet. This package will install gene mapping packages from BioConductor if they aren't found, which was causing some test failures. The related tests are now skipped on CRAN, but the results can still be seen at the below links for test results.
 2. The NOTE concerning the "possibly" invalid URL is wrong. The URL is fine and can be accessed.
 
-This should cover all issues brought up with the first resubmission.
+This should cover all issues brought up with the second resubmission.
 
 ## Important information about the package
 
@@ -25,36 +25,30 @@ If you decide to reject the package for CRAN, please give us some feedback on wh
   0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ### Online check
-`devtools::check_rhub()` Windows result:
 
-  > checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Jake Hughey <jakejhughey@gmail.com>'
+RHUB has disabled their windows and linux environments "due to a billing issue". Additionally, at the time of submission, the mac R builder website is having gateway issues. In lieu, `devtools::check_win_devel()` was run in addition to the local check (run on an Intel Macbook).
 
-  New submission
+`devtools::check_win_devel()` Windows result:
 
-  > checking for detritus in the temp directory ... NOTE
-  Found the following files/directories:
-    'lastMiKTeXException'
+  > Maintainer: 'Jake Hughey <jakejhughey@gmail.com>'
 
-  0 errors ✓ | 0 warnings ✓ | 2 notes x
+    New submission
+    
+    Possibly misspelled words in DESCRIPTION:
+      Genomic (3:16)
+      microarray (9:54)
+    
+    Found the following (possibly) invalid URLs:
+      URL: https://www.ebi.ac.uk/arrayexpress/
+        From: inst/doc/introduction.html
+        Status: 400
+        Message: Bad Request
+
+  0 errors ✓ | 0 warnings ✓ | 1 note x
   
-
-`devtools::check_rhub()` Ubuntu result:
-
-  > checking CRAN incoming feasibility ... NOTE
-  Maintainer: ‘Jake Hughey <jakejhughey@gmail.com>’
-  
-  New submission
-
-  0 errors ✓ | 0 warnings ✓ | 1 notes x
-  
-
-`devtools::check_rhub()` Mac M1 result:
-
-  0 errors ✓ | 0 warnings ✓ | 0 notes x
 
 Online check notes:
-  - The "lastMiKTeXException" note in the windows environment only occurs on Windows rhub environments, and can be ignored.
+  - The spellings and URL are all valid, so ignore this error.
 
 You can also see the results of R CMD check on Windows, Linux, and MacOS by going to the GitHub Actions run labeled `check-deploy` [here](https://github.com/hugheylab/seeker/actions).
 
