@@ -12,7 +12,7 @@ seeker to fetch and process RNA-seq data."><!-- mathjax --><script src="https://
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,8 @@ seeker to fetch and process RNA-seq data.</p>
 <span>  minicondaEnv <span class="op">=</span> <span class="st">"seeker"</span>,</span>
 <span>  refgenieDir <span class="op">=</span> <span class="st">"~/refgenie_genomes"</span>,</span>
 <span>  refgenieGenomes <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fastqscreenDir <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  fastqscreenDir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rprofileDir <span class="op">=</span> <span class="st">"~"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,6 +111,11 @@ transcriptome indexes for <code><a href="salmon.html">salmon()</a></code>, to pu
 <dd><p>String indicating directory in which to download the
 genomes for <code><a href="fastqscreen.html">fastqscreen()</a></code>. This takes a long time. If <code>NULL</code>, genomes are
 not downloaded.</p></dd>
+
+
+<dt>rprofileDir</dt>
+<dd><p>String indicating directory in which to create or modify
+.Rprofile, which is run by R on startup. Common options are "~" or ".".</p></dd>
 
 </dl></div>
     <div class="section level2">
