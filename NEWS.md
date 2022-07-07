@@ -1,5 +1,5 @@
 # seeker 1.0.5
-* Added argument to installSysDeps()` to specify directory in which to create or modify .Rprofile.
+* Added argument to `installSysDeps()` to specify directory in which to create or modify .Rprofile.
 
 # seeker 1.0.4
 * Skipped "`getNaiveEsetAe()` supported" test on CRAN due to BioConductor issues.
