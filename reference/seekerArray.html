@@ -14,7 +14,7 @@ maps probes to genes."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
     
     <a class="navbar-brand me-2" href="../index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,13 @@ maps probes to genes.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seekerArray</span><span class="op">(</span><span class="va">study</span>, <span class="va">geneIdType</span>, platform <span class="op">=</span> <span class="cn">NULL</span>, parentDir <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seekerArray</span><span class="op">(</span></span>
+<span>  <span class="va">study</span>,</span>
+<span>  <span class="va">geneIdType</span>,</span>
+<span>  platform <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  parentDir <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  metadataOnly <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -98,6 +104,11 @@ and the study uses multiple platforms.</p></dd>
 <dt>parentDir</dt>
 <dd><p>Directory in which to store the output, which will be a
 directory named according to <code>study</code>.</p></dd>
+
+
+<dt>metadataOnly</dt>
+<dd><p>Logical indicating whether to only process the sample
+metadata, and skip processing the expression data.</p></dd>
 
 </dl></div>
     <div class="section level2">
