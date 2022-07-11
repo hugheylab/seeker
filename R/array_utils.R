@@ -59,7 +59,9 @@ installCustomCdfPackages = function(pkgs, ver = 25, dryRun = FALSE) {
   invisible(urls)}
 
 
-getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
+getNaiveEsetGeo = function(
+    study, outputDir, rawDir, platform = NULL, metadataOnly = FALSE) {
+
   gq = GEOquery::getGEO(study, destdir = outputDir, getGPL = FALSE)
   idx = if (length(gq) == 1L) {
     1L
@@ -80,6 +82,8 @@ getNaiveEsetGeo = function(study, outputDir, rawDir, platform = NULL) {
   dSuppTmp = GEOquery::getGEOSuppFiles(
     study, makeDirectory = FALSE, baseDir = outputDir, fetch_files = FALSE)
   isRaw = grepl('_RAW\\.tar$', dSuppTmp$fname)
+
+  if (metadataOnly) return(list(eset = eset))
 
   if (rmaOk && any(isRaw)) {
     dSupp = GEOquery::getGEOSuppFiles(
@@ -112,7 +116,7 @@ getAeMetadata = function(study, type = c('experiments', 'files')) {
   return(x)}
 
 
-getNaiveEsetAe = function(study, outputDir, rawDir) {
+getNaiveEsetAe = function(study, outputDir, rawDir, metadataOnly = FALSE) {
   expers = getAeMetadata(study, 'experiments')
   if (nrow(expers) != 1L) {
     return(list(rmaOk = glue(
@@ -127,6 +131,8 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
   files = getAeMetadata(study, 'files') # for one study, should be a data.frame
   hasRaw = any(files$kind == 'raw')
   hasProc = any(sapply(files$kind, function(k) any(k == 'processed', na.rm = TRUE)))
+
+  if (metadataOnly) return(list(eset = eset))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
     mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')

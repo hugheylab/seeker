@@ -1,4 +1,5 @@
-checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
+checkSeekerArrayArgs = function(
+    study, geneIdType, platform, parentDir, metadataOnly) {
   assertString(study)
   assertTRUE(any(startsWith(study, c('GSE', 'E-', 'LOCAL'))))
   assertChoice(geneIdType, c('ensembl', 'entrez'))
@@ -28,6 +29,8 @@ checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
     files = dir(rawDir, '\\.cel(\\.gz)?$', ignore.case = TRUE)
     fileSamples = gsub('\\.cel(\\.gz)?$', '', files, ignore.case = TRUE)
     assertSetEqual(fileSamples, d[[sampColname]])}
+
+  assertLogical(metadataOnly, any.missing = FALSE, len = 1L)
 
   return(list(repo = repo, outputDir = outputDir, rawDir = rawDir,
               metadataPath = metadataPath, sampColname = sampColname))}
@@ -74,6 +77,8 @@ checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
 #'   data. See <https://www.ncbi.nlm.nih.gov/geo/browse/?view=platforms>.
 #'   Only necessary if `study` starts with "LOCAL", or starts with "GSE"
 #'   and the study uses multiple platforms.
+#' @param metadataOnly Logical indicating whether to only process the sample
+#'   metadata, and skip processing the expression data.
 #'
 #' @param parentDir Directory in which to store the output, which will be a
 #'   directory named according to `study`.
@@ -83,9 +88,10 @@ checkSeekerArrayArgs = function(study, geneIdType, platform, parentDir) {
 #' @seealso [seeker()]
 #'
 #' @export
-seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
+seekerArray = function(
+    study, geneIdType, platform = NULL, parentDir = '.', metadataOnly = FALSE) {
 
-  r = checkSeekerArrayArgs(study, geneIdType, platform, parentDir)
+  r = checkSeekerArrayArgs(study, geneIdType, platform, parentDir, metadataOnly)
   repo = r$repo
   outputDir = r$outputDir
   rawDir = r$rawDir
@@ -98,7 +104,7 @@ seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
   withr::local_envvar(VROOM_CONNECTION_SIZE = 131072 * 20)
 
   result = if (repo == 'geo') {
-    getNaiveEsetGeo(study, outputDir, rawDir, platform)
+    getNaiveEsetGeo(study, outputDir, rawDir, platform, metadataOnly)
   } else if (repo == 'ae') {
     getNaiveEsetAe(study, outputDir, rawDir)
   } else {
@@ -115,9 +121,11 @@ seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
     set(metadata, j = sampColname, value = stripFileExt(metadata[[sampColname]]))
     fwrite(metadata, metadataPath)}
 
+  if (metadataOnly) return(invisible(outputDir))
+
   if (is.character(rmaOk)) {
     warning(rmaOk)
-    return(invisible())}
+    return(invisible(outputDir))}
 
   if (rmaOk) {
     cdfname = getCdfname(eset@annotation, geneIdType)
@@ -133,7 +141,13 @@ seekerArray = function(study, geneIdType, platform = NULL, parentDir = '.') {
         'failed due to the following error:', trimws(as.character(emat))))
     } else {
       colnames(emat) = getNewEmatColnames(colnames(emat), repo)
-      emat = emat[, metadata[[sampColname]]]}
+      idx = metadata[[sampColname]] %in% colnames(emat)
+      if (!all(idx)) {
+        warning(paste(
+          'The following sample(s) in the sample metadata',
+          'is/are missing from the expression matrix:',
+          paste(metadata[[sampColname]][!idx], collapse = ', ')))}
+      emat = emat[, metadata[[sampColname]][idx], drop = FALSE]}
 
     paths = dir(rawDir, '\\.cel$', full.names = TRUE, ignore.case = TRUE)
     for (path in paths) {

@@ -4,7 +4,13 @@
 \alias{seekerArray}
 \title{Process microarray data end to end}
 \usage{
-seekerArray(study, geneIdType, platform = NULL, parentDir = ".")
+seekerArray(
+  study,
+  geneIdType,
+  platform = NULL,
+  parentDir = ".",
+  metadataOnly = FALSE
+)
 }
 \arguments{
 \item{study}{String indicating the study accession and used to name the output
@@ -26,6 +32,9 @@ and the study uses multiple platforms.}
 
 \item{parentDir}{Directory in which to store the output, which will be a
 directory named according to \code{study}.}
+
+\item{metadataOnly}{Logical indicating whether to only process the sample
+metadata, and skip processing the expression data.}
 }
 \value{
 Path to the output directory \code{parentDir}/\code{study}, invisibly.

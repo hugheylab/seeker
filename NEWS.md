@@ -1,3 +1,7 @@
+# seeker 1.0.7
+* Added support for more platforms.
+* Added ability for `seekerArray()` to skip processing the expression data.
+
 # seeker 1.0.6
 * Added installation of snakemake by `installSysDeps()` for easier reproducible analyses.
 
