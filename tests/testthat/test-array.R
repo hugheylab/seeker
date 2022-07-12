@@ -1,5 +1,6 @@
 paramsArray = yaml::read_yaml(file.path(dataDir, 'GSE25585.yml'))
 parentDirArr = file.path(dataDir, 'staging_seeker_array')
+metadataOnly = FALSE
 dir.create(parentDirArr)
 withr::local_file(parentDirArr)
 
@@ -7,7 +8,8 @@ test_that('checkSeekerArrayArgs', {
   skip_on_os('windows', arch = NULL)
 
   resultObs = checkSeekerArrayArgs(
-    paramsArray$study, paramsArray$geneIdType, paramsArray$platform, parentDirArr)
+    paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
+    parentDirArr, FALSE)
   resultExp = snapshot(
     resultObs, file.path(dataDir, 'seeker_array_args_output.qs'))
 
@@ -20,15 +22,15 @@ test_that('checkSeekerArrayArgs errors', {
 
   # GSE platform not null or GPL
   expect_error(checkSeekerArrayArgs(
-    paramsArray$study, paramsArray$geneIdType, 'abcd', parentDirArr))
+    paramsArray$study, paramsArray$geneIdType, 'abcd', parentDirArr, metadataOnly))
 
   # E- with platform
   expect_error(checkSeekerArrayArgs(
-    'E-test', paramsArray$geneIdType, 'abcd', parentDirArr))
+    'E-test', paramsArray$geneIdType, 'abcd', parentDirArr, metadataOnly))
 
   # raw with raw dir not existing
   expect_error(checkSeekerArrayArgs(
-    'LOCAL', paramsArray$geneIdType, 'GPL1', parentDirArr))
+    'LOCAL', paramsArray$geneIdType, 'GPL1', parentDirArr, metadataOnly))
 })
 
 
