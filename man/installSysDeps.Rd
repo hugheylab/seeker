@@ -5,30 +5,39 @@
 \title{Install seeker's system dependencies}
 \usage{
 installSysDeps(
-  sraToolkitDir = "~",
-  minicondaDir = "~",
+  sraToolkitDir,
+  minicondaDir,
+  refgenieDir,
+  rprofileDir,
   minicondaEnv = "seeker",
-  refgenieDir = "~/refgenie_genomes",
   refgenieGenomes = NULL,
-  fastqscreenDir = NULL,
-  rprofileDir = "~"
+  fastqscreenDir = NULL
 )
 }
 \arguments{
 \item{sraToolkitDir}{String indicating directory in which to install the
 \href{https://github.com/ncbi/sra-tools}{SRA Toolkit}. If \code{NULL}, the Toolkit
-will not be installed.}
+will not be installed. Due to CRAN policies, we cannot provide a default for
+this argument, but it is recommended that you use the \code{~} (home) directory.}
 
 \item{minicondaDir}{String indicating directory in which to install
 \href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. If \code{NULL},
-Miniconda will not be installed.}
+Miniconda will not be installed. Due to CRAN policies, we cannot provide a
+default for this argument, but it is recommended that you use the \code{~} (home)
+directory.}
+
+\item{refgenieDir}{String indicating directory in which to download genome
+assets using refgenie. Only used if \code{minicondaDir} is not \code{NULL}. If the
+directory does not end with \code{refgenie_genomes} it will be appended. Due to
+CRAN policies, we cannot provide a default for this argument, but it is
+recommended that you use the \code{~} (home) directory.}
+
+\item{rprofileDir}{String indicating directory in which to create or modify
+.Rprofile, which is run by R on startup. Common options are "~" or ".".}
 
 \item{minicondaEnv}{String indicating name of the Miniconda environment in
 which to install various conda packages (fastq-screen, fastqc, multiqc,
 pigz, refgenie, salmon, and trim-galore).}
-
-\item{refgenieDir}{String indicating directory in which to download genome
-assets using refgenie. Only used if \code{minicondaDir} is not \code{NULL}.}
 
 \item{refgenieGenomes}{Character vector indicating genome assets, such as
 transcriptome indexes for \code{\link[=salmon]{salmon()}}, to pull from
@@ -38,9 +47,6 @@ transcriptome indexes for \code{\link[=salmon]{salmon()}}, to pull from
 \item{fastqscreenDir}{String indicating directory in which to download the
 genomes for \code{\link[=fastqscreen]{fastqscreen()}}. This takes a long time. If \code{NULL}, genomes are
 not downloaded.}
-
-\item{rprofileDir}{String indicating directory in which to create or modify
-.Rprofile, which is run by R on startup. Common options are "~" or ".".}
 }
 \value{
 \code{NULL}, invisibly

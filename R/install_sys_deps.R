@@ -1,4 +1,4 @@
-addToProfile = function(line, type = 'OS', rprofileDir = '~') {
+addToProfile = function(line, rprofileDir, type = 'OS') {
   paths = file.path('~', c('.zshrc', '.bashrc', '.profile'))
   paths = if (type == 'OS') {
     paths[file.exists(paths)]
@@ -55,9 +55,9 @@ installSraToolkit = function(installDir, rprofileDir) {
     writeLines(lines, configPath)}
 
   # Add to OS path and .Rprofile path
-  addToProfile(glue('export PATH="$PATH:{sraPath}"'))
+  addToProfile(glue('export PATH="$PATH:{sraPath}"'), rprofileDir)
   path = paste(Sys.getenv('PATH'), sraPath, sep = ':')
-  addToProfile(glue('Sys.setenv(PATH = "{path}")'), 'R', rprofileDir)
+  addToProfile(glue('Sys.setenv(PATH = "{path}")'), rprofileDir, 'R')
   Sys.setenv(PATH = path)
 
   invisible()}
@@ -103,7 +103,7 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Set the option
   # if (setSeekerOption) {
   addToProfile(
-    glue('options(seeker.miniconda = "{minicondaEnvPath}")'), 'R', rprofileDir)
+    glue('options(seeker.miniconda = "{minicondaEnvPath}")'), rprofileDir, 'R')
   options(seeker.miniconda = minicondaEnvPath)#}
 
   cat('Installing conda packages via mamba...\n')
@@ -120,9 +120,9 @@ setRefgenie = function(refgenieDir, rprofileDir) {
   refgenieYamlPath = file.path(path.expand(refgenieDir), 'genome_config.yaml')
   if (!file.exists(refgenieYamlPath)) {
     system3('refgenie', c('init', '-c', refgenieYamlPath))}
-  addToProfile(glue('export REFGENIE="{refgenieYamlPath}"'))
+  addToProfile(glue('export REFGENIE="{refgenieYamlPath}"'), rprofileDir)
   addToProfile(
-    glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), 'R', rprofileDir)
+    glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), rprofileDir, 'R')
   Sys.setenv(REFGENIE = refgenieYamlPath)
   invisible()}
 
@@ -159,15 +159,23 @@ getSysDeps = function(outputDir, params) {
 #'
 #' @param sraToolkitDir String indicating directory in which to install the
 #'   [SRA Toolkit](https://github.com/ncbi/sra-tools). If `NULL`, the Toolkit
-#'   will not be installed.
+#'   will not be installed. Due to CRAN policies, we cannot provide a default for
+#'   this argument, but it is recommended that you use the `~` (home) directory.
 #' @param minicondaDir String indicating directory in which to install
 #'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). If `NULL`,
-#'   Miniconda will not be installed.
+#'   Miniconda will not be installed. Due to CRAN policies, we cannot provide a
+#'   default for this argument, but it is recommended that you use the `~` (home)
+#'   directory.
+#' @param refgenieDir String indicating directory in which to download genome
+#'   assets using refgenie. Only used if `minicondaDir` is not `NULL`. If the
+#'   directory does not end with `refgenie_genomes` it will be appended. Due to
+#'   CRAN policies, we cannot provide a default for this argument, but it is
+#'   recommended that you use the `~` (home) directory.
+#' @param rprofileDir String indicating directory in which to create or modify
+#'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #' @param minicondaEnv String indicating name of the Miniconda environment in
 #'   which to install various conda packages (fastq-screen, fastqc, multiqc,
 #'   pigz, refgenie, salmon, and trim-galore).
-#' @param refgenieDir String indicating directory in which to download genome
-#'   assets using refgenie. Only used if `minicondaDir` is not `NULL`.
 #' @param refgenieGenomes Character vector indicating genome assets, such as
 #'   transcriptome indexes for [salmon()], to pull from
 #'   [refgenomes](http://refgenomes.databio.org/index) using refgenie. If
@@ -175,8 +183,6 @@ getSysDeps = function(outputDir, params) {
 #' @param fastqscreenDir String indicating directory in which to download the
 #'   genomes for [fastqscreen()]. This takes a long time. If `NULL`, genomes are
 #'   not downloaded.
-#' @param rprofileDir String indicating directory in which to create or modify
-#'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #'
 #' @return `NULL`, invisibly
 #'
@@ -184,9 +190,8 @@ getSysDeps = function(outputDir, params) {
 #'
 #' @export
 installSysDeps = function(
-    sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
-    refgenieDir = '~/refgenie_genomes', refgenieGenomes = NULL,
-    fastqscreenDir = NULL, rprofileDir = '~') {
+    sraToolkitDir, minicondaDir, refgenieDir, rprofileDir,
+    minicondaEnv = 'seeker', refgenieGenomes = NULL, fastqscreenDir = NULL) {
 
   assertOS(c('linux', 'mac', 'solaris'))
   assertString(sraToolkitDir, null.ok = TRUE)
@@ -195,6 +200,8 @@ installSysDeps = function(
   if (!is.null(minicondaDir)) assertDirectoryExists(minicondaDir)
   assertString(minicondaEnv, pattern = '^\\S+$')
   assertString(refgenieDir, null.ok = is.null(minicondaDir))
+  if (!is.null(refgenieDir) && !endsWith(refgenieDir, 'refgenie_genomes')) {
+    refgenieDir = file.path(refgenieDir, 'refgenie_genomes')}
   assertCharacter(refgenieGenomes, any.missing = FALSE, null.ok = TRUE)
   assertString(fastqscreenDir, null.ok = TRUE)
   assertString(rprofileDir)
