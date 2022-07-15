@@ -1,3 +1,9 @@
+# seeker 1.0.8
+* Remove default install directories for dependencies in `installSysDeps()`.
+* Replaced `options(warn=-1)` to use `suppressWarnings()`.
+* Updated description text.
+* Revised console printing.
+
 # seeker 1.0.7
 * Added support for more platforms.
 * Added ability for `seekerArray()` to skip processing the expression data.

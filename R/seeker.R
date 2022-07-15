@@ -362,9 +362,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
     } else {
       sprintf('Dry run encountered the following errors:\n%s\n',
               paste(coll$getMessages(), collapse = '\n'))}
-    cat(m)
     writeLines(m, 'seeker_dry_run.log')
-    return(invisible())}
+    return(m)}
 
   outputDir = checkArgsRes$outputDir
   if (!dir.exists(outputDir)) dir.create(outputDir)

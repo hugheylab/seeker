@@ -17,10 +17,10 @@ installSraToolkit = function(installDir, rprofileDir) {
 
   # Check if sratoolkit already exists at location
   if (dir.exists(sraPath)) {
-    cat('SRA Toolkit already installed, skipping...\n')
+    message('SRA Toolkit already installed, skipping...\n')
 
   } else {
-    cat('Installing SRA Toolkit...\n')
+    message('Installing SRA Toolkit...\n')
     # Change working directory
     withr::local_dir(installDir)
 
@@ -72,10 +72,10 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
     file.path(minicondaPath, 'envs', minicondaEnv)}
 
   if (dir.exists(minicondaPath)) {
-    cat('Miniconda already installed, skipping...\n')
+    message('Miniconda already installed, skipping...\n')
 
   } else {
-    cat('Installing Miniconda...\n')
+    message('Installing Miniconda...\n')
 
     miniOsSh = if (Sys.info()[['sysname']] == 'Darwin') 'MacOSX' else 'Linux'
     miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
@@ -84,12 +84,12 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
       glue('https://repo.anaconda.com/miniconda/{miniSh}'), miniSh, quiet = TRUE)
     system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
 
-    cat('Running conda init...\n')
+    message('Running conda init...\n')
     system(glue('{minicondaPath}/bin/conda init bash'))}
 
   # Create new environment if it doesn't exist
   if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
-    cat('Creating conda environment...\n')
+    message('Creating conda environment...\n')
     yamlPath = system.file('extdata', 'conda_env.yml', package = 'seeker')
     envYaml = yaml::read_yaml(yamlPath)
 
@@ -106,7 +106,7 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
     glue('options(seeker.miniconda = "{minicondaEnvPath}")'), rprofileDir, 'R')
   options(seeker.miniconda = minicondaEnvPath)#}
 
-  cat('Installing conda packages via mamba...\n')
+  message('Installing conda packages via mamba...\n')
   mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
   mambaArgs = c('env', 'update', '-p', minicondaEnvPath, '--file', mambaEnvPath)
   system3('mamba', mambaArgs)
@@ -115,7 +115,7 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
 
 
 setRefgenie = function(refgenieDir, rprofileDir) {
-  cat('Configuring refgenie...\n')
+  message('Configuring refgenie...\n')
   if (!dir.exists(refgenieDir)) dir.create(refgenieDir)
   refgenieYamlPath = file.path(path.expand(refgenieDir), 'genome_config.yaml')
   if (!file.exists(refgenieYamlPath)) {
@@ -128,7 +128,7 @@ setRefgenie = function(refgenieDir, rprofileDir) {
 
 
 getRefgenieGenomes = function(genomes) {
-  cat('Fetching refgenie genome assets...\n')
+  message('Fetching refgenie genome assets...\n')
   for (genome in genomes) {
     rgArgs = c('pull', genome, '--genome-config', Sys.getenv('REFGENIE'))
     system3('refgenie', rgArgs)}
@@ -228,7 +228,7 @@ installSysDeps = function(
     if (is.na(validateCommand('fastq_screen'))) {
       warning('fastq_screen not found, genomes cannot be fetched.')
     } else {
-      cat('Fetching fastq_screen genomes...\n')
+      message('Fetching fastq_screen genomes...\n')
       if (!dir.exists(fastqscreenDir)) dir.create(fastqscreenDir)
       tryCatch(
         system3('fastq_screen', c('--get_genomes', '--outdir', fastqscreenDir)),
