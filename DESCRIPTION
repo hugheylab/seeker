@@ -8,19 +8,19 @@ Authors@R: c(
 Description: Wrapper around various existing tools and command-line interfaces,
   providing a standard interface, simple parallelization, and detailed logging.
   For microarray data, maps probe sets to standard gene IDs, building on
-  GEOquery (Davis and Meltzer 2007, doi: 10.1093/bioinformatics/btm254),
-  ArrayExpress (Kauffmann et al. 2009, doi: 10.1093/bioinformatics/btp354),
-  RMA (Irizarry et al. 2003, doi: 10.1093/biostatistics/4.2.249), and
-  BrainArray (Dai et al. 2005, doi: 10.1093/nar/gni179).
+  GEOquery (Davis and Meltzer 2007, <doi:10.1093/bioinformatics/btm254>),
+  ArrayExpress (Kauffmann et al. 2009, <doi:10.1093/bioinformatics/btp354>),
+  RMA (Irizarry et al. 2003, <doi:10.1093/biostatistics/4.2.249>), and
+  BrainArray (Dai et al. 2005, <doi:10.1093/nar/gni179>).
   For RNA-seq data, fetches metadata and raw reads from NCBI SRA,
-  performs standard adapter and quality trimming using Trim Galore (Krueger, https://github.com/FelixKrueger/TrimGalore),
-  performs quality control checks using FastQC (Andrews, https://github.com/s-andrews/FastQC),
-  quantifies transcript abundances using salmon (Patro et al. 2017, doi: 10.1038/nmeth.4197) and potentially
-  refgenie (Stolarczyk et al. 2020, doi: 10.1093/gigascience/giz149),
-  aggregates the results using MultiQC (Ewels et al. 2016, doi: 10.1093/bioinformatics/btw354),
-  maps transcripts to genes using biomaRt (Durinkck et al. 2009, doi: 10.1038/nprot.2009.97),
+  performs standard adapter and quality trimming using Trim Galore (Krueger, <https://github.com/FelixKrueger/TrimGalore>),
+  performs quality control checks using FastQC (Andrews, <https://github.com/s-andrews/FastQC>),
+  quantifies transcript abundances using salmon (Patro et al. 2017, <doi:10.1038/nmeth.4197>) and potentially
+  refgenie (Stolarczyk et al. 2020, <doi:10.1093/gigascience/giz149>),
+  aggregates the results using MultiQC (Ewels et al. 2016, <doi:10.1093/bioinformatics/btw354>),
+  maps transcripts to genes using biomaRt (Durinkck et al. 2009, <doi:10.1038/nprot.2009.97>),
   and summarizes transcript-level quantifications for gene-level analyses using
-  tximport (Soneson et al. 2015, doi: 10.12688/f1000research.7563.2).
+  tximport (Soneson et al. 2015, <doi:10.12688/f1000research.7563.2>).
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
 License: GPL-2
 Encoding: UTF-8
