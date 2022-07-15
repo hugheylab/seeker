@@ -16,21 +16,17 @@ installSysDeps(
 }
 \arguments{
 \item{sraToolkitDir}{String indicating directory in which to install the
-\href{https://github.com/ncbi/sra-tools}{SRA Toolkit}. If \code{NULL}, the Toolkit
-will not be installed. No default is provided, but it is recommended that
-you use the \code{~} (home) directory.}
+\href{https://github.com/ncbi/sra-tools}{SRA Toolkit}. Recommended to use "~",
+the home directory. If \code{NULL}, the Toolkit will not be installed.}
 
 \item{minicondaDir}{String indicating directory in which to install
-\href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. If \code{NULL},
-Miniconda will not be installed. No default is provided, but it is
-recommended that you use the \code{~} (home)
-directory.}
+\href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. Recommended
+to use "~", the home directory. If \code{NULL}, Miniconda will not be installed.}
 
-\item{refgenieDir}{String indicating directory in which to download genome
-assets using refgenie. Only used if \code{minicondaDir} is not \code{NULL}. If the
-directory does not end with \code{refgenie_genomes} it will be appended. No
-default is provided, but it is
-recommended that you use the \code{~} (home) directory.}
+\item{refgenieDir}{String indicating directory in which to store the
+directory of genome assets from refgenie, which will be named
+"refgenie_genomes". Recommended to use "~", the home directory. Only used
+if \code{minicondaDir} is not \code{NULL}.}
 
 \item{rprofileDir}{String indicating directory in which to create or modify
 .Rprofile, which is run by R on startup. Common options are "~" or ".".}

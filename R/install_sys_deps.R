@@ -158,19 +158,15 @@ getSysDeps = function(outputDir, params) {
 #' seeker to fetch and process RNA-seq data.
 #'
 #' @param sraToolkitDir String indicating directory in which to install the
-#'   [SRA Toolkit](https://github.com/ncbi/sra-tools). If `NULL`, the Toolkit
-#'   will not be installed. No default is provided, but it is recommended that
-#'   you use the `~` (home) directory.
+#'   [SRA Toolkit](https://github.com/ncbi/sra-tools). Recommended to use "~",
+#'   the home directory. If `NULL`, the Toolkit will not be installed.
 #' @param minicondaDir String indicating directory in which to install
-#'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). If `NULL`,
-#'   Miniconda will not be installed. No default is provided, but it is
-#'   recommended that you use the `~` (home)
-#'   directory.
-#' @param refgenieDir String indicating directory in which to download genome
-#'   assets using refgenie. Only used if `minicondaDir` is not `NULL`. If the
-#'   directory does not end with `refgenie_genomes` it will be appended. No
-#'   default is provided, but it is
-#'   recommended that you use the `~` (home) directory.
+#'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). Recommended
+#'   to use "~", the home directory. If `NULL`, Miniconda will not be installed.
+#' @param refgenieDir String indicating directory in which to store the
+#'   directory of genome assets from refgenie, which will be named
+#'   "refgenie_genomes". Recommended to use "~", the home directory. Only used
+#'   if `minicondaDir` is not `NULL`.
 #' @param rprofileDir String indicating directory in which to create or modify
 #'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #' @param minicondaEnv String indicating name of the Miniconda environment in
@@ -200,7 +196,6 @@ installSysDeps = function(
   if (!is.null(minicondaDir)) assertDirectoryExists(minicondaDir)
   assertString(minicondaEnv, pattern = '^\\S+$')
   assertString(refgenieDir, null.ok = is.null(minicondaDir))
-  refgenieDir = file.path(refgenieDir, 'refgenie_genomes')
   assertCharacter(refgenieGenomes, any.missing = FALSE, null.ok = TRUE)
   assertString(fastqscreenDir, null.ok = TRUE)
   assertString(rprofileDir)
@@ -215,7 +210,8 @@ installSysDeps = function(
     if (is.na(validateCommand('refgenie'))) {
       warning('refgenie not found, cannot be configured.')
     } else {
-      tryCatch(setRefgenie(refgenieDir, rprofileDir), error = warning)}}
+      rgDir = file.path(refgenieDir, 'refgenie_genomes')
+      tryCatch(setRefgenie(rgDir, rprofileDir), error = warning)}}
 
   if (!is.null(refgenieGenomes)) {
     if (is.na(validateCommand('refgenie'))) {

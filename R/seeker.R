@@ -358,9 +358,9 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   if (dryRun) {
     m = if (length(coll$getMessages()) == 0) {
-      'Dry run encountered no errors. All systems go.\n'
+      'Dry run encountered no errors. All systems go.'
     } else {
-      sprintf('Dry run encountered the following errors:\n%s\n',
+      sprintf('Dry run encountered the following errors:\n%s',
               paste(coll$getMessages(), collapse = '\n'))}
     message(m)
     writeLines(m, 'seeker_dry_run.log')
