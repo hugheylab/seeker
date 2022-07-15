@@ -17,19 +17,19 @@ installSysDeps(
 \arguments{
 \item{sraToolkitDir}{String indicating directory in which to install the
 \href{https://github.com/ncbi/sra-tools}{SRA Toolkit}. If \code{NULL}, the Toolkit
-will not be installed. Due to CRAN policies, we cannot provide a default for
-this argument, but it is recommended that you use the \code{~} (home) directory.}
+will not be installed. No default is provided, but it is recommended that
+you use the \code{~} (home) directory.}
 
 \item{minicondaDir}{String indicating directory in which to install
 \href{https://docs.conda.io/en/latest/miniconda.html}{Miniconda}. If \code{NULL},
-Miniconda will not be installed. Due to CRAN policies, we cannot provide a
-default for this argument, but it is recommended that you use the \code{~} (home)
+Miniconda will not be installed. No default is provided, but it is
+recommended that you use the \code{~} (home)
 directory.}
 
 \item{refgenieDir}{String indicating directory in which to download genome
 assets using refgenie. Only used if \code{minicondaDir} is not \code{NULL}. If the
-directory does not end with \code{refgenie_genomes} it will be appended. Due to
-CRAN policies, we cannot provide a default for this argument, but it is
+directory does not end with \code{refgenie_genomes} it will be appended. No
+default is provided, but it is
 recommended that you use the \code{~} (home) directory.}
 
 \item{rprofileDir}{String indicating directory in which to create or modify
