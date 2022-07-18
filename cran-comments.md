@@ -1,13 +1,43 @@
 ## Resubmission Notes
 
-This package was originally submitted as 1.0.1 on 2022/06/16, again as 1.0.3 on 2022/07/04, and most recently as 1.0.4 on 2022/07/06. There were errors on the win builder pre-checks, and the following notes pertain to the 3rd submission.
+This package was originally submitted as 1.0.1 on 2022/06/16, again as 1.0.3 on 2022/07/04, as 1.0.4 on 2022/07/06, and most recently as 1.0.5 on 2022/07/07. We received the following feedback about v1.0.5:
 
-The problems were found to be the following:
+"The Description field is intended to be a (one paragraph) description
+of what the package does and why it may be useful.
+Please add more details about the package functionality and implemented
+methods in your Description text.
 
-1. The debian build failed because (similar to the 2nd submission notes) the R-devel (4.3) version of R is being used, and Bioconductor isn't available for R 4.3 yet. This package will install gene mapping packages from BioConductor if they aren't found, which was causing some test failures. The related tests are now skipped on CRAN, but the results can still be seen at the below links for test results.
-2. The NOTE concerning the "possibly" invalid URL is wrong. The URL is fine and can be accessed.
+If there are references describing the methods in your package, please
+add these in the description field of your DESCRIPTION file in the form
+authors (year) <doi:...>
+authors (year) <arXiv:...>
+authors (year, ISBN:...)
+or if those are not available: <https:...>
+with no space after 'doi:', 'arXiv:', 'https:' and angle brackets for
+auto-linking.
+(If you want to add a title as well please put it in quotes: "Title")
 
-This should cover all issues brought up with the second resubmission.
+You write information messages to the console that cannot be easily
+suppressed.
+It is more R like to generate objects that can be used to extract the
+information a user is interested in, and then print() that object.
+Instead of print()/cat() rather use message()/warning() or
+if(verbose)cat(..) (or maybe stop()) if you really have to write text to
+the console.
+(except for print, summary, interactive functions)
+
+Please ensure that your functions do not write by default or in your
+examples/vignettes/tests in the user's home filespace (including the
+package directory and getwd()). This is not allowed by CRAN policies.
+Please omit any default path in writing functions.
+In your examples/vignettes/tests you can write to tempdir().
+
+You are setting options(warn=-1) in your function. This is not allowed.
+Please rather use suppressWarnings() if really needed.
+
+Please fix and resubmit."
+
+We have addressed the feedback in this message and now are submitting version 1.0.8 to CRAN.
 
 ## Important information about the package
 
