@@ -1,10 +1,10 @@
 pandoc: 2.14.2
-pkgdown: 2.0.5
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
   reproducibility: reproducibility.html
-last_built: 2022-07-12T02:00Z
+last_built: 2022-07-18T18:35Z
 urls:
   reference: https://seeker.hugheylab.org/reference
   article: https://seeker.hugheylab.org/articles
