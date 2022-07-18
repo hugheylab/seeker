@@ -1,4 +1,4 @@
-addToProfile = function(line, type = 'OS', rprofileDir = '~') {
+addToProfile = function(line, rprofileDir, type = 'OS') {
   paths = file.path('~', c('.zshrc', '.bashrc', '.profile'))
   paths = if (type == 'OS') {
     paths[file.exists(paths)]
@@ -17,10 +17,10 @@ installSraToolkit = function(installDir, rprofileDir) {
 
   # Check if sratoolkit already exists at location
   if (dir.exists(sraPath)) {
-    cat('SRA Toolkit already installed, skipping...\n')
+    message('SRA Toolkit already installed, skipping...')
 
   } else {
-    cat('Installing SRA Toolkit...\n')
+    message('Installing SRA Toolkit...')
     # Change working directory
     withr::local_dir(installDir)
 
@@ -57,7 +57,7 @@ installSraToolkit = function(installDir, rprofileDir) {
   # Add to OS path and .Rprofile path
   addToProfile(glue('export PATH="$PATH:{sraPath}"'))
   path = paste(Sys.getenv('PATH'), sraPath, sep = ':')
-  addToProfile(glue('Sys.setenv(PATH = "{path}")'), 'R', rprofileDir)
+  addToProfile(glue('Sys.setenv(PATH = "{path}")'), rprofileDir, 'R')
   Sys.setenv(PATH = path)
 
   invisible()}
@@ -72,10 +72,10 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
     file.path(minicondaPath, 'envs', minicondaEnv)}
 
   if (dir.exists(minicondaPath)) {
-    cat('Miniconda already installed, skipping...\n')
+    message('Miniconda already installed, skipping...')
 
   } else {
-    cat('Installing Miniconda...\n')
+    message('Installing Miniconda...')
 
     miniOsSh = if (Sys.info()[['sysname']] == 'Darwin') 'MacOSX' else 'Linux'
     miniSh = glue('Miniconda3-latest-{miniOsSh}-x86_64.sh')
@@ -84,12 +84,12 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
       glue('https://repo.anaconda.com/miniconda/{miniSh}'), miniSh, quiet = TRUE)
     system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
 
-    cat('Running conda init...\n')
+    message('Running conda init...')
     system(glue('{minicondaPath}/bin/conda init bash'))}
 
   # Create new environment if it doesn't exist
   if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
-    cat('Creating conda environment...\n')
+    message('Creating conda environment...')
     yamlPath = system.file('extdata', 'conda_env.yml', package = 'seeker')
     envYaml = yaml::read_yaml(yamlPath)
 
@@ -103,10 +103,10 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Set the option
   # if (setSeekerOption) {
   addToProfile(
-    glue('options(seeker.miniconda = "{minicondaEnvPath}")'), 'R', rprofileDir)
+    glue('options(seeker.miniconda = "{minicondaEnvPath}")'), rprofileDir, 'R')
   options(seeker.miniconda = minicondaEnvPath)#}
 
-  cat('Installing conda packages via mamba...\n')
+  message('Installing conda packages via mamba...')
   mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
   mambaArgs = c('env', 'update', '-p', minicondaEnvPath, '--file', mambaEnvPath)
   system3('mamba', mambaArgs)
@@ -115,20 +115,20 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
 
 
 setRefgenie = function(refgenieDir, rprofileDir) {
-  cat('Configuring refgenie...\n')
+  message('Configuring refgenie...')
   if (!dir.exists(refgenieDir)) dir.create(refgenieDir)
   refgenieYamlPath = file.path(path.expand(refgenieDir), 'genome_config.yaml')
   if (!file.exists(refgenieYamlPath)) {
     system3('refgenie', c('init', '-c', refgenieYamlPath))}
   addToProfile(glue('export REFGENIE="{refgenieYamlPath}"'))
   addToProfile(
-    glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), 'R', rprofileDir)
+    glue('Sys.setenv(REFGENIE = "{refgenieYamlPath}")'), rprofileDir, 'R')
   Sys.setenv(REFGENIE = refgenieYamlPath)
   invisible()}
 
 
 getRefgenieGenomes = function(genomes) {
-  cat('Fetching refgenie genome assets...\n')
+  message('Fetching refgenie genome assets...')
   for (genome in genomes) {
     rgArgs = c('pull', genome, '--genome-config', Sys.getenv('REFGENIE'))
     system3('refgenie', rgArgs)}
@@ -158,16 +158,20 @@ getSysDeps = function(outputDir, params) {
 #' seeker to fetch and process RNA-seq data.
 #'
 #' @param sraToolkitDir String indicating directory in which to install the
-#'   [SRA Toolkit](https://github.com/ncbi/sra-tools). If `NULL`, the Toolkit
-#'   will not be installed.
+#'   [SRA Toolkit](https://github.com/ncbi/sra-tools). Recommended to use "~",
+#'   the home directory. If `NULL`, the Toolkit will not be installed.
 #' @param minicondaDir String indicating directory in which to install
-#'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). If `NULL`,
-#'   Miniconda will not be installed.
+#'   [Miniconda](https://docs.conda.io/en/latest/miniconda.html). Recommended
+#'   to use "~", the home directory. If `NULL`, Miniconda will not be installed.
+#' @param refgenieDir String indicating directory in which to store the
+#'   directory of genome assets from refgenie, which will be named
+#'   "refgenie_genomes". Recommended to use "~", the home directory. Only used
+#'   if `minicondaDir` is not `NULL`.
+#' @param rprofileDir String indicating directory in which to create or modify
+#'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #' @param minicondaEnv String indicating name of the Miniconda environment in
 #'   which to install various conda packages (fastq-screen, fastqc, multiqc,
 #'   pigz, refgenie, salmon, and trim-galore).
-#' @param refgenieDir String indicating directory in which to download genome
-#'   assets using refgenie. Only used if `minicondaDir` is not `NULL`.
 #' @param refgenieGenomes Character vector indicating genome assets, such as
 #'   transcriptome indexes for [salmon()], to pull from
 #'   [refgenomes](http://refgenomes.databio.org/index) using refgenie. If
@@ -175,8 +179,6 @@ getSysDeps = function(outputDir, params) {
 #' @param fastqscreenDir String indicating directory in which to download the
 #'   genomes for [fastqscreen()]. This takes a long time. If `NULL`, genomes are
 #'   not downloaded.
-#' @param rprofileDir String indicating directory in which to create or modify
-#'   .Rprofile, which is run by R on startup. Common options are "~" or ".".
 #'
 #' @return `NULL`, invisibly
 #'
@@ -184,9 +186,8 @@ getSysDeps = function(outputDir, params) {
 #'
 #' @export
 installSysDeps = function(
-    sraToolkitDir = '~', minicondaDir = '~', minicondaEnv = 'seeker',
-    refgenieDir = '~/refgenie_genomes', refgenieGenomes = NULL,
-    fastqscreenDir = NULL, rprofileDir = '~') {
+    sraToolkitDir, minicondaDir, refgenieDir, rprofileDir,
+    minicondaEnv = 'seeker', refgenieGenomes = NULL, fastqscreenDir = NULL) {
 
   assertOS(c('linux', 'mac', 'solaris'))
   assertString(sraToolkitDir, null.ok = TRUE)
@@ -209,7 +210,8 @@ installSysDeps = function(
     if (is.na(validateCommand('refgenie'))) {
       warning('refgenie not found, cannot be configured.')
     } else {
-      tryCatch(setRefgenie(refgenieDir, rprofileDir), error = warning)}}
+      rgDir = file.path(refgenieDir, 'refgenie_genomes')
+      tryCatch(setRefgenie(rgDir, rprofileDir), error = warning)}}
 
   if (!is.null(refgenieGenomes)) {
     if (is.na(validateCommand('refgenie'))) {
@@ -221,7 +223,7 @@ installSysDeps = function(
     if (is.na(validateCommand('fastq_screen'))) {
       warning('fastq_screen not found, genomes cannot be fetched.')
     } else {
-      cat('Fetching fastq_screen genomes...\n')
+      message('Fetching fastq_screen genomes...')
       if (!dir.exists(fastqscreenDir)) dir.create(fastqscreenDir)
       tryCatch(
         system3('fastq_screen', c('--get_genomes', '--outdir', fastqscreenDir)),
