@@ -1,6 +1,6 @@
 Package: seeker
 Type: Package
-Title: Simplified fetching and processing of microarray and RNA-seq data.
+Title: Simplified Fetching and Processing of Microarray and RNA-Seq Data
 Version: 1.0.8
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', role = c('aut', 'cre')),
