@@ -30,6 +30,7 @@ test_that('installCustomCdfPackages', {
 
 
 test_that('getNaiveEsetGeo', {
+  skip_on_cran()
   studies = c('GSE147674', 'GSE167458', 'GSE50143')
 
   for (study in studies) {
@@ -144,6 +145,7 @@ test_that('getNewEmatColnames', {
 
 
 test_that('getProbeGeneMappingDirect', {
+  skip_on_cran()
   featureDt = data.table(
     ID = paste0('A', 1:3), GENE = c('12', '', '17'), SEQ = c('at', 'ca', 'tg'))
   mappingExp = featureDt[, c('ID', 'GENE')]
@@ -155,6 +157,7 @@ test_that('getProbeGeneMappingDirect', {
 
 
 test_that('getEntrezEnsemblMapping', {
+  skip_on_cran()
   m = getEntrezEnsemblMapping('Mm')
   expect_s3_class(m, 'data.table')
   expect_names(
@@ -163,6 +166,7 @@ test_that('getEntrezEnsemblMapping', {
 
 
 test_that('getProbeGeneMapping', {
+  skip_on_cran()
   mapPkgVerObs = packageVersion('org.Mm.eg.db')
   mapPkgVerExp = snapshot(mapPkgVerObs, file.path(dataDir, 'map_pkg_ver.qs'))
   if (mapPkgVerObs != mapPkgVerExp) {
