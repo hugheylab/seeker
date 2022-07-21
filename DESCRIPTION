@@ -10,8 +10,8 @@ Description: Wrapper around various existing tools and command-line interfaces,
   For microarray data, maps probe sets to standard gene IDs, building on
   'GEOquery' Davis and Meltzer (2007) <doi:10.1093/bioinformatics/btm254>,
   'ArrayExpress' Kauffmann et al. (2009) <doi:10.1093/bioinformatics/btp354>,
-  'RMA' Irizarry et al. (2003) <doi:10.1093/biostatistics/4.2.249>, and
-  'BrainArray' Dai et al. (2005) <doi:10.1093/nar/gni179>.
+  Robust multi-array average 'RMA' Irizarry et al. (2003) <doi:10.1093/biostatistics/4.2.249>,
+  and 'BrainArray' Dai et al. (2005) <doi:10.1093/nar/gni179>.
   For RNA-seq data, fetches metadata and raw reads from National Center for Biotechnology
   Information (NCBI) Sequence Read Archive (SRA), performs standard adapter and
   quality trimming using 'TrimGalore' Krueger <https://github.com/FelixKrueger/TrimGalore>,
