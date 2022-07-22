@@ -36,6 +36,7 @@ test_that('checkSeekerArrayArgs errors', {
 
 test_that('seekerArray GSE', {
   skip_on_os('windows', arch = NULL)
+  skip_on_cran()
 
   seekerArray(paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
               parentDirArr)
@@ -71,6 +72,7 @@ test_that('seekerArray Ae', {
 
 test_that('seekerArray LOCAL', {
   skip_on_os('windows', arch = NULL)
+  skip_on_cran()
 
   parentDirArrLcl = file.path(dataDir, 'staging_seeker_array_local')
   dir.create(parentDirArrLcl)

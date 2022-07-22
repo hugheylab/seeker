@@ -149,12 +149,9 @@ safe = function(x) {
 validateCommand = function(cmd) {
   # if cmd doesn't exist, system2('command', ...) seems to
   # give warning on mac and error on linux
-  old = getOption('warn')
-  options(warn = -1)
   suppressWarnings({
     path = tryCatch({system3('command', c('-v', safe(cmd)), stdout = TRUE)},
                     error = function(e) NA_character_)})
-  options(warn = old)
   if (length(path) == 0) path = NA_character_
   return(path)}
 
