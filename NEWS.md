@@ -1,3 +1,7 @@
+# seeker 1.0.9
+* Revised "Description" text.
+* Skipped more tests on CRAN to avoid installation of packages.
+
 # seeker 1.0.8
 * Removed default install directories for dependencies in `installSysDeps()`.
 * Replaced `options(warn=-1)` to use `suppressWarnings()`.
