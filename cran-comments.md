@@ -1,43 +1,31 @@
 ## Resubmission Notes
 
-This package was originally submitted as 1.0.1 on 2022/06/16, again as 1.0.3 on 2022/07/04, as 1.0.4 on 2022/07/06, and most recently as 1.0.5 on 2022/07/07. We received the following feedback about v1.0.5:
+This package was originally submitted as 1.0.1 on 2022/06/16, again as 1.0.3 on 2022/07/04, as 1.0.4 on 2022/07/06, as 1.0.5 on 2022/07/07, and most recently as 1.0.8 on 2022/07/19. We received the following feedback about v1.0.8:
 
-"The Description field is intended to be a (one paragraph) description
-of what the package does and why it may be useful.
-Please add more details about the package functionality and implemented
-methods in your Description text.
+"Please always explain all acronyms in the description text. -> 'RMA'; ...
 
-If there are references describing the methods in your package, please
-add these in the description field of your DESCRIPTION file in the form
+Please always write package names, software names and API (application
+programming interface) names in single quotes in title and description.
+e.g: --> 'tximport'
+Please note that package names are case sensitive.
+
+Please write references in the description of the DESCRIPTION file in
+the form
 authors (year) <doi:...>
 authors (year) <arXiv:...>
 authors (year, ISBN:...)
-or if those are not available: <https:...>
+or if those are not available: authors (year) <https:...>
 with no space after 'doi:', 'arXiv:', 'https:' and angle brackets for
 auto-linking.
 (If you want to add a title as well please put it in quotes: "Title")
 
-You write information messages to the console that cannot be easily
-suppressed.
-It is more R like to generate objects that can be used to extract the
-information a user is interested in, and then print() that object.
-Instead of print()/cat() rather use message()/warning() or
-if(verbose)cat(..) (or maybe stop()) if you really have to write text to
-the console.
-(except for print, summary, interactive functions)
+You are still setting options(warn=-1) in your function. This is not
+allowed. (utils.R line 153)
 
-Please ensure that your functions do not write by default or in your
-examples/vignettes/tests in the user's home filespace (including the
-package directory and getwd()). This is not allowed by CRAN policies.
-Please omit any default path in writing functions.
-In your examples/vignettes/tests you can write to tempdir().
+Please do not install packages in your functions, examples or vignette.
+This can make the functions,examples and cran-check very slow."
 
-You are setting options(warn=-1) in your function. This is not allowed.
-Please rather use suppressWarnings() if really needed.
-
-Please fix and resubmit."
-
-We have addressed the feedback in this message and now are submitting version 1.0.8 to CRAN.
+We have addressed the feedback in this message and now are submitting version 1.0.9 to CRAN.
 
 ## Important information about the package
 
