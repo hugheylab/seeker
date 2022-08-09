@@ -120,10 +120,21 @@
 <div class="section level3">
 <h3 id="r-package">R package<a class="anchor" aria-label="anchor" href="#r-package"></a>
 </h3>
+<div class="section level4">
+<h4 id="option-1-cran">Option 1: CRAN<a class="anchor" aria-label="anchor" href="#option-1-cran"></a>
+</h4>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span> <span class="co"># handles Bioconductor dependencies</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="option-2-hughey-lab-drat-repository">Option 2: Hughey Lab Drat Repository<a class="anchor" aria-label="anchor" href="#option-2-hughey-lab-drat-repository"></a>
+</h4>
 <ol style="list-style-type: decimal">
 <li>
 <p>Install <a href="https://cran.r-project.org/package=BiocManager" class="external-link"><code>BiocManager</code></a>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span></code></pre></div>
 </li>
@@ -135,18 +146,19 @@
 </li>
 </ul>
 <p>You only have to do this once. Then you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span>, site_repository <span class="op">=</span> <span class="st">'https://hugheylab.github.io/drat/'</span><span class="op">)</span></span></code></pre></div>
 </li>
 </ol>
 </div>
+</div>
 <div class="section level3">
 <h3 id="system-dependencies">System dependencies<a class="anchor" aria-label="anchor" href="#system-dependencies"></a>
 </h3>
-<p>If not using the docker image, use <a href="https://seeker.hugheylab.org/reference/installsysdeps"><code>seeker::installSysDeps()</code></a> to conveniently install and configure the various programs required to fetch and process sequencing data.</p>
+<p>If not using the docker image, use <a href="https://seeker.hugheylab.org/reference/installsysdeps"><code>seeker::installSysDeps()</code></a> to install and configure the various programs required to fetch and process sequencing data.</p>
 </div>
 </div>
 <div class="section level2">
@@ -158,6 +170,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=seeker" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/hugheylab/seeker/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
@@ -191,6 +204,7 @@
 <li><a href="https://github.com/hugheylab/seeker/actions" class="external-link"><img src="https://github.com/hugheylab/seeker/workflows/check-deploy/badge.svg" alt="check-deploy"></a></li>
 <li><a href="https://codecov.io/gh/hugheylab/seeker" class="external-link"><img src="https://codecov.io/gh/hugheylab/seeker/branch/master/graph/badge.svg" alt="codecov"></a></li>
 <li><a href="https://app.netlify.com/sites/hardcore-aryabhata-980673/deploys" class="external-link"><img src="https://api.netlify.com/api/v1/badges/a3d002cf-ca5c-427f-9963-061d282b1d1b/deploy-status" alt="Netlify Status"></a></li>
+<li><a href="https://cran.r-project.org/package=seeker" class="external-link"><img src="https://www.r-pkg.org/badges/version/seeker" alt="CRAN Status"></a></li>
 <li><a href="https://github.com/hugheylab/drat/tree/gh-pages/src/contrib" class="external-link"><img src="https://raw.githubusercontent.com/hugheylab/drat/gh-pages/badges/seeker_drat_badge.svg" alt="drat version"></a></li>
 </ul>
 </div>
