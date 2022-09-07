@@ -6,7 +6,7 @@
 [![CRAN Status](https://www.r-pkg.org/badges/version/seeker)](https://cran.r-project.org/package=seeker)
 [![drat version](https://raw.githubusercontent.com/hugheylab/drat/gh-pages/badges/seeker_drat_badge.svg)](https://github.com/hugheylab/drat/tree/gh-pages/src/contrib)
 
-`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data, as well as microarray data. Hopefully it helps you get what you're after, before the day you die.
+`seeker` is an R package for fetching and processing sequencing data, especially RNA-seq data, as well as microarray data. Hopefully it helps you get what you're after, before the day you die. For more details, check out the [preprint](https://doi.org/10.1101/2022.08.30.505820).
 
 ## Installation
 

@@ -23,7 +23,7 @@ Description: Wrapper around various existing tools and command-line interfaces,
   and summarizes transcript-level quantifications for gene-level analyses using
   'tximport' Soneson et al. (2015) <doi:10.12688/f1000research.7563.2>.
 URL: https://seeker.hugheylab.org, https://github.com/hugheylab/seeker
-License: GPL-2
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.0
