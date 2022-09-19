@@ -117,6 +117,8 @@ getAeMetadata = function(study, type = c('experiments', 'files')) {
 
 
 getNaiveEsetAe = function(study, outputDir, rawDir, metadataOnly = FALSE) {
+  withr::local_options(timeout = max(300, getOption('timeout')))
+
   expers = getAeMetadata(study, 'experiments')
   if (nrow(expers) != 1L) {
     return(list(rmaOk = glue(

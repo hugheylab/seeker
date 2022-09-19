@@ -1,3 +1,6 @@
+# seeker 1.0.10
+* Revised package for CRAN.
+
 # seeker 1.0.9
 * Revised "Description" text.
 * Skipped more tests on CRAN to avoid installation of packages.

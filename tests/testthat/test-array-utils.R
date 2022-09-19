@@ -87,21 +87,27 @@ test_that('getNaiveEsetAe supported', {
 
 
 test_that('getNaiveEsetAe unsupported', {
-  study = 'E-MEXP-2755'
+  study = 'E-MEXP-3696'
 
   outputDir = tempfile()
   withr::local_file(outputDir)
   dir.create(outputDir)
 
-  resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
-  filesObs = dir(outputDir, recursive = TRUE)
+  if (onCran) {
+    expect_error(
+      getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw')),
+      regexp = NA)
 
-  path = file.path(dataDir, paste0(study, '_eset.qs'))
-  resExp = snapshot(resObs, path)
-  filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
+  } else {
+    resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
+    filesObs = dir(outputDir, recursive = TRUE)
 
-  expect_equal(resObs, resExp)
-  expect_equal(filesObs, filesExp)
+    path = file.path(dataDir, paste0(study, '_eset.qs'))
+    resExp = snapshot(resObs, path)
+    filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
+
+    expect_equal(resObs, resExp)
+    expect_equal(filesObs, filesExp)}
 })
 
 

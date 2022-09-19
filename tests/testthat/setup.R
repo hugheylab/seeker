@@ -2,6 +2,8 @@ library('data.table')
 library('qs')
 library('foreach')
 
+onCran = !identical(Sys.getenv('NOT_CRAN'), 'true')
+
 snapshot = function(xObs, path) {
   if (file.exists(path)) {
     xExp = qread(path)

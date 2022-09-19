@@ -100,7 +100,7 @@ seekerArray = function(
 
   if (!dir.exists(outputDir)) dir.create(outputDir)
 
-  withr::local_options(timeout = 600)
+  withr::local_options(timeout = max(300, getOption('timeout')))
   withr::local_envvar(VROOM_CONNECTION_SIZE = 131072 * 20)
 
   result = if (repo == 'geo') {
