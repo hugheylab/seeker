@@ -12,11 +12,11 @@ The R-hub checks are not working due to R-hub not installing Bioconductor packag
 
 ### GitHub Actions
 
-Results for Windows, Linux, and MacOS are [here](https://github.com/hugheylab/seeker/actions/workflows/check-deploy.yaml).
+The package is passing on Windows, Linux, and MacOS as shown [here](https://github.com/hugheylab/seeker/actions/runs/3084217501/jobs/4986441663).
 
 ## Additional information
 
-One of the tests was failing due to apparent unavailability of an internet resource. The corresponding function in the `seeker` package calls a function in the `ArrayExpress` package, which handles such cases by not throwing an error and instead printing console messages about which files it was able to download and which files not. Because the `ArrayExpress` function determines which files to try to download in the first place, the function in the `seeker` package would have to capture and parse the console messages in order to know the expected output of the test. In addition, upon further inspection, the problem was not that the internet file was unavailable, but that the download of the file was timing out. 
+One of the tests had been failing due to apparent unavailability of an internet resource. The corresponding function in the `seeker` package calls a function in the `ArrayExpress` package, which handles such cases by not throwing an error and instead printing console messages about which files it was able to download and which files not. Because the `ArrayExpress` function determines which files to try to download in the first place, the function in the `seeker` package would have to capture and parse the console messages in order to know the expected output of the test. In addition, upon further inspection, the problem was not that the internet file was unavailable, but that the download of the file was timing out due to the remote server being quite slow. 
 
 I have revised the package as follows:
 
