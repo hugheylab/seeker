@@ -69,7 +69,7 @@ getTx2gene = function(
 #'
 #' @return A list, as returned by [tximport::tximport()], invisibly.
 #'
-#' @seealso [seeker()], [getTx2Gene()]
+#' @seealso [seeker()], [getTx2gene()]
 #'
 #' @export
 tximport = function(
