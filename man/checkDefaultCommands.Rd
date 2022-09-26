@@ -7,7 +7,8 @@
 checkDefaultCommands(keepIdx = FALSE)
 }
 \arguments{
-\item{keepIdx}{Logical indicating whether or not to keep the \code{idx} column of d.}
+\item{keepIdx}{Logical indicating whether to keep the \code{idx} column of the
+resulting data.table. For internal use only.}
 }
 \value{
 A data.table with columns for command, path, and version.
@@ -15,4 +16,7 @@ A data.table with columns for command, path, and version.
 \description{
 This function checks whether the command-line tools used by seeker are
 accessible in the expected places.
+}
+\seealso{
+\code{\link[=installSysDeps]{installSysDeps()}}
 }

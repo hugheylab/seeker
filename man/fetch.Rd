@@ -57,5 +57,5 @@ that intermediate files created by fasterq-dump are uncompressed and could
 require hundreds of gigabytes if files are processed in parallel.
 }
 \seealso{
-\code{\link[=fetchMetadata]{fetchMetadata()}}
+\code{\link[=seeker]{seeker()}}, \code{\link[=fetchMetadata]{fetchMetadata()}}
 }

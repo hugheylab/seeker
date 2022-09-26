@@ -33,3 +33,6 @@ If \code{checkArgsOnly} is \code{FALSE}, a data.table based on the result from
 This function uses the
 \href{https://doi.org/doi:10.18129/B9.bioc.biomaRt}{biomaRt package}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}, \code{\link[=tximport]{tximport()}}
+}

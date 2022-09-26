@@ -167,9 +167,12 @@ getCommandVersion = function(cmd, idx) {
 #' This function checks whether the command-line tools used by seeker are
 #' accessible in the expected places.
 #'
-#' @param keepIdx Logical indicating whether or not to keep the `idx` column of d.
+#' @param keepIdx Logical indicating whether to keep the `idx` column of the
+#'   resulting data.table. For internal use only.
 #'
 #' @return A data.table with columns for command, path, and version.
+#'
+#' @seealso [installSysDeps()]
 #'
 #' @export
 checkDefaultCommands = function(keepIdx = FALSE) {
@@ -198,7 +201,9 @@ checkDefaultCommands = function(keepIdx = FALSE) {
 checkCommand = function(cmd, cmdName, defaultPath) {
   if (is.null(cmd)) {
     if (is.na(defaultPath)) {
-      return(glue('{cmdName} is not available at the default location.'))}
+      return(glue(
+        '{cmdName} is not available at the default location.',
+        ' Have you run `installSysDeps`?'))}
   } else {
     path = validateCommand(cmd)
     if (is.na(path)) {

@@ -15,6 +15,8 @@
 #'
 #' @return A vector of exit codes, invisibly.
 #'
+#' @seealso [seeker()]
+#'
 #' @export
 fastqc = function(
   filepaths, outputDir = 'fastqc_output', cmd = 'fastqc', args = NULL) {
@@ -67,6 +69,8 @@ fastqc = function(
 #' @param args Additional arguments to pass to the command-line interface.
 #'
 #' @return A vector of exit codes, invisibly.
+#'
+#' @seealso [seeker()]
 #'
 #' @export
 fastqscreen = function(
@@ -121,6 +125,8 @@ fastqscreen = function(
 #' @param pigzCmd String for pigz command, which will gzip the output files.
 #'
 #' @return A vector of exit codes, invisibly.
+#'
+#' @seealso [seeker()]
 #'
 #' @export
 trimgalore = function(
@@ -180,6 +186,8 @@ trimgalore = function(
 #' @param args Additional arguments to pass to the command-line interface.
 #'
 #' @return An exit code, invisibly.
+#'
+#' @seealso [seeker()]
 #'
 #' @export
 multiqc = function(

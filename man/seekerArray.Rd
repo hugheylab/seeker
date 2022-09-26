@@ -42,7 +42,8 @@ Path to the output directory \code{parentDir}/\code{study}, invisibly.
 \description{
 This function fetches data and metadata from NCBI GEO and ArrayExpress,
 processes raw Affymetrix data using RMA and custom CDFs from Brainarray, and
-maps probes to genes.
+maps probes to genes. See also the vignettes:
+\code{browseVignettes('seeker')}.
 }
 \details{
 The standard output:
@@ -67,6 +68,12 @@ matrix was generated from processed data.
 
 The output may include other files from NCBI GEO or ArrayExpress. Files with
 extension "qs" can be read into R using \code{\link[qs:qread]{qs::qread()}}.
+}
+\examples{
+\dontrun{
+seekerArray('GSE25585', 'entrez')
+}
+
 }
 \seealso{
 \code{\link[=seeker]{seeker()}}

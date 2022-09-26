@@ -177,6 +177,15 @@ Path to the output directory \code{parentDir}/\code{params$study}, invisibly.
 }
 \description{
 This function selectively performs various steps to process RNA-seq data.
+See also the vignettes: \code{browseVignettes('seeker')}.
+}
+\examples{
+\dontrun{
+doParallel::registerDoParallel()
+params = yaml::read_yaml('my_params.yaml')
+seeker(params)
+}
+
 }
 \seealso{
 \code{\link[=fetchMetadata]{fetchMetadata()}}, \code{\link[=fetch]{fetch()}}, \code{\link[=trimgalore]{trimgalore()}}, \code{\link[=fastqc]{fastqc()}},

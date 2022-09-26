@@ -10,55 +10,39 @@
 
 ## Installation
 
-### Docker image
+To use `seeker`, you can install `seeker` and its dependencies, or use a pre-built Docker image in which `seeker` and its dependencies are already installed.
 
-`seeker` and its dependencies are available in a Docker image called [socker](https://github.com/hugheylab/socker), based on [rocker/rstudio](https://github.com/rocker-org/rocker-versioned2).
+### R package and dependencies
 
-```sh
-docker pull ghcr.io/hugheylab/socker
-```
-
-If you don't want to use Docker, you can follow the instructions below.
-
-### R package
-
-#### Option 1: CRAN
-
-```r
-if (!requireNamespace('BiocManager', quietly = TRUE))
-  install.packages('BiocManager')
-BiocManager::install('seeker') # handles Bioconductor dependencies
-```
-
-#### Option 2: Hughey Lab Drat Repository
-
-1. Install [`BiocManager`](https://cran.r-project.org/package=BiocManager).
+1. Install the `BiocManager` R package.
 
     ```r
     if (!requireNamespace('BiocManager', quietly = TRUE))
       install.packages('BiocManager')
     ```
 
-1. If you use RStudio, go to Tools → Global Options... → Packages → Add... (under Secondary repositories), then enter:
-
-    - Name: hugheylab
-    - Url: https://hugheylab.github.io/drat/
-
-    You only have to do this once. Then you can install or update the package by entering:
-
+1. Install the `seeker` R package, either from CRAN or from the Hughey Lab drat repository. We use `BiocManager::install()` in order to smoothly install `seeker`'s dependencies that are on Bioconductor.
+    
     ```r
-    BiocManager::install('seeker')
+    BiocManager::install('seeker') # CRAN
+    # BiocManager::install('seeker', site_repository = 'https://hugheylab.github.io/drat/') # drat
     ```
 
-    Alternatively, you can install or update the package by entering:
+1. Install the system dependencies to fetch and process sequencing data. The simplest way to do this is to use the function [`installSysDeps()`](https://seeker.hugheylab.org/reference/installsysdeps). For example,
 
     ```r
-    BiocManager::install('seeker', site_repository = 'https://hugheylab.github.io/drat/')
+    seeker::installSysDeps('~', '~', '~', '~')
     ```
+    
+    You can also use `installSysDeps()` to fetch genomes from refgenie, such as those required to quantify transcript abundances using salmon.
 
-### System dependencies
+### Docker image
 
-If not using the docker image, use [`seeker::installSysDeps()`](https://seeker.hugheylab.org/reference/installsysdeps) to install and configure the various programs required to fetch and process sequencing data.
+The Docker image is called [socker](https://github.com/hugheylab/socker) and is based on [rocker/rstudio](https://github.com/rocker-org/rocker-versioned2).
+
+```sh
+docker pull ghcr.io/hugheylab/socker
+```
 
 ## Usage
 

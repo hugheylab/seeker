@@ -16,6 +16,8 @@
 #' @return If `checkArgsOnly` is `FALSE`, a data.table based on the result from
 #'   [biomaRt::getBM()], with an attribute "version". Otherwise `0`.
 #'
+#' @seealso [seeker()], [tximport()]
+#'
 #' @export
 getTx2gene = function(
   organism = 'mmusculus', version = NULL, outputDir = 'data',
@@ -66,6 +68,8 @@ getTx2gene = function(
 #' @param ... Additional arguments passed to [tximport::tximport()].
 #'
 #' @return A list, as returned by [tximport::tximport()], invisibly.
+#'
+#' @seealso [seeker()], [getTx2Gene()]
 #'
 #' @export
 tximport = function(

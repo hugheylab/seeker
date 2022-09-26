@@ -14,6 +14,8 @@ getSalmonMetadata(inputDir, outputDir = "data")
 }
 \value{
 A data.table, invisibly.
+
+#' @seealso \code{\link[=seeker]{seeker()}}, \code{\link[=salmon]{salmon()}}
 }
 \description{
 Aggregrate metadata from salmon quantifications

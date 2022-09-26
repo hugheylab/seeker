@@ -42,3 +42,6 @@ A list, as returned by \code{\link[tximport:tximport]{tximport::tximport()}}, in
 This function uses the
 \href{https://doi.org/doi:10.18129/B9.bioc.tximport}{tximport package}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}, \code{\link[=getTx2Gene]{getTx2Gene()}}
+}

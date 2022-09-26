@@ -19,6 +19,8 @@
 #'
 #' @return A vector of exit codes, invisibly.
 #'
+#' @seealso [seeker()], [getSalmonMetadata()]
+#'
 #' @export
 salmon = function(
   filepaths, samples, indexDir, outputDir = 'salmon_output', cmd = 'salmon',
@@ -86,6 +88,8 @@ salmon = function(
 #'   "salmon_meta_info.csv". If `NULL`, no file is saved.
 #'
 #' @return A data.table, invisibly.
+#'
+#'#' @seealso [seeker()], [salmon()]
 #'
 #' @export
 getSalmonMetadata = function(inputDir, outputDir = 'data') {

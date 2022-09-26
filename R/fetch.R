@@ -10,7 +10,7 @@
 #'
 #' @return A `data.table`.
 #'
-#' @seealso [fetch()]
+#' @seealso [seeker()], [fetch()]
 #'
 #' @export
 fetchMetadata = function(
@@ -152,7 +152,7 @@ fetchMetadata = function(
 #' @return A list. As the function runs, it updates a tab-delimited log file in
 #'   `outputDir` called "progress.tsv".
 #'
-#' @seealso [fetchMetadata()]
+#' @seealso [seeker()], [fetchMetadata()]
 #'
 #' @export
 fetch = function(

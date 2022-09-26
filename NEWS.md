@@ -1,3 +1,6 @@
+# seeker 1.0.11
+* Revised documentation.
+
 # seeker 1.0.10
 * Revised package for CRAN.
 

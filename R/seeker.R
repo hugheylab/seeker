@@ -202,6 +202,7 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #' Process RNA-seq data end to end
 #'
 #' This function selectively performs various steps to process RNA-seq data.
+#' See also the vignettes: \code{browseVignettes('seeker')}.
 #'
 #' @param params Named list of parameters with components:
 #' * `study`: String used to name the output directory within `parentDir`.
@@ -345,6 +346,13 @@ checkSeekerArgs = function(params, parentDir, dryRun = FALSE) {
 #'   without actually fetching or processing any data.
 #'
 #' @return Path to the output directory `parentDir`/`params$study`, invisibly.
+#'
+#' @examples
+#' \dontrun{
+#' doParallel::registerDoParallel()
+#' params = yaml::read_yaml('my_params.yaml')
+#' seeker(params)
+#' }
 #'
 #' @seealso [fetchMetadata()], [fetch()], [trimgalore()], [fastqc()],
 #'   [salmon()], [multiqc()], [tximport()], [installSysDeps()], [seekerArray()]

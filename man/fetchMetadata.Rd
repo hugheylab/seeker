@@ -28,5 +28,5 @@ This function can use the API of the European Nucleotide Archive
 (recommended) or the Sequence Read Archive.
 }
 \seealso{
-\code{\link[=fetch]{fetch()}}
+\code{\link[=seeker]{seeker()}}, \code{\link[=fetch]{fetch()}}
 }

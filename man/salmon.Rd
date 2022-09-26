@@ -43,3 +43,6 @@ This function calls
 using \code{\link[=system2]{system2()}}. To run in parallel, register a parallel backend, e.g.,
 using \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}, \code{\link[=getSalmonMetadata]{getSalmonMetadata()}}
+}

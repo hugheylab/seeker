@@ -39,3 +39,6 @@ using \code{\link[=system2]{system2()}}, and is only designed to handle standard
 trimming. To run in parallel, register a parallel backend, e.g., using
 \code{\link[doParallel:registerDoParallel]{doParallel::registerDoParallel()}}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}
+}

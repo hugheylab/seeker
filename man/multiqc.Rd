@@ -27,3 +27,6 @@ An exit code, invisibly.
 \description{
 This function calls \href{https://multiqc.info/}{multiqc} using \code{\link[=system2]{system2()}}.
 }
+\seealso{
+\code{\link[=seeker]{seeker()}}
+}
