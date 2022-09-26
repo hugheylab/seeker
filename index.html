@@ -58,7 +58,7 @@
     
     <a class="navbar-brand me-2" href="index.html">seeker</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,55 +110,36 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>To use <code>seeker</code>, you can install <code>seeker</code> and its dependencies, or use a pre-built Docker image in which <code>seeker</code> and its dependencies are already installed.</p>
 <div class="section level3">
-<h3 id="docker-image">Docker image<a class="anchor" aria-label="anchor" href="#docker-image"></a>
+<h3 id="r-package-and-dependencies">R package and dependencies<a class="anchor" aria-label="anchor" href="#r-package-and-dependencies"></a>
 </h3>
-<p><code>seeker</code> and its dependencies are available in a Docker image called <a href="https://github.com/hugheylab/socker" class="external-link">socker</a>, based on <a href="https://github.com/rocker-org/rocker-versioned2" class="external-link">rocker/rstudio</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
-<p>If you don’t want to use Docker, you can follow the instructions below.</p>
-</div>
-<div class="section level3">
-<h3 id="r-package">R package<a class="anchor" aria-label="anchor" href="#r-package"></a>
-</h3>
-<div class="section level4">
-<h4 id="option-1-cran">Option 1: CRAN<a class="anchor" aria-label="anchor" href="#option-1-cran"></a>
-</h4>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span> <span class="co"># handles Bioconductor dependencies</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="option-2-hughey-lab-drat-repository">Option 2: Hughey Lab Drat Repository<a class="anchor" aria-label="anchor" href="#option-2-hughey-lab-drat-repository"></a>
-</h4>
 <ol style="list-style-type: decimal">
 <li>
-<p>Install <a href="https://cran.r-project.org/package=BiocManager" class="external-link"><code>BiocManager</code></a>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Install the <code>BiocManager</code> R package.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li>
-<p>If you use RStudio, go to Tools → Global Options… → Packages → Add… (under Secondary repositories), then enter:</p>
-<ul>
-<li>Name: hugheylab</li>
-<li>Url: <a href="https://hugheylab.github.io/drat/" class="external-link uri">https://hugheylab.github.io/drat/</a>
+<p>Install the <code>seeker</code> R package, either from CRAN or from the Hughey Lab drat repository. We use <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">BiocManager::install()</a></code> in order to smoothly install <code>seeker</code>’s dependencies that are on Bioconductor.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span> <span class="co"># CRAN</span></span>
+<span><span class="co"># BiocManager::install('seeker', site_repository = 'https://hugheylab.github.io/drat/') # drat</span></span></code></pre></div>
 </li>
-</ul>
-<p>You only have to do this once. Then you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span><span class="op">)</span></span></code></pre></div>
-<p>Alternatively, you can install or update the package by entering:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'seeker'</span>, site_repository <span class="op">=</span> <span class="st">'https://hugheylab.github.io/drat/'</span><span class="op">)</span></span></code></pre></div>
+<li>
+<p>Install the system dependencies to fetch and process sequencing data. The simplest way to do this is to use the function <a href="https://seeker.hugheylab.org/reference/installsysdeps"><code>installSysDeps()</code></a>. For example,</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">seeker</span><span class="fu">::</span><span class="fu"><a href="reference/installSysDeps.html">installSysDeps</a></span><span class="op">(</span><span class="st">'~'</span>, <span class="st">'~'</span>, <span class="st">'~'</span>, <span class="st">'~'</span><span class="op">)</span></span></code></pre></div>
+<p>You can also use <code><a href="reference/installSysDeps.html">installSysDeps()</a></code> to fetch genomes from refgenie, such as those required to quantify transcript abundances using salmon.</p>
 </li>
 </ol>
 </div>
-</div>
 <div class="section level3">
-<h3 id="system-dependencies">System dependencies<a class="anchor" aria-label="anchor" href="#system-dependencies"></a>
+<h3 id="docker-image">Docker image<a class="anchor" aria-label="anchor" href="#docker-image"></a>
 </h3>
-<p>If not using the docker image, use <a href="https://seeker.hugheylab.org/reference/installsysdeps"><code>seeker::installSysDeps()</code></a> to install and configure the various programs required to fetch and process sequencing data.</p>
+<p>The Docker image is called <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> and is based on <a href="https://github.com/rocker-org/rocker-versioned2" class="external-link">rocker/rstudio</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
