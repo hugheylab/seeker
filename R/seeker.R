@@ -390,8 +390,8 @@ seeker = function(params, parentDir = '.', dryRun = FALSE) {
 
   if (paramsNow$run) {
     # host must be 'ena' to download fastq files using ascp
-    metadata = fetchMetadata(paramsNow$bioproject)
-    fwrite(metadata, metadataPath) # could be overwritten
+    metadata = fetchMetadata(paramsNow$bioproject, file = metadataPath)
+    # fwrite(metadata, metadataPath) # could be overwritten
   } else {
     metadata = fread(metadataPath, na.strings = '')}
   fwrite(metadata, file.path(outputDir, 'metadata_original.csv'))
