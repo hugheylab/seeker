@@ -30,7 +30,7 @@ checkSeekerArrayArgs = function(
     fileSamples = gsub('\\.cel(\\.gz)?$', '', files, ignore.case = TRUE)
     assertSetEqual(fileSamples, d[[sampColname]])}
 
-  assertLogical(metadataOnly, any.missing = FALSE, len = 1L)
+  assertFlag(metadataOnly)
 
   return(list(repo = repo, outputDir = outputDir, rawDir = rawDir,
               metadataPath = metadataPath, sampColname = sampColname))}
@@ -112,7 +112,12 @@ seekerArray = function(
   result = if (repo == 'geo') {
     getNaiveEsetGeo(study, outputDir, rawDir, platform, metadataOnly)
   } else if (repo == 'ae') {
-    getNaiveEsetAe(study, outputDir, rawDir)
+    tryCatch(
+      getNaiveEsetAe(study, outputDir, rawDir),
+      error = function(e) list(
+        eset = NULL,
+        rmaOk = glue('Cannot process {study} until the ArrayExpress package',
+                     ' is updated to use the BioStudies API.')))
   } else {
     getNaiveEsetLocal(study, platform)}
 

@@ -102,39 +102,60 @@ getNaiveEsetGeo = function(
   return(list(eset = eset, rmaOk = rmaOk))}
 
 
-getAeMetadata = function(study, type = c('experiments', 'files')) {
+getAeMetadata = function(study, type = c('search', 'studies')) {
   type = match.arg(type)
-  urlBase = 'https://www.ebi.ac.uk/arrayexpress/json/v3'
-  url = glue('{urlBase}/{type}/{study}')
+  # urlBase = 'https://www.ebi.ac.uk/arrayexpress/json/v3'
+  # url = glue('{urlBase}/{type}/{study}')
+  urlBase = 'https://www.ebi.ac.uk/biostudies/api/v1'
+  url = if (type == 'search') {
+    glue('{urlBase}/search?accession={study}')
+  } else {
+    glue('{urlBase}/studies/{study}')}
+
   raw = curl::curl_fetch_memory(url)
   x = jsonlite::fromJSON(rawToChar(raw$content))
-
-  if (type == 'experiments') {
-    x = setDT(x$experiments$experiment)
-  } else {
-    x = x$files$experiment$file}
+  # x = if (type == 'experiments') {
+  #   setDT(x$experiments$experiment)
+  # } else {
+  #   x$files$experiment$file}
   return(x)}
 
 
-getNaiveEsetAe = function(study, outputDir, rawDir, metadataOnly = FALSE) {
+getNaiveEsetAe = function(study, outputDir, rawDir) {
   withr::local_options(timeout = max(300, getOption('timeout')))
 
-  expers = getAeMetadata(study, 'experiments')
-  if (nrow(expers) != 1L) {
+  metaList = getAeMetadata(study, 'search')
+  if (metaList$totalHits != 1L) {
     return(list(rmaOk = glue(
     "'{study}' does not match exactly one study, cannot proceed.")))}
 
-  arrays = expers[1L]$arraydesign
-  if (length(arrays) != 1L) {
+  meta1 = getAeMetadata(study, 'studies')$section$subsections
+  idx = sapply(meta1, function(y) identical(y$type, 'Assays and Data'))
+  meta2 = meta1[[which(idx)]]$subsections
+  idx = meta2$type == 'Array Designs'
+  meta3 = meta2$links[[which(idx)]]
+
+  if (length(meta3) != 1L) {
     return(list(rmaOk = glue(
       '{study} does not use exactly one platform, cannot proceed.')))}
-  platform = arrays[[1L]]$accession
 
-  files = getAeMetadata(study, 'files') # for one study, should be a data.frame
-  hasRaw = any(files$kind == 'raw')
-  hasProc = any(sapply(files$kind, function(k) any(k == 'processed', na.rm = TRUE)))
+  platform = meta3[[1L]]$url
+  idx = sapply(meta1, function(y) identical(y$type, 'MIAME Score'))
+  meta4 = meta1[[which(idx)]]$attributes
+  hasRaw = meta4$value[meta4$name == 'Raw'] == '*'
+  hasProc = meta4$value[meta4$name == 'Processed'] == '*'
 
-  if (metadataOnly) return(list(eset = eset))
+  # arrays = expers[1L]$arraydesign
+  # if (length(arrays) != 1L) {
+  #   return(list(rmaOk = glue(
+  #     '{study} does not use exactly one platform, cannot proceed.')))}
+  # platform = arrays[[1L]]$accession
+  #
+  # files = getAeMetadata(study, 'files') # for one study, should be a data.frame
+  # hasRaw = any(files$kind == 'raw')
+  # hasProc = any(sapply(files$kind, function(k) any(k == 'processed', na.rm = TRUE)))
+  #
+  # if (metadataOnly) return(list(eset = eset))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
     mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')

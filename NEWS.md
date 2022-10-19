@@ -1,3 +1,6 @@
+# seeker 1.0.13
+* Updated for BioStudies API.
+
 # seeker 1.0.12
 * `fetchMetadata()` can now save the metadata to a text file.
 

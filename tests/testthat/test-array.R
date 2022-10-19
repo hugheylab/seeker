@@ -49,25 +49,25 @@ test_that('seekerArray GSE', {
 })
 
 
-test_that('seekerArray Ae', {
-  skip_on_os('windows', arch = NULL)
-  skip_on_cran()
-
-  parentDirArrAe = file.path(dataDir, 'staging_seeker_array_ae')
-  dir.create(parentDirArrAe)
-  withr::local_file(parentDirArrAe)
-  paramsArrayAe = paramsArray
-  paramsArrayAe$study = 'E-MTAB-8714'
-
-  seekerArray(paramsArrayAe$study, paramsArrayAe$geneIdType,
-              paramsArrayAe$platform, parentDirArrAe)
-
-  resultObs = list.files(parentDirArrAe, recursive = TRUE)
-  resultExp = snapshot(
-    resultObs, file.path(dataDir, 'seeker_array_ae_output.qs'))
-
-  expect_equal(resultObs, resultExp)
-})
+# test_that('seekerArray Ae', {
+#   skip_on_os('windows', arch = NULL)
+#   skip_on_cran()
+#
+#   parentDirArrAe = file.path(dataDir, 'staging_seeker_array_ae')
+#   dir.create(parentDirArrAe)
+#   withr::local_file(parentDirArrAe)
+#   paramsArrayAe = paramsArray
+#   paramsArrayAe$study = 'E-MTAB-8714'
+#
+#   seekerArray(paramsArrayAe$study, paramsArrayAe$geneIdType,
+#               paramsArrayAe$platform, parentDirArrAe)
+#
+#   resultObs = list.files(parentDirArrAe, recursive = TRUE)
+#   resultExp = snapshot(
+#     resultObs, file.path(dataDir, 'seeker_array_ae_output.qs'))
+#
+#   expect_equal(resultObs, resultExp)
+# })
 
 
 test_that('seekerArray LOCAL', {

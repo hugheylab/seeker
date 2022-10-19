@@ -58,57 +58,57 @@ test_that('getNaiveEsetGeo', {
 })
 
 
-test_that('getNaiveEsetAe supported', {
-  skip_on_cran()
-  study = 'E-MTAB-8714'
+# test_that('getNaiveEsetAe supported', {
+#   skip_on_cran()
+#   study = 'E-MTAB-8714'
+#
+#   outputDir = tempfile()
+#   withr::local_file(outputDir)
+#   dir.create(outputDir)
+#
+#   resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
+#   # reduce disk size of expression set while preserving dimensions
+#   Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 1000), ] = 1
+#   rownames(resObs$eset@featureData@data) = NULL
+#
+#   filesObs = dir(outputDir, recursive = TRUE)
+#
+#   path = file.path(dataDir, paste0(study, '_eset.qs'))
+#   resExp = snapshot(resObs, path)
+#   filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
+#
+#   expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
+#   expect_equal(resObs$rmaOk, resExp$rmaOk)
+#   expect_equal(resObs$eset@annotation, resExp$eset@annotation)
+#   expect_equal(resObs$eset@phenoData@data, resExp$eset@phenoData@data)
+#   expect_equal(resObs$eset@assayData$exprs, resExp$eset@assayData$exprs)
+#   expect_equal(filesObs, filesExp)
+# })
 
-  outputDir = tempfile()
-  withr::local_file(outputDir)
-  dir.create(outputDir)
 
-  resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
-  # reduce disk size of expression set while preserving dimensions
-  Biobase::exprs(resObs$eset)[-seq(1, nrow(resObs$eset), 1000), ] = 1
-  rownames(resObs$eset@featureData@data) = NULL
-
-  filesObs = dir(outputDir, recursive = TRUE)
-
-  path = file.path(dataDir, paste0(study, '_eset.qs'))
-  resExp = snapshot(resObs, path)
-  filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
-
-  expect_names(names(resObs), permutation.of = c('eset', 'rmaOk'))
-  expect_equal(resObs$rmaOk, resExp$rmaOk)
-  expect_equal(resObs$eset@annotation, resExp$eset@annotation)
-  expect_equal(resObs$eset@phenoData@data, resExp$eset@phenoData@data)
-  expect_equal(resObs$eset@assayData$exprs, resExp$eset@assayData$exprs)
-  expect_equal(filesObs, filesExp)
-})
-
-
-test_that('getNaiveEsetAe unsupported', {
-  study = 'E-MEXP-3696'
-
-  outputDir = tempfile()
-  withr::local_file(outputDir)
-  dir.create(outputDir)
-
-  if (onCran) {
-    expect_error(
-      getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw')),
-      regexp = NA)
-
-  } else {
-    resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
-    filesObs = dir(outputDir, recursive = TRUE)
-
-    path = file.path(dataDir, paste0(study, '_eset.qs'))
-    resExp = snapshot(resObs, path)
-    filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
-
-    expect_equal(resObs, resExp)
-    expect_equal(filesObs, filesExp)}
-})
+# test_that('getNaiveEsetAe unsupported', {
+#   study = 'E-MEXP-3696'
+#
+#   outputDir = tempfile()
+#   withr::local_file(outputDir)
+#   dir.create(outputDir)
+#
+#   if (onCran) {
+#     expect_error(
+#       getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw')),
+#       regexp = NA)
+#
+#   } else {
+#     resObs = getNaiveEsetAe(study, outputDir, file.path(outputDir, 'raw'))
+#     filesObs = dir(outputDir, recursive = TRUE)
+#
+#     path = file.path(dataDir, paste0(study, '_eset.qs'))
+#     resExp = snapshot(resObs, path)
+#     filesExp = snapshot(filesObs, gsub('_eset', '_files', path))
+#
+#     expect_equal(resObs, resExp)
+#     expect_equal(filesObs, filesExp)}
+# })
 
 
 test_that('getNaiveEsetLocal', {
@@ -124,15 +124,15 @@ test_that('getNaiveEsetLocal', {
 })
 
 
-test_that('getAeMetadata', {
-  study = 'E-MEXP-3780'
-  expers = getAeMetadata(study, type = 'experiments')
-  expect_s3_class(expers, 'data.frame')
-  expect_equal(nrow(expers), 1L)
-
-  files = getAeMetadata(study, type = 'files')
-  expect_s3_class(files, 'data.frame')
-})
+# test_that('getAeMetadata', {
+#   study = 'E-MEXP-3780'
+#   expers = getAeMetadata(study, type = 'experiments')
+#   expect_s3_class(expers, 'data.frame')
+#   expect_equal(nrow(expers), 1L)
+#
+#   files = getAeMetadata(study, type = 'files')
+#   expect_s3_class(files, 'data.frame')
+# })
 
 
 test_that('stripFileExt', {
