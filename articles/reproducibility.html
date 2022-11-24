@@ -76,9 +76,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Reproducibility with seeker</h1>
-                        <h4 data-toc-skip class="author">Jake Hughey</h4>
+                        <h4 data-toc-skip class="author">Jake
+Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-10-20</h4>
+            <h4 data-toc-skip class="date">2022-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/reproducibility.Rmd" class="external-link"><code>vignettes/reproducibility.Rmd</code></a></small>
       <div class="d-none name"><code>reproducibility.Rmd</code></div>
@@ -86,12 +87,18 @@
 
     
     
-<p>Using the <code>seeker</code> package together with docker, it’s easy to make fetching and processing of sequencing and microarray data completely reproducible. First pull the latest version of the <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> image, which has <code>seeker</code> and its dependencies already installed.</p>
+<p>Using the <code>seeker</code> package together with docker, it’s easy
+to make fetching and processing of sequencing and microarray data
+completely reproducible. First pull the latest version of the <a href="https://github.com/hugheylab/socker" class="external-link">socker</a> image, which has
+<code>seeker</code> and its dependencies already installed.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/hugheylab/socker</span></code></pre></div>
 <div class="section level2">
 <h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
 </h2>
-<p>The <code>seeker</code> package includes an example yaml file, R script, and shell script for fetching and processing a subset of an RNA-seq dataset. Here we’ll download the files from GitHub to avoid having to install the package locally:</p>
+<p>The <code>seeker</code> package includes an example yaml file, R
+script, and shell script for fetching and processing a subset of an
+RNA-seq dataset. Here we’ll download the files from GitHub to avoid
+having to install the package locally:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">urlBase</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'run_seeker.R'</span>, <span class="st">'run_seeker.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -176,12 +183,19 @@
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> PRJNA600892_progress.log</span></code></pre></div>
 <p>Now simply run the shell script:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> run_seeker.sh</span></code></pre></div>
-<p>The output will appear in your working directory. You can follow <code><a href="../reference/seeker.html">seeker()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly. Beware this example uses “salmon_partial_sa_index” from refgenie to minimize computational requirements; for actual use we recommend “salmon_sa_index”.</p>
+<p>The output will appear in your working directory. You can follow
+<code><a href="../reference/seeker.html">seeker()</a></code>’s progress using the log file. To process a
+different dataset, modify the yaml file and shell script accordingly.
+Beware this example uses “salmon_partial_sa_index” from refgenie to
+minimize computational requirements; for actual use we recommend
+“salmon_sa_index”.</p>
 </div>
 <div class="section level2">
 <h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
 </h2>
-<p>The <code>seeker</code> package also includes an example yaml file, R script, and shell script for fetching and processing a microarray dataset. Download the files to your working directory:</p>
+<p>The <code>seeker</code> package also includes an example yaml file, R
+script, and shell script for fetching and processing a microarray
+dataset. Download the files to your working directory:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">urlBase</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/hugheylab/seeker/master/inst/extdata/'</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'GSE25585.yml'</span>, <span class="st">'run_seeker_array.R'</span>, <span class="st">'run_seeker_array.sh'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -212,7 +226,10 @@
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&amp;</span><span class="er">&gt;</span> GSE25585_progress.log</span></code></pre></div>
 <p>Now simply run the shell script:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> run_seeker_array.sh</span></code></pre></div>
-<p>The output will appear in your working directory. You can follow <code><a href="../reference/seekerArray.html">seekerArray()</a></code>’s progress using the log file. To process a different dataset, modify the yaml file and shell script accordingly.</p>
+<p>The output will appear in your working directory. You can follow
+<code><a href="../reference/seekerArray.html">seekerArray()</a></code>’s progress using the log file. To process a
+different dataset, modify the yaml file and shell script
+accordingly.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

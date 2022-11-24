@@ -76,9 +76,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Introduction to seeker</h1>
-                        <h4 data-toc-skip class="author">Jake Hughey</h4>
+                        <h4 data-toc-skip class="author">Jake
+Hughey</h4>
             
-            <h4 data-toc-skip class="date">2022-10-20</h4>
+            <h4 data-toc-skip class="date">2022-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hugheylab/seeker/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
@@ -89,7 +90,13 @@
 <div class="section level2">
 <h2 id="rna-seq-data">RNA-seq data<a class="anchor" aria-label="anchor" href="#rna-seq-data"></a>
 </h2>
-<p>The <code>seeker</code> package is designed to be a wrapper around various command-line and R-based tools. The main function is, well, <code><a href="../reference/seeker.html">seeker()</a></code>, which is targeted at processing bulk RNA-seq data. <code><a href="../reference/seeker.html">seeker()</a></code>’s main argument is a list of parameters specifying which steps of RNA-seq data processing to perform and how to perform them. The list of parameters can come from a yaml file, an example of which is shown below.</p>
+<p>The <code>seeker</code> package is designed to be a wrapper around
+various command-line and R-based tools. The main function is, well,
+<code><a href="../reference/seeker.html">seeker()</a></code>, which is targeted at processing bulk RNA-seq
+data. <code><a href="../reference/seeker.html">seeker()</a></code>’s main argument is a list of parameters
+specifying which steps of RNA-seq data processing to perform and how to
+perform them. The list of parameters can come from a yaml file, an
+example of which is shown below.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>study<span class="sc">:</span> <span class="st">'PRJNA600892'</span> <span class="co"># [string]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>metadata<span class="sc">:</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  run<span class="sc">:</span> <span class="cn">TRUE</span> <span class="co"># [logical]</span></span>
@@ -143,11 +150,15 @@
 <span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filename # [string or NULL]</span></span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  countsFromAbundance<span class="sc">:</span> <span class="st">'lengthScaledTPM'</span> <span class="co"># [string]</span></span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ignoreTxVersion # [logical or NULL]</span></span></code></pre></div>
-<p>An empty template yaml file is available at <code>system.file('extdata', 'params_template.yml', package = 'seeker')</code>. You can copy these yaml files to your working directory like so:</p>
+<p>An empty template yaml file is available at
+<code>system.file('extdata', 'params_template.yml', package = 'seeker')</code>.
+You can copy these yaml files to your working directory like so:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">filename</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PRJNA600892.yml'</span>, <span class="st">'params_template.yml'</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata'</span>, <span class="va">filename</span>, package <span class="op">=</span> <span class="st">'seeker'</span><span class="op">)</span>, <span class="st">'.'</span><span class="op">)</span><span class="op">}</span></span></code></pre></div>
-<p>If you’ve already installed the system dependencies, such as with <code><a href="../reference/installSysDeps.html">installSysDeps()</a></code>, a basic way to run <code><a href="../reference/seeker.html">seeker()</a></code> is then:</p>
+<p>If you’ve already installed the system dependencies, such as with
+<code><a href="../reference/installSysDeps.html">installSysDeps()</a></code>, a basic way to run <code><a href="../reference/seeker.html">seeker()</a></code>
+is then:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span></span>
 <span><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -160,7 +171,11 @@
 <div class="section level2">
 <h2 id="microarray-data">Microarray data<a class="anchor" aria-label="anchor" href="#microarray-data"></a>
 </h2>
-<p>Here you can use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function, which can process data from <a href="https://www.ncbi.nlm.nih.gov/geo/" class="external-link">NCBI GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/" class="external-link">ArrayExpress</a>, and can process raw Affymetrix data stored locally. The main arguments are <code>study</code> and <code>geneIdType</code>. For example:</p>
+<p>Here you can use the <code><a href="../reference/seekerArray.html">seekerArray()</a></code> function, which can
+process data from <a href="https://www.ncbi.nlm.nih.gov/geo/" class="external-link">NCBI
+GEO</a> and <a href="https://www.ebi.ac.uk/arrayexpress/" class="external-link">ArrayExpress</a>, and can
+process raw Affymetrix data stored locally. The main arguments are
+<code>study</code> and <code>geneIdType</code>. For example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://seeker.hugheylab.org">'seeker'</a></span><span class="op">)</span></span>
 <span></span>
