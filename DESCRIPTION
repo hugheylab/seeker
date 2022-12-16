@@ -35,7 +35,7 @@ Imports:
   ArrayExpress (>= 1.50.0),
   BiocManager (>= 1.30.0),
   biomaRt (>= 2.36.1),
-  checkmate (>= 2.0.0),
+  checkmate (>= 2.1.0),
   curl (>= 3.2),
   data.table (>= 1.11.8),
   foreach (>= 1.4.4),
