@@ -37,9 +37,11 @@ test_that('checkSeekerArrayArgs errors', {
 test_that('seekerArray GSE', {
   skip_on_os('windows', arch = NULL)
   skip_on_cran()
+  skip_on_ci() # RMA refuses to work on the GH Actions runner
 
-  seekerArray(paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
-              parentDirArr)
+  seekerArray(
+    paramsArray$study, paramsArray$geneIdType, paramsArray$platform,
+    parentDirArr)
 
   resultObs = list.files(parentDirArr, recursive = TRUE)
   resultExp = snapshot(
@@ -73,6 +75,7 @@ test_that('seekerArray GSE', {
 test_that('seekerArray LOCAL', {
   skip_on_os('windows', arch = NULL)
   skip_on_cran()
+  skip_on_ci()
 
   parentDirArrLcl = file.path(dataDir, 'staging_seeker_array_local')
   dir.create(parentDirArrLcl)
@@ -80,8 +83,9 @@ test_that('seekerArray LOCAL', {
   paramsArrayLocal = yaml::read_yaml(file.path(dataDir, 'LOCAL01.yml'))
   file.copy(file.path(dataDir, 'LOCAL01'), parentDirArrLcl, recursive = TRUE)
 
-  seekerArray(paramsArrayLocal$study, paramsArrayLocal$geneIdType,
-              paramsArrayLocal$platform, parentDirArrLcl)
+  seekerArray(
+    paramsArrayLocal$study, paramsArrayLocal$geneIdType,
+    paramsArrayLocal$platform, parentDirArrLcl)
 
   resultObs = list.files(parentDirArrLcl, recursive = TRUE)
   resultExp = snapshot(
