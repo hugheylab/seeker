@@ -75,7 +75,7 @@ test_that('seekerArray GSE', {
 test_that('seekerArray LOCAL', {
   skip_on_os('windows', arch = NULL)
   skip_on_cran()
-  skip_on_ci()
+  skip_on_ci() # RMA refuses to work on the GH Actions runner
 
   parentDirArrLcl = file.path(dataDir, 'staging_seeker_array_local')
   dir.create(parentDirArrLcl)
