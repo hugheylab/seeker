@@ -65,7 +65,7 @@ installSraToolkit = function(installDir, rprofileDir) {
 
 installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Determine paths for miniconda
-  minicondaPath = path.expand(file.path(installDir, 'miniconda3'))
+  minicondaPath = safe(file.path(installDir, 'miniconda3'))
   minicondaEnvPath = if (minicondaEnv == 'base') {
     minicondaPath
   } else {
@@ -82,10 +82,10 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
     withr::local_file(miniSh)
     download.file(
       glue('https://repo.anaconda.com/miniconda/{miniSh}'), miniSh, quiet = TRUE)
-    system2('sh', c(miniSh, '-b', '-p', file.path(installDir, 'miniconda3')))
+    system2('sh', c(miniSh, '-b', '-p', minicondaPath))
 
     message('Running conda init...')
-    system(glue('{minicondaPath}/bin/conda init bash'))}
+    system(glue('"{minicondaPath}/bin/conda" init bash'))}
 
   # Create new environment if it doesn't exist
   if (minicondaEnv != 'base' && !dir.exists(minicondaEnvPath)) {
@@ -98,7 +98,7 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
       envYaml$name = minicondaEnv
       yaml::write_yaml(envYaml, yamlPath)}
 
-    system(glue('{minicondaPath}/bin/conda env create -f "{yamlPath}"'))}
+    system(glue('"{minicondaPath}/bin/conda" env create -f "{yamlPath}"'))}
 
   # Set the option
   # if (setSeekerOption) {

@@ -1,3 +1,6 @@
+# seeker 1.0.14
+* Fixed handling of whitespace in file paths while installing miniconda.
+
 # seeker 1.0.13
 * Updated for BioStudies API.
 
