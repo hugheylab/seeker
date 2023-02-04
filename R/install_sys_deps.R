@@ -65,11 +65,11 @@ installSraToolkit = function(installDir, rprofileDir) {
 
 installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Determine paths for miniconda
-  minicondaPath = file.path(installDir, 'miniconda3')
+  minicondaPath = path.expand(file.path(installDir, 'miniconda3'))
   minicondaEnvPath = if (minicondaEnv == 'base') {
     minicondaPath
   } else {
-    file.path(minicondaPath, 'envs', minicondaEnv)}
+    path.expand(file.path(minicondaPath, 'envs', minicondaEnv))}
 
   if (dir.exists(minicondaPath)) {
     message('Miniconda already installed, skipping...')
