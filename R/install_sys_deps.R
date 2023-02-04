@@ -65,7 +65,7 @@ installSraToolkit = function(installDir, rprofileDir) {
 
 installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
   # Determine paths for miniconda
-  minicondaPath = safe(file.path(installDir, 'miniconda3'))
+  minicondaPath = file.path(installDir, 'miniconda3')
   minicondaEnvPath = if (minicondaEnv == 'base') {
     minicondaPath
   } else {
@@ -82,7 +82,7 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
     withr::local_file(miniSh)
     download.file(
       glue('https://repo.anaconda.com/miniconda/{miniSh}'), miniSh, quiet = TRUE)
-    system2('sh', c(miniSh, '-b', '-p', minicondaPath))
+    system2('sh', c(miniSh, '-b', '-p', safe(minicondaPath)))
 
     message('Running conda init...')
     system(glue('"{minicondaPath}/bin/conda" init bash'))}
@@ -108,7 +108,8 @@ installMiniconda = function(installDir, minicondaEnv, rprofileDir) {
 
   message('Installing conda packages via mamba...')
   mambaEnvPath = system.file('extdata', 'mamba_env.yml', package = 'seeker')
-  mambaArgs = c('env', 'update', '-p', minicondaEnvPath, '--file', mambaEnvPath)
+  mambaArgs = c(
+    'env', 'update', '-p', safe(minicondaEnvPath), '--file', safe(mambaEnvPath))
   system3('mamba', mambaArgs)
 
   invisible()}
