@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Simplified Fetching and Processing of Microarray and RNA-Seq Data
-Version: 1.0.14
+Version: 1.1.0
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', role = c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', role = 'aut'))
@@ -32,7 +32,6 @@ Depends: R (>= 3.5)
 Imports:
   affy (>= 1.68.0),
   AnnotationDbi (>= 1.52.0),
-  ArrayExpress (>= 1.50.0),
   BiocManager (>= 1.30.0),
   biomaRt (>= 2.36.1),
   checkmate (>= 2.1.0),
@@ -52,6 +51,7 @@ Imports:
   withr (>= 2.4.2),
   yaml (>= 2.2.1)
 Suggests:
+  ArrayExpress (>= 1.50.0),
   Biobase,
   doParallel (>= 1.0.17),
   knitr,

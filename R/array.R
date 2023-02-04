@@ -111,13 +111,19 @@ seekerArray = function(
 
   result = if (repo == 'geo') {
     getNaiveEsetGeo(study, outputDir, rawDir, platform, metadataOnly)
+
   } else if (repo == 'ae') {
+    if (!requireNamespace('ArrayExpress', quietly = TRUE)) {
+      stop(
+        glue('Processing {study} requires the ArrayExpress package.'),
+        .call = FALSE)}
+
+    rmaOk = glue('Cannot process {study} until the ArrayExpress package',
+                 ' is updated to use the BioStudies API.')
     tryCatch(
       getNaiveEsetAe(study, outputDir, rawDir),
-      error = function(e) list(
-        eset = NULL,
-        rmaOk = glue('Cannot process {study} until the ArrayExpress package',
-                     ' is updated to use the BioStudies API.')))
+      error = function(e) list(eset = NULL, rmaOk = rmaOk))
+
   } else {
     getNaiveEsetLocal(study, platform)}
 

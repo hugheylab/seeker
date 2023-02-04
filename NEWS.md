@@ -1,3 +1,6 @@
+# seeker 1.1.0
+* Removed dependency on ArrayExpress package
+
 # seeker 1.0.14
 * Fixed handling of whitespace in file paths while installing miniconda.
 
