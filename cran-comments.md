@@ -22,7 +22,7 @@ See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.0.tar.gz-0c
 
   0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
-See results for Mac, Windows, and Ubuntu [here](https://github.com/hugheylab/seeker/actions/runs/4093123590).
+See results for Mac, Windows, and Ubuntu [here](https://github.com/hugheylab/seeker/actions/runs/4485283289).
 
 ## Changes from current CRAN release
 
