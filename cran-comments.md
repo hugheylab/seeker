@@ -16,16 +16,14 @@
 
 The URL noted above is valid.
 
-See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.0.tar.gz-0c794b51ae724e0c987c11a18f91f705).
+See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.1.tar.gz-aca4f6fb53a743629192fa678a888c8a), [Ubuntu](https://builder.r-hub.io/status/seeker_1.1.1.tar.gz-a543eec5aa484149b31310d61de34ee4), and [Fedora](https://builder.r-hub.io/status/seeker_1.1.1.tar.gz-39217d1719f64e6f9968d66ecaf18206).
 
 ### GitHub Actions
 
   0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
-See results for Mac, Windows, and Ubuntu [here](https://github.com/hugheylab/seeker/actions/runs/4485283289).
+See results for Mac, Windows, and Ubuntu [here]().
 
 ## Changes from current CRAN release
 
-* Fixed handling of whitespace in file paths while installing miniconda.
-* Updated test snapshots for latest version of org.Mm.eg.db.
-* Moved ArrayExpress package from Imports to Suggests and updated code accordingly.
+* Updated test expectations for altered column order in metadata from ENA.

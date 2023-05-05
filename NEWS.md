@@ -1,3 +1,6 @@
+# seeker 1.1.1
+* Updated test expectations for altered column order in metadata from ENA.
+
 # seeker 1.1.0
 * Removed dependency on ArrayExpress package.
 
