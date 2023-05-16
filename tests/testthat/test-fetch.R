@@ -7,6 +7,9 @@ test_that('fetchMetadata', {
   idx = metadataObs[[paramsNow$include$colname]] %in% paramsNow$include$values
   metadataObs = metadataObs[idx]
 
+  skip_if(isTRUE(all.equal(names(metadataObs), '<!doctype html>')),
+          'Skipping, as ENA temporarily unavailable.')
+
   metadataExp = snapshot(
     metadataObs, file.path(dataDir, 'fetch_metadata_output.qs'))
 
