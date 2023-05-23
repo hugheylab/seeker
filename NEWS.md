@@ -1,5 +1,6 @@
 # seeker 1.1.3
 * Updated test for fetching metadata again.
+* `fetchMetadata()` now orders its result.
 
 # seeker 1.1.2
 * Updated test for fetching metadata.

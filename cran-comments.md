@@ -21,3 +21,4 @@ See results for Mac, Windows, and Ubuntu [here]().
 ## Changes from current CRAN release
 
 * Updated test for fetching metadata, this time to make it less sensitive to arbitrary changes on the remote resource.
+* `fetchMetadata()` now orders its result.

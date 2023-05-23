@@ -41,7 +41,7 @@ fetchMetadata = function(
 
   raw = curl::curl_fetch_memory(url)
   metadata = fread(text = rawToChar(raw$content), sep = sep, na.strings = '')
-  setorder(metadata)
+  data.table::setorder(metadata)
   if (!is.null(file)) fwrite(metadata, file)
   return(metadata)}
 
