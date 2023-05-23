@@ -1,3 +1,6 @@
+# seeker 1.1.3
+* Updated test for fetching metadata again.
+
 # seeker 1.1.2
 * Updated test for fetching metadata.
 
@@ -23,7 +26,7 @@
 * Revised package for CRAN.
 
 # seeker 1.0.9
-* Revised "Description" text.
+* Revised "Description" text.y
 * Skipped more tests on CRAN to avoid installation of packages.
 
 # seeker 1.0.8
