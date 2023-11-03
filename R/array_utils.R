@@ -174,8 +174,8 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
 
   if (!dir.exists(rawDir)) dir.create(rawDir)
 
-  . = file.rename(file.path(outputDir, mage$rawFiles),
-                  file.path(rawDir, mage$rawFiles))
+  . = file.rename(file.path(outputDir, basename(mage$rawFiles)),
+                  file.path(rawDir, basename(mage$rawFiles)))
 
   return(list(eset = eset, rmaOk = rmaOk))}
 
