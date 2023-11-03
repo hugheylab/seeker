@@ -158,7 +158,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
   # if (metadataOnly) return(list(eset = eset))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
-    mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')
+    mage = ArrayExpress::getAE(study, path = outputDir, type = 'full')
     eset = ArrayExpress::ae2bioc(mage)
     rmaOk = TRUE
   } else {
