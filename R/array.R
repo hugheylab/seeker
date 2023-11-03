@@ -120,7 +120,7 @@ seekerArray = function(
 
     rmaOk = glue('Cannot process {study} until the ArrayExpress package',
                  ' is updated to use the BioStudies API.')
-    result <- tryCatch(
+    tryCatch(
       getNaiveEsetAe(study, outputDir, rawDir),
       error = function(e) list(eset = NULL, rmaOk = rmaOk))
 
