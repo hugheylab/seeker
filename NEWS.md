@@ -1,3 +1,7 @@
+# seeker 1.1.4
+* Fixed processing of ArrayExpress data (thanks to @jacorvar).
+* Removed deprecated argument from `biomaRt::listEnsemblArchives()`.
+
 # seeker 1.1.3
 * Updated test for fetching metadata again.
 * `fetchMetadata()` now orders its result.

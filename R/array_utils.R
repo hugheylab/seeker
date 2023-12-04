@@ -158,7 +158,7 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
   # if (metadataOnly) return(list(eset = eset))
 
   if ((platform %in% getPlatforms('cdf')$ae_accession) && hasRaw) {
-    mage = ArrayExpress::getAE(study, path = outputDir, type = 'raw')
+    mage = ArrayExpress::getAE(study, path = outputDir, type = 'full')
     eset = ArrayExpress::ae2bioc(mage)
     rmaOk = TRUE
   } else {
@@ -174,8 +174,8 @@ getNaiveEsetAe = function(study, outputDir, rawDir) {
 
   if (!dir.exists(rawDir)) dir.create(rawDir)
 
-  . = file.rename(file.path(outputDir, mage$rawFiles),
-                  file.path(rawDir, mage$rawFiles))
+  . = file.rename(file.path(outputDir, basename(mage$rawFiles)),
+                  file.path(rawDir, basename(mage$rawFiles)))
 
   return(list(eset = eset, rmaOk = rmaOk))}
 
