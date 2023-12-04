@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Simplified Fetching and Processing of Microarray and RNA-Seq Data
-Version: 1.1.3
+Version: 1.1.4
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', role = c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', role = 'aut'))
@@ -51,7 +51,7 @@ Imports:
   withr (>= 2.4.2),
   yaml (>= 2.2.1)
 Suggests:
-  ArrayExpress (>= 1.50.0),
+  ArrayExpress (>= 1.62.0),
   Biobase,
   doParallel (>= 1.0.17),
   knitr,

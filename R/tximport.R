@@ -29,7 +29,7 @@ getTx2gene = function(
   withr::local_options(timeout = 600)
 
   if (is.null(version)) { # let's be strict
-    arch = setDT(biomaRt::listEnsemblArchives(https = TRUE))
+    arch = setDT(biomaRt::listEnsemblArchives())
     version = as.integer(arch[arch$current_release == '*']$version)}
 
   if (!is.null(outputDir)) {

@@ -8,17 +8,28 @@
 
 ### R-hub
 
-R-hub builds are giving errors because "Bioconductor does not yet build and check packages for R version 4.4".
+`devtools::check_rhub()`:
 
-See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.3.tar.gz-7dd2f5c93e324fceb89b5451f55325ec), [Ubuntu](https://builder.r-hub.io/status/seeker_1.1.3.tar.gz-e086fb7a85834001b34f4a6111838921), and [Fedora](https://builder.r-hub.io/status/seeker_1.1.3.tar.gz-c75d4dfc8fd74825b4fbac365d27c862).
+  0 errors ✓ | 0 warnings ✓ | 2 notes ✓
+  
+❯ checking for non-standard things in the check directory ... NOTE
+  Found the following files/directories:
+    ''NULL''
+
+❯ checking for detritus in the temp directory ... NOTE
+  Found the following files/directories:
+    'lastMiKTeXException'
+
+See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-1fd21b320f264289820666012a924a8a), [Ubuntu](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-dd2ecaaf51d24135a360cee4e0b8a858), and [Fedora](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-6cfb237d17794ae5bd6fa302781fb7b0).
 
 ### GitHub Actions
 
   0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
-See results for Mac, Windows, and Ubuntu [here](https://github.com/hugheylab/seeker/actions/runs/5062969952).
+See results for Mac, Windows, and Ubuntu [here]().
 
 ## Changes from current CRAN release
 
-* Updated test for fetching metadata, this time to make it less sensitive to arbitrary changes on the remote resource.
-* `fetchMetadata()` now orders its result.
+* Fixed processing of ArrayExpress data (thanks to @jacorvar).
+* Removed deprecated argument from `biomaRt::listEnsemblArchives()`.
+* Updated test standards.
