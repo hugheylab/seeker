@@ -1,6 +1,6 @@
 # seeker 1.1.5
 * Added support for GPL17811 (thanks to @jacorvar).
-* 
+
 # seeker 1.1.4
 * Fixed processing of ArrayExpress data (thanks to @jacorvar).
 * Removed deprecated argument from `biomaRt::listEnsemblArchives()`.

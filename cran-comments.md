@@ -20,7 +20,7 @@
   Found the following files/directories:
     'lastMiKTeXException'
 
-See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-1fd21b320f264289820666012a924a8a), [Ubuntu](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-dd2ecaaf51d24135a360cee4e0b8a858), and [Fedora](https://builder.r-hub.io/status/seeker_1.1.4.tar.gz-6cfb237d17794ae5bd6fa302781fb7b0).
+See results for [Windows](https://builder.r-hub.io/status/seeker_1.1.5.tar.gz-8a323a68035846eb827c4bcdd88625b5), [Ubuntu](https://builder.r-hub.io/status/seeker_1.1.5.tar.gz-0e06ae6f6ad84e0bb98821147bf0488c), and [Fedora](https://builder.r-hub.io/status/seeker_1.1.5.tar.gz-6d6c440ee7bd4a6d98c0b01f1f7fb3af).
 
 ### GitHub Actions
 
@@ -30,6 +30,4 @@ See results for Mac, Windows, and Ubuntu [here]().
 
 ## Changes from current CRAN release
 
-* Fixed processing of ArrayExpress data (thanks to @jacorvar).
-* Removed deprecated argument from `biomaRt::listEnsemblArchives()`.
-* Updated test standards.
+* Added support for GPL17811.

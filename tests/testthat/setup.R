@@ -2,6 +2,7 @@ library('data.table')
 library('qs')
 library('foreach')
 
+withr::local_options(list(timeout = 300), .local_envir = teardown_env())
 onCran = !identical(Sys.getenv('NOT_CRAN'), 'true')
 
 snapshot = function(xObs, path) {
@@ -45,7 +46,6 @@ commandsDt = rbind(
   getCommandsCheck(params),
   data.table(filename = 'salmon_index', exists = file.exists(params$salmon$indexDir)))
 anyMissing = any(!commandsDt[['exists']])
-
 
 params$fetch$run = FALSE
 parentDir = file.path(dataDir, 'staging')
