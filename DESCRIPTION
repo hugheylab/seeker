@@ -1,7 +1,7 @@
 Package: seeker
 Type: Package
 Title: Simplified Fetching and Processing of Microarray and RNA-Seq Data
-Version: 1.1.5
+Version: 1.1.6
 Authors@R: c(
   person('Jake', 'Hughey', , 'jakejhughey@gmail.com', role = c('aut', 'cre')),
   person('Josh', 'Schoenbachler', , 'josh.schoenbachler@gmail.com', role = 'aut'))
