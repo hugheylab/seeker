@@ -32,7 +32,12 @@ installSraToolkit = function(installDir, rprofileDir) {
     sraVersion = max(regmatches(x, m))
 
     # Based on operating system, download correct version to correct path
-    sraOsTar = if (Sys.info()[['sysname']] == 'Darwin') 'mac64' else 'ubuntu64'
+    sraOsTar = if (Sys.info()[['sysname']] == 'Darwin') {
+      uname = system('uname -m', intern = TRUE)
+      if (uname == 'x86_64') 'mac-x86_64' else 'mac-arm64'
+    } else {
+      'ubuntu64'
+    }
     sraTar = glue('sratoolkit.{sraVersion}-{sraOsTar}.tar.gz')
 
     # Download based on version and OS, unzip, then rename directory
