@@ -4,6 +4,8 @@ test_that('fetchMetadata', {
   paramsNow = params[[step]]
 
   metadataObs = fetchMetadata(paramsNow$bioproject)
+  skip_if(nrow(metadataObs) == 0L)
+
   idx = metadataObs[[paramsNow$include$colname]] %in% paramsNow$include$values
   metadataObs = metadataObs[idx]
 

@@ -39,7 +39,12 @@ fetchMetadata = function(
       '?save=efetch&db=sra&rettype=runinfo&term=', bioproject)
     sep = ','}
 
-  raw = curl::curl_fetch_memory(url)
+  raw = tryCatch(curl::curl_fetch_memory(url), error = \(e) e)
+  metadata = if (inherits(raw, 'error')) {
+    message('Unable to fetch metadata. Host may be temporarily unavailable.')
+    return(data.table())
+  }
+
   metadata = fread(text = rawToChar(raw$content), sep = sep, na.strings = '')
   data.table::setorder(metadata)
   if (!is.null(file)) fwrite(metadata, file)

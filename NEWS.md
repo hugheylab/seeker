@@ -1,3 +1,6 @@
+# seeker 1.1.6
+* Made error handling more graceful.
+
 # seeker 1.1.5
 * Added support for GPL17811 (thanks to @jacorvar).
 
